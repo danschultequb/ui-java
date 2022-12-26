@@ -648,29 +648,51 @@ public interface SwingUIWindowTests
                 });
             });
 
-            runner.test("sandbox", runner.skip(true), (Test test) ->
+            runner.test("sandbox", runner.skip(false), (Test test) ->
             {
                 try (final SwingUI ui = SwingUI.create(mainAsyncRunner);
                      final SwingUIWindow window = SwingUIWindow.create(ui))
                 {
-                    final UIVerticalLayout verticalLayout = ui.createUIVerticalLayout().await()
-                        .setBackgroundColor(Color.create(200, 200, 0));
+                    window.setWidth(Distance.inches(3));
+                    window.setHeight(Distance.inches(3));
 
-                    final UIText text = ui.createUIText().await()
-                        .setBackgroundColor(Color.blue);
-                    verticalLayout.add(text);
+                    final UIVerticalLayout verticalLayout = ui.createUIVerticalLayout().await();
 
-                    final UIButton button = ui.createUIButton().await();
-                    button.setBackgroundColor(Color.white);
-                    button.setText("Increment");
-                    final IntegerValue counter = IntegerValue.create(-1);
-                    final Action0 buttonPressed = () ->
+                    final UIHorizontalLayout firstNameLayout = ui.createUIHorizontalLayout().await();
+                    firstNameLayout.add(ui.createUIText().await().setText("First Name:"));
+                    final UITextBox firstNameTextBox = ui.createUITextBox().await();
+                    firstNameLayout.add(firstNameTextBox);
+                    verticalLayout.add(firstNameLayout);
+
+                    final UIHorizontalLayout lastNameLayout = ui.createUIHorizontalLayout().await();
+                    lastNameLayout.add(ui.createUIText().await().setText("Last Name:"));
+                    final UITextBox lastNameTextBox = ui.createUITextBox().await();
+                    lastNameLayout.add(lastNameTextBox);
+                    verticalLayout.add(lastNameLayout);
+
+                    final UIText greeting = ui.createUIText().await();
+                    final Action0 updateGreetingText = () ->
                     {
-                        text.setText("Counter: " + counter.incrementAndGetAsInt());
+                        final String firstName = firstNameTextBox.getText();
+                        final String lastName = lastNameTextBox.getText();
+                        if (Strings.isNullOrEmpty(firstName) && Strings.isNullOrEmpty(lastName))
+                        {
+                            greeting.setText("");
+                        }
+                        else
+                        {
+                            String fullName = firstName;
+                            if (!Strings.isNullOrEmpty(firstName) && !Strings.isNullOrEmpty(lastName))
+                            {
+                                fullName += ' ';
+                            }
+                            fullName += lastName;
+                            greeting.setText("Hello, " + fullName + "!");
+                        }
                     };
-                    buttonPressed.run();
-                    button.onClick(buttonPressed);
-                    verticalLayout.add(button);
+                    firstNameTextBox.onTextChanged(updateGreetingText);
+                    lastNameTextBox.onTextChanged(updateGreetingText);
+                    verticalLayout.add(greeting);
 
                     window.setContent(verticalLayout);
 

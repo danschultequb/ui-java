@@ -22,20 +22,7 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
 
         this.jFrame = new javax.swing.JFrame();
         this.jFrame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        this.jFrame.addWindowListener(new java.awt.event.WindowAdapter()
-        {
-            @Override
-            public void windowOpened(java.awt.event.WindowEvent e)
-            {
-                SwingUIWindow.this.ui.setCurrentThreadAsyncRunner();
-            }
-
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e)
-            {
-                SwingUIWindow.this.close();
-            }
-        });
+        this.jFrame.addWindowListener(SwingUIWindowListener.create(ui, this));
     }
 
     public static SwingUIWindow create(SwingUI ui)

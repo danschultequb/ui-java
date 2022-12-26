@@ -95,14 +95,13 @@ public interface UI extends Disposable
         return this.create(UIText.class);
     }
 
-//    /**
-//     * Create a new UITextBox.
-//     * @return The new UITextBox.
-//     */
-//    default Result<? extends UITextBox> createUITextBox()
-//    {
-//        return this.create(UITextBox.class);
-//    }
+    /**
+     * Create a new {@link UITextBox}.
+     */
+    public default Result<? extends UITextBox> createUITextBox()
+    {
+        return this.create(UITextBox.class);
+    }
 
     /**
      * Create a new {@link UIVerticalLayout}.
@@ -112,12 +111,11 @@ public interface UI extends Disposable
         return this.create(UIVerticalLayout.class);
     }
 
-//    /**
-//     * Create a new UIHorizontalLayout.
-//     * @return The new UIHorizontalLayout.
-//     */
-//    default Result<? extends UIHorizontalLayout> createUIHorizontalLayout()
-//    {
-//        return this.create(UIHorizontalLayout.class);
-//    }
+    /**
+     * Create a new {@link UIHorizontalLayout}.
+     */
+    public default Result<? extends UIHorizontalLayout> createUIHorizontalLayout()
+    {
+        return this.create(UIHorizontalLayout.class);
+    }
 }

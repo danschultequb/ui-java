@@ -123,6 +123,24 @@ public interface UITests
                 }
             });
 
+            runner.test("createUIHorizontalLayout()", (Test test) ->
+            {
+                try (final UI ui = creator.run())
+                {
+                    final UIHorizontalLayout layout = ui.createUIHorizontalLayout().await();
+                    test.assertNotNull(layout);
+                }
+            });
+
+            runner.test("createUITextBox()", (Test test) ->
+            {
+                try (final UI ui = creator.run())
+                {
+                    final UITextBox textBox = ui.createUITextBox().await();
+                    test.assertNotNull(textBox);
+                }
+            });
+
             runner.test("dispose()", (Test test) ->
             {
                 try (final UI ui = creator.run())

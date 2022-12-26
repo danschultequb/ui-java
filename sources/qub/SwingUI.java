@@ -17,6 +17,7 @@ public class SwingUI extends UIBase<SwingUI>
         this.windows = List.create();
 
         this.setCreator(Iterable.create(UIText.class, SwingUIText.class), () -> SwingUIText.create(this));
+        this.setCreator(Iterable.create(UITextBox.class, SwingUITextBox.class), () -> SwingUITextBox.create(this));
         this.setCreator(Iterable.create(UIButton.class, SwingUIButton.class), () -> SwingUIButton.create(this));
         this.setCreator(Iterable.create(UIHorizontalLayout.class, SwingUIHorizontalLayout.class), () -> SwingUIHorizontalLayout.create(this));
         this.setCreator(Iterable.create(UIVerticalLayout.class, SwingUIVerticalLayout.class), () -> SwingUIVerticalLayout.create(this));

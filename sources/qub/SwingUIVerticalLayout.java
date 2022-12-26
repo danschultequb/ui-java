@@ -44,6 +44,8 @@ public class SwingUIVerticalLayout implements UIVerticalLayout, JComponentUIElem
         this.jPanel.add(jComponent);
         this.childUIElements.add(uiElement);
 
+        jComponent.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+
         return this;
     }
 

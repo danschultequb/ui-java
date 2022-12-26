@@ -1,64 +1,64 @@
-//package qub;
-//
-///**
-// * An editable text box element within a UI.
-// */
-//public interface UITextBox extends UIElement
-//{
-//    @Override
-//    UITextBox setWidth(Distance width);
-//
-//    @Override
-//    UITextBox setHeight(Distance height);
-//
-//    @Override
-//    UITextBox setSize(Size2D size);
-//
-//    @Override
-//    UITextBox setSize(Distance width, Distance height);
-//
-//    /**
-//     * Get the text of this {@link UITextBox}.
-//     * @return The text of this {@link UITextBox}.
-//     */
-//    String getText();
-//
-//    /**
-//     * Set the text of this {@link UITextBox}.
-//     * @param text The text of this {@link UITextBox}.
-//     * @return This object for method chaining.
-//     */
-//    UITextBox setText(String text);
-//
-//    /**
-//     * Register the provided callback to be invoked when this {@link UITextBox}'s text is changed.
-//     * @param callback The callback to invoke when this {@link UITextBox}'s text is changed.
-//     * @return A {@link Disposable} that can be disposed to unregister the provided callback.
-//     */
-//    default Disposable onTextChanged(Action0 callback)
-//    {
-//        PreCondition.assertNotNull(callback, "callback");
-//
-//        return this.onTextChanged((String newText) -> callback.run());
-//    }
-//
-//    /**
-//     * Register the provided callback to be invoked when this {@link UITextBox}'s text is changed.
-//     * @param callback The callback to invoke when this {@link UITextBox}'s text is changed.
-//     * @return A {@link Disposable} that can be disposed to unregister the provided callback.
-//     */
-//    Disposable onTextChanged(Action1<String> callback);
-//
-//    /**
-//     * Get the size of the font used by this {@link UITextBox}.
-//     * @return The size of the font used by this {@link UITextBox}.
-//     */
-//    Distance getFontSize();
-//
-//    /**
-//     * Set the size of the font used by this {@link UITextBox}.
-//     * @param fontSize The size of the font used by this {@link UITextBox}.
-//     * @return This object for method chaining.
-//     */
-//    UITextBox setFontSize(Distance fontSize);
-//}
+package qub;
+
+/**
+ * An editable text box element within a {@link UI}.
+ */
+public interface UITextBox extends UIElement
+{
+    @Override
+    public UITextBox setBackgroundColor(Color backgroundColor);
+
+    /**
+     * Get the number of characters in the text.
+     */
+    public int getTextLength();
+
+    /**
+     * Get the text of this {@link UITextBox}.
+     */
+    public String getText();
+
+    /**
+     * Set the text of this {@link UITextBox}.
+     * @param text The text of this {@link UITextBox}.
+     * @return This object for method chaining.
+     */
+    public UITextBox setText(String text);
+
+    /**
+     * Insert the provided text at the provided startIndex.
+     * @param startIndex The index at which to insert the provided text.
+     * @param text The text to insert.
+     * @return This object for method chaining.
+     */
+    public UITextBox insertText(int startIndex, String text);
+
+    /**
+     * Remove the text from the provided range.
+     * @param startIndex The index at which to start removing characters.
+     * @param length The number of characters to remove.
+     * @return The text that was removed.
+     */
+    public UITextBox removeText(int startIndex, int length);
+
+    /**
+     * Register the provided {@link Action0} to be invoked when this {@link UITextBox}'s text is
+     * changed.
+     * @param callback The {@link Action0} to invoke when this {@link UITextBox}'s text is changed.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action0}.
+     */
+    public default Disposable onTextChanged(Action0 callback)
+    {
+        PreCondition.assertNotNull(callback, "callback");
+
+        return this.onTextChanged((TextChange textChange) -> callback.run());
+    }
+
+    /**
+     * Register the provided {@link Action1} to be invoked when this {@link UITextBox}'s text is
+     * changed.
+     * @param callback The {@link Action1} to invoke when this {@link UITextBox}'s text is changed.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action1}.
+     */
+    public Disposable onTextChanged(Action1<TextChange> callback);
+}

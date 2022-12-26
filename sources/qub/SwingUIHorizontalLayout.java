@@ -44,6 +44,8 @@ public class SwingUIHorizontalLayout implements UIHorizontalLayout, JComponentUI
         this.jPanel.add(jComponent);
         this.childUIElements.add(uiElement);
 
+        jComponent.setAlignmentY(java.awt.Component.TOP_ALIGNMENT);
+
         return this;
     }
 
