@@ -1,6 +1,6 @@
 package qub;
 
-public class SwingUIHorizontalLayout implements UIHorizontalLayout, JComponentUIElement
+public class SwingUIHorizontalLayout implements UIHorizontalLayout.Typed<SwingUIHorizontalLayout>, JComponentUIElement.Typed<SwingUIHorizontalLayout>
 {
     private final SwingUI ui;
     private final javax.swing.JPanel jPanel;
@@ -24,13 +24,7 @@ public class SwingUIHorizontalLayout implements UIHorizontalLayout, JComponentUI
     @Override
     public SwingUIHorizontalLayout setBackgroundColor(Color backgroundColor)
     {
-        return this.ui.setBackgroundColor(this, backgroundColor);
-    }
-
-    @Override
-    public Color getBackgroundColor()
-    {
-        return this.ui.getBackgroundColor(this);
+        return JComponentUIElement.Typed.super.setBackgroundColor(backgroundColor);
     }
 
     @Override
@@ -47,18 +41,6 @@ public class SwingUIHorizontalLayout implements UIHorizontalLayout, JComponentUI
         jComponent.setAlignmentY(java.awt.Component.TOP_ALIGNMENT);
 
         return this;
-    }
-
-    @Override
-    public SwingUIHorizontalLayout addAll(UIElement... uiElements)
-    {
-        return (SwingUIHorizontalLayout)UIHorizontalLayout.super.addAll(uiElements);
-    }
-
-    @Override
-    public SwingUIHorizontalLayout addAll(Iterable<? extends UIElement> uiElements)
-    {
-        return (SwingUIHorizontalLayout)UIHorizontalLayout.super.addAll(uiElements);
     }
 
     @Override

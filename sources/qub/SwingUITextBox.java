@@ -1,6 +1,6 @@
 package qub;
 
-public class SwingUITextBox implements UITextBox, JComponentUIElement
+public class SwingUITextBox implements UITextBox.Typed<SwingUITextBox>, JComponentUIElement.Typed<SwingUITextBox>
 {
     private final SwingUI ui;
     private final javax.swing.JTextArea javaTextBox;
@@ -30,15 +30,9 @@ public class SwingUITextBox implements UITextBox, JComponentUIElement
     }
 
     @Override
-    public Color getBackgroundColor()
-    {
-        return this.ui.getBackgroundColor(this);
-    }
-
-    @Override
     public SwingUITextBox setBackgroundColor(Color backgroundColor)
     {
-        return this.ui.setBackgroundColor(this, backgroundColor);
+        return JComponentUIElement.Typed.super.setBackgroundColor(backgroundColor);
     }
 
     @Override

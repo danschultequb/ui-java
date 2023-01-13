@@ -26,4 +26,17 @@ public interface UIButton extends UIElement
      * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action0}.
      */
     public Disposable onClick(Action0 callback);
+
+    /**
+     * A version of a {@link UIButton} that returns its own type from chainable methods.
+     * @param <T> The actual type of the {@link UIButton}.
+     */
+    public interface Typed<T extends UIButton> extends UIButton
+    {
+        @Override
+        public T setBackgroundColor(Color backgroundColor);
+
+        @Override
+        public T setText(String text);
+    }
 }

@@ -1,6 +1,6 @@
 package qub;
 
-public class SwingUIText implements UIText, JComponentUIElement
+public class SwingUIText implements UIText.Typed<SwingUIText>, JComponentUIElement.Typed<SwingUIText>
 {
     private final SwingUI ui;
     private final javax.swing.JLabel label;
@@ -16,6 +16,12 @@ public class SwingUIText implements UIText, JComponentUIElement
     public static SwingUIText create(SwingUI ui)
     {
         return new SwingUIText(ui);
+    }
+
+    @Override
+    public SwingUIText setBackgroundColor(Color backgroundColor)
+    {
+        return JComponentUIElement.Typed.super.setBackgroundColor(backgroundColor);
     }
 
     @Override
@@ -38,17 +44,5 @@ public class SwingUIText implements UIText, JComponentUIElement
     public javax.swing.JComponent getJComponent()
     {
         return this.label;
-    }
-
-    @Override
-    public SwingUIText setBackgroundColor(Color backgroundColor)
-    {
-        return this.ui.setBackgroundColor(this, backgroundColor);
-    }
-
-    @Override
-    public Color getBackgroundColor()
-    {
-        return this.ui.getBackgroundColor(this);
     }
 }

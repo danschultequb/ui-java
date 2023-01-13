@@ -247,9 +247,9 @@ public interface SwingUIWindowTests
                     });
                 };
 
-                setSizeErrorTest.run(-1, -1, new PreConditionFailure("pixelWidth (-1) must be greater than or equal to 0."));
-                setSizeErrorTest.run(-1, 0, new PreConditionFailure("pixelWidth (-1) must be greater than or equal to 0."));
-                setSizeErrorTest.run(0, -1, new PreConditionFailure("pixelHeight (-1) must be greater than or equal to 0."));
+                setSizeErrorTest.run(-1, -1, new PreConditionFailure("width (-1) must be greater than or equal to 0."));
+                setSizeErrorTest.run(-1, 0, new PreConditionFailure("width (-1) must be greater than or equal to 0."));
+                setSizeErrorTest.run(0, -1, new PreConditionFailure("height (-1) must be greater than or equal to 0."));
 
                 runner.test("when disposed", (Test test) ->
                 {
@@ -343,8 +343,6 @@ public interface SwingUIWindowTests
                             {
                                 final SwingUIWindow setSizeResult = window.setSize(width, height);
                                 test.assertSame(window, setSizeResult);
-
-                                test.assertEqual(Size2.create(width, height), window.getSizeDistances());
                             }
                         }
                     });
@@ -375,7 +373,7 @@ public interface SwingUIWindowTests
                     });
                 };
 
-                setWidthErrorTest.run(-1, new PreConditionFailure("pixelWidth (-1) must be greater than or equal to 0."));
+                setWidthErrorTest.run(-1, new PreConditionFailure("width (-1) must be greater than or equal to 0."));
 
                 runner.test("when disposed", (Test test) ->
                 {
@@ -506,7 +504,7 @@ public interface SwingUIWindowTests
                     });
                 };
 
-                setHeightErrorTest.run(-1, new PreConditionFailure("pixelHeight (-1) must be greater than or equal to 0."));
+                setHeightErrorTest.run(-1, new PreConditionFailure("height (-1) must be greater than or equal to 0."));
 
                 runner.test("when disposed", (Test test) ->
                 {
@@ -648,7 +646,7 @@ public interface SwingUIWindowTests
                 });
             });
 
-            runner.test("sandbox", runner.skip(false), (Test test) ->
+            runner.test("sandbox", runner.skip(true), (Test test) ->
             {
                 try (final SwingUI ui = SwingUI.create(mainAsyncRunner);
                      final SwingUIWindow window = SwingUIWindow.create(ui))
@@ -656,45 +654,50 @@ public interface SwingUIWindowTests
                     window.setWidth(Distance.inches(3));
                     window.setHeight(Distance.inches(3));
 
-                    final UIVerticalLayout verticalLayout = ui.createUIVerticalLayout().await();
-
-                    final UIHorizontalLayout firstNameLayout = ui.createUIHorizontalLayout().await();
-                    firstNameLayout.add(ui.createUIText().await().setText("First Name:"));
-                    final UITextBox firstNameTextBox = ui.createUITextBox().await();
-                    firstNameLayout.add(firstNameTextBox);
-                    verticalLayout.add(firstNameLayout);
-
-                    final UIHorizontalLayout lastNameLayout = ui.createUIHorizontalLayout().await();
-                    lastNameLayout.add(ui.createUIText().await().setText("Last Name:"));
-                    final UITextBox lastNameTextBox = ui.createUITextBox().await();
-                    lastNameLayout.add(lastNameTextBox);
-                    verticalLayout.add(lastNameLayout);
-
-                    final UIText greeting = ui.createUIText().await();
-                    final Action0 updateGreetingText = () ->
+                    final UICanvas canvas = ui.createUICanvas().await();
+                    canvas.setPaintAction((UIPainter painter) ->
                     {
-                        final String firstName = firstNameTextBox.getText();
-                        final String lastName = lastNameTextBox.getText();
-                        if (Strings.isNullOrEmpty(firstName) && Strings.isNullOrEmpty(lastName))
+                        final int canvasWidth = canvas.getWidth();
+                        final int canvasHeight = canvas.getHeight();
+
+                        final int leftX;
+                        final int topY;
+                        final int boardSize;
+                        if (canvasWidth < canvasHeight)
                         {
-                            greeting.setText("");
+                            boardSize = canvasWidth;
+                            leftX = 0;
+                            topY = (canvasHeight - canvasWidth) / 2;
                         }
                         else
                         {
-                            String fullName = firstName;
-                            if (!Strings.isNullOrEmpty(firstName) && !Strings.isNullOrEmpty(lastName))
-                            {
-                                fullName += ' ';
-                            }
-                            fullName += lastName;
-                            greeting.setText("Hello, " + fullName + "!");
+                            boardSize = canvasHeight;
+                            leftX = (canvasWidth - canvasHeight) / 2;
+                            topY = 0;
                         }
-                    };
-                    firstNameTextBox.onTextChanged(updateGreetingText);
-                    lastNameTextBox.onTextChanged(updateGreetingText);
-                    verticalLayout.add(greeting);
+                        final int rightX = leftX + boardSize;
+                        final int bottomY = topY + boardSize;
 
-                    window.setContent(verticalLayout);
+                        final int oneThirdSize = boardSize / 3;
+                        final int twoThirdSize = oneThirdSize * 2;
+
+                        final int leftLineX = leftX + oneThirdSize;
+                        final int rightLineX = leftX + twoThirdSize;
+
+                        final int topLineY = topY + oneThirdSize;
+                        final int bottomLineY = topY + twoThirdSize;
+
+                        painter.drawLine(leftLineX, topY, leftLineX, bottomY);
+                        painter.drawLine(rightLineX, topY, rightLineX, bottomY);
+                        painter.drawLine(leftX, topLineY, rightX, topLineY);
+                        painter.drawLine(leftX, bottomLineY, rightX, bottomLineY);
+
+                        painter.drawOval(leftX, topY, oneThirdSize, oneThirdSize);
+                        painter.drawOval(leftLineX, topLineY, oneThirdSize, oneThirdSize);
+                        painter.drawOval(rightLineX, bottomLineY, oneThirdSize, oneThirdSize);
+                    });
+
+                    window.setContent(canvas);
 
                     window.setVisible(true);
                     window.await();

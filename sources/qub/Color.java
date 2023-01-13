@@ -73,6 +73,14 @@ public interface Color
     public int getAlpha();
 
     /**
+     * Get whether this {@link Color} is completely transparent (alpha is 0).
+     */
+    public default boolean isTransparent()
+    {
+        return this.getAlpha() == 0;
+    }
+
+    /**
      * Get the {@link String} representation of the provided {@link Color}.
      * @param color The {@link Color} to get a {@link String} representation of.
      * @return The {@link String} representation of the provided {@link Color}.

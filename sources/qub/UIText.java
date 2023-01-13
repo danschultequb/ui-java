@@ -19,4 +19,17 @@ public interface UIText extends UIElement
      * @return This object for method chaining.
      */
     public UIText setText(String text);
+
+    /**
+     * A version of a {@link UIText} that returns its own type from chainable methods.
+     * @param <T> The actual type of the {@link UIText}.
+     */
+    public static interface Typed<T extends UIText> extends UIText
+    {
+        @Override
+        public T setBackgroundColor(Color backgroundColor);
+
+        @Override
+        public T setText(String text);
+    }
 }

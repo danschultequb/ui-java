@@ -65,7 +65,7 @@ public interface UIElementTests
 //                            final UIElement setWidthResult = uiElement.setWidth(width);
 //                            test.assertSame(uiElement, setWidthResult);
 //
-//                            test.assertEqual(width, uiElement.getWidth());
+//                            test.assertEqual(width, uiElement.getPixelWidth());
 //                        }
 //                    });
 //                };
@@ -175,7 +175,7 @@ public interface UIElementTests
 //                            final UIElement uiElement = creator.run(process);
 //                            final UIElement setSizeResult = uiElement.setSize(width, height);
 //                            test.assertSame(uiElement, setSizeResult);
-//                            test.assertEqual(width, uiElement.getWidth());
+//                            test.assertEqual(width, uiElement.getPixelWidth());
 //                            test.assertEqual(height, uiElement.getHeight());
 //                        }
 //                    });
@@ -340,8 +340,8 @@ public interface UIElementTests
 //                        uiElement.setPadding(padding);
 //
 //                        final Size2D contentSpaceSize = uiElement.getContentSpaceSize();
-//                        final Distance width = uiElement.getWidth();
-//                        final Distance expectedWidth = width.greaterThan(padding.getWidth()) ? width.minus(padding.getWidth()) : Distance.zero;
+//                        final Distance width = uiElement.getPixelWidth();
+//                        final Distance expectedWidth = width.greaterThan(padding.getPixelWidth()) ? width.minus(padding.getPixelWidth()) : Distance.zero;
 //                        final Distance height = uiElement.getHeight();
 //                        final Distance expectedHeight = height.greaterThan(padding.getHeight()) ? height.minus(padding.getHeight()) : Distance.zero;
 //                        final Size2D expectedSize = Size2D.create(expectedWidth, expectedHeight);
@@ -360,7 +360,7 @@ public interface UIElementTests
 //                        uiElement.setPadding(UIPadding.zero);
 //
 //                        final Distance contentSpaceWidth = uiElement.getContentSpaceWidth();
-//                        final Distance width = uiElement.getWidth();
+//                        final Distance width = uiElement.getPixelWidth();
 //                        test.assertEqual(width, contentSpaceWidth);
 //                    }
 //                });
@@ -374,8 +374,8 @@ public interface UIElementTests
 //                        uiElement.setPadding(padding);
 //
 //                        final Distance contentSpaceWidth = uiElement.getContentSpaceWidth();
-//                        final Distance width = uiElement.getWidth();
-//                        final Distance expectedWidth = width.greaterThan(padding.getWidth()) ? width.minus(padding.getWidth()) : Distance.zero;
+//                        final Distance width = uiElement.getPixelWidth();
+//                        final Distance expectedWidth = width.greaterThan(padding.getPixelWidth()) ? width.minus(padding.getPixelWidth()) : Distance.zero;
 //                        test.assertEqual(expectedWidth, contentSpaceWidth, Distance.inches(0.00001));
 //                    }
 //                });

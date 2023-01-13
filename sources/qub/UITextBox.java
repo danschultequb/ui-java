@@ -61,4 +61,23 @@ public interface UITextBox extends UIElement
      * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action1}.
      */
     public Disposable onTextChanged(Action1<TextChange> callback);
+
+    /**
+     * A version of a {@link UITextBox} that returns its own type from chainable methods.
+     * @param <T> The actual type of the {@link UITextBox}.
+     */
+    public static interface Typed<T extends UITextBox> extends UITextBox
+    {
+        @Override
+        public T setBackgroundColor(Color backgroundColor);
+
+        @Override
+        public T setText(String text);
+
+        @Override
+        public T insertText(int startIndex, String text);
+
+        @Override
+        public T removeText(int startIndex, int length);
+    }
 }

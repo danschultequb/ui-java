@@ -1,6 +1,6 @@
 package qub;
 
-public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
+public class SwingUIWindow implements UIWindow.Typed<SwingUIWindow>
 {
     private final SwingUI ui;
 
@@ -22,7 +22,9 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
 
         this.jFrame = new javax.swing.JFrame();
         this.jFrame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        this.jFrame.addWindowListener(SwingUIWindowListener.create(ui, this));
+        this.jFrame.addWindowListener(JavaWindowListenter.create()
+            .setWindowOpenedAction(ui::setCurrentThreadAsyncRunner)
+            .setWindowClosedAction(this::close));
     }
 
     public static SwingUIWindow create(SwingUI ui)
@@ -33,10 +35,7 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
     @Override
     public SwingUIWindow setBackgroundColor(Color backgroundColor)
     {
-        PreCondition.assertNotNull(backgroundColor, "backgroundColor");
-
-        final java.awt.Color javaAwtColor = this.ui.convertColorToJavaAwtColor(backgroundColor);
-        this.jFrame.setBackground(javaAwtColor);
+        JavaAwtFrames.setBackgroundColor(this.jFrame, backgroundColor);
 
         return this;
     }
@@ -44,20 +43,13 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
     @Override
     public Color getBackgroundColor()
     {
-        final java.awt.Color javaAwtColor = this.jFrame.getBackground();
-        final Color result = this.ui.convertJavaAwtColorToColor(javaAwtColor);
-
-        PostCondition.assertNotNull(result, "result");
-
-        return result;
+        return JavaAwtFrames.getBackgroundColor(this.jFrame);
     }
 
     @Override
     public SwingUIWindow setTitle(String title)
     {
-        PreCondition.assertNotNull(title, "title");
-
-        this.jFrame.setTitle(title);
+        JavaAwtFrames.setTitle(this.jFrame, title);
 
         return this;
     }
@@ -65,7 +57,7 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
     @Override
     public String getTitle()
     {
-        return this.jFrame.getTitle();
+        return JavaAwtFrames.getTitle(this.jFrame);
     }
 
     /**
@@ -73,7 +65,7 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
      */
     public boolean getVisible()
     {
-        return this.jFrame.isVisible();
+        return JavaAwtFrames.getVisible(this.jFrame);
     }
 
     /**
@@ -83,7 +75,7 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
      */
     public SwingUIWindow setVisible(boolean visible)
     {
-        this.jFrame.setVisible(visible);
+        JavaAwtFrames.setVisible(this.jFrame, visible);
 
         return this;
     }
@@ -115,6 +107,7 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
                 this.disposed = true;
 
                 this.jFrame.dispose();
+
                 this.disposeEvent.run();
 
                 this.disposeTask.schedule();
@@ -133,71 +126,75 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
     }
 
     /**
-     * Set the width and height pixel counts of this {@link SwingUIWindow}.
-     * @param pixelWidth The new width pixel count of this {@link SwingUIWindow}.
-     * @param pixelHeight The new height pixel count of this {@link SwingUIWindow}.
+     * Set the pixel width and height of this {@link SwingUIWindow}.
+     * @param width The pixel width of this {@link SwingUIWindow}.
+     * @param height The pixel height of this {@link SwingUIWindow}.
      * @return This object for method chaining.
      */
-    public SwingUIWindow setSize(int pixelWidth, int pixelHeight)
+    public SwingUIWindow setSize(int width, int height)
     {
-        PreCondition.assertGreaterThanOrEqualTo(pixelWidth, 0, "pixelWidth");
-        PreCondition.assertGreaterThanOrEqualTo(pixelHeight, 0, "pixelHeight");
         PreCondition.assertNotDisposed(this, "this");
 
-        this.jFrame.setSize(pixelWidth, pixelHeight);
+        JavaAwtFrames.setSize(this.jFrame, width, height);
 
         return this;
     }
 
     /**
-     * Set the width and height {@link Distance}s of this {@link SwingUIWindow}.
-     * @param width The new width {@link Distance} of this {@link SwingUIWindow}.
-     * @param height The new height {@link Distance} of this {@link SwingUIWindow}.
+     * Set the {@link Distance} width and height of this {@link SwingUIWindow}.
+     * @param width The new {@link Distance} width of this {@link SwingUIWindow}.
+     * @param height The new {@link Distance} height of this {@link SwingUIWindow}.
      * @return This object for method chaining.
      */
     public SwingUIWindow setSize(Distance width, Distance height)
     {
-        PreCondition.assertGreaterThanOrEqualTo(width, Distance.zero, "width");
-        PreCondition.assertGreaterThanOrEqualTo(height, Distance.zero, "height");
         PreCondition.assertNotDisposed(this, "this");
 
-        final int pixelWidth = this.ui.convertHorizontalDistanceToPixels(width);
-        final int pixelHeight = this.ui.convertVerticalDistanceToPixels(height);
-        return this.setSize(pixelWidth, pixelHeight);
+        JavaAwtFrames.setSize(this.jFrame, this.ui, width, height);
+
+        return this;
     }
 
     /**
-     * Set the width pixel count of this {@link SwingUIWindow}.
-     * @param pixelWidth The new width pixel count of this {@link SwingUIWindow}.
+     * Set the pixel width of this {@link SwingUIWindow}.
+     * @param width The new pixel width of this {@link SwingUIWindow}.
      * @return This object for method chaining.
      */
-    public SwingUIWindow setWidth(int pixelWidth)
+    public SwingUIWindow setWidth(int width)
     {
-        return this.setSize(pixelWidth, this.getHeight());
+        PreCondition.assertNotDisposed(this, "this");
+
+        JavaAwtFrames.setWidth(this.jFrame, width);
+
+        return this;
     }
 
     /**
-     * Set the width {@link Distance} of this {@link SwingUIWindow}.
-     * @param width The new width {@link Distance} of this {@link SwingUIWindow}.
+     * Set the {@link Distance} width of this {@link SwingUIWindow}.
+     * @param width The new {@link Distance} width of this {@link SwingUIWindow}.
      * @return This object for method chaining.
      */
     public SwingUIWindow setWidth(Distance width)
     {
-        PreCondition.assertNotNull(width, "width");
-        PreCondition.assertGreaterThanOrEqualTo(width, Distance.zero, "width");
+        PreCondition.assertNotDisposed(this, "this");
 
-        final int pixelWidth = this.ui.convertHorizontalDistanceToPixels(width);
-        return this.setWidth(pixelWidth);
+        JavaAwtFrames.setWidth(this.jFrame, this.ui, width);
+
+        return this;
     }
 
     /**
-     * Set the height pixel count of this {@link SwingUIWindow}.
-     * @param pixelHeight The new height pixel count of this {@link SwingUIWindow}.
+     * Set the pixel height of this {@link SwingUIWindow}.
+     * @param pixelHeight The new pixel height of this {@link SwingUIWindow}.
      * @return This object for method chaining.
      */
     public SwingUIWindow setHeight(int pixelHeight)
     {
-        return this.setSize(this.getWidth(), pixelHeight);
+        PreCondition.assertNotDisposed(this, "this");
+
+        JavaAwtFrames.setHeight(this.jFrame, pixelHeight);
+
+        return this;
     }
 
     /**
@@ -207,52 +204,40 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
      */
     public SwingUIWindow setHeight(Distance height)
     {
-        PreCondition.assertNotNull(height, "height");
-        PreCondition.assertGreaterThanOrEqualTo(height, Distance.zero, "height");
+        PreCondition.assertNotDisposed(this, "this");
 
-        final int pixelHeight = this.ui.convertVerticalDistanceToPixels(height);
-        return this.setHeight(pixelHeight);
+        JavaAwtFrames.setHeight(this.jFrame, this.ui, height);
+
+        return this;
     }
 
     @Override
     public int getWidth()
     {
-        return this.jFrame.getWidth();
-    }
+        PreCondition.assertNotDisposed(this, "this");
 
-    @Override
-    public Distance getWidthDistance()
-    {
-        final int pixelWidth = this.getWidth();
-        final Distance result = this.ui.convertHorizontalPixelsToDistance(pixelWidth);
-
-        PostCondition.assertNotNull(result, "result");
-        PostCondition.assertGreaterThanOrEqualTo(result, Distance.zero, "result");
-
-        return result;
+        return JavaAwtFrames.getWidth(this.jFrame);
     }
 
     @Override
     public int getHeight()
     {
-        return this.jFrame.getHeight();
+        PreCondition.assertNotDisposed(this, "this");
+
+        return JavaAwtFrames.getHeight(this.jFrame);
     }
 
     @Override
-    public Distance getHeightDistance()
+    public Size2Integer getSize()
     {
-        final int pixelHeight = this.getHeight();
-        final Distance result = this.ui.convertVerticalPixelsToDistance(pixelHeight);
-
-        PostCondition.assertNotNull(result, "result");
-        PostCondition.assertGreaterThanOrEqualTo(result, Distance.zero, "result");
-
-        return result;
+        return JavaAwtFrames.getSize(this.jFrame);
     }
 
     @Override
     public Result<? extends UIElement> getContent()
     {
+        PreCondition.assertNotDisposed(this, "this");
+
         return Result.create(() ->
         {
             if (this.content == null)
@@ -270,6 +255,7 @@ public class SwingUIWindow extends UIWindowBase<SwingUIWindow>
     @Override
     public SwingUIWindow setContent(UIElement uiElement)
     {
+        PreCondition.assertNotDisposed(this, "this");
         PreCondition.assertNotNull(uiElement, "uiElement");
         PreCondition.assertInstanceOf(uiElement, JComponentUIElement.class, "uiElement");
 

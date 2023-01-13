@@ -43,4 +43,31 @@ public interface UIHorizontalLayout extends UIElement
 
         return this;
     }
+
+    /**
+     * A version of a {@link UIHorizontalLayout} that returns its own type from chainable methods.
+     * @param <T> The actual type of the {@link UIHorizontalLayout}.
+     */
+    public static interface Typed<T extends UIHorizontalLayout> extends UIHorizontalLayout
+    {
+        @Override
+        public T setBackgroundColor(Color backgroundColor);
+
+        @Override
+        public T add(UIElement uiElement);
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public default T addAll(UIElement... uiElements)
+        {
+            return (T)UIHorizontalLayout.super.addAll(uiElements);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public default T addAll(Iterable<? extends UIElement> uiElements)
+        {
+            return (T)UIHorizontalLayout.super.addAll(uiElements);
+        }
+    }
 }

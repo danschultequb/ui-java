@@ -1,6 +1,6 @@
 package qub;
 
-public class SwingUIVerticalLayout implements UIVerticalLayout, JComponentUIElement
+public class SwingUIVerticalLayout implements UIVerticalLayout.Typed<SwingUIVerticalLayout>, JComponentUIElement.Typed<SwingUIVerticalLayout>
 {
     private final SwingUI ui;
     private final javax.swing.JPanel jPanel;
@@ -24,13 +24,7 @@ public class SwingUIVerticalLayout implements UIVerticalLayout, JComponentUIElem
     @Override
     public SwingUIVerticalLayout setBackgroundColor(Color backgroundColor)
     {
-        return this.ui.setBackgroundColor(this, backgroundColor);
-    }
-
-    @Override
-    public Color getBackgroundColor()
-    {
-        return this.ui.getBackgroundColor(this);
+        return JComponentUIElement.Typed.super.setBackgroundColor(backgroundColor);
     }
 
     @Override
@@ -47,18 +41,6 @@ public class SwingUIVerticalLayout implements UIVerticalLayout, JComponentUIElem
         jComponent.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
 
         return this;
-    }
-
-    @Override
-    public SwingUIVerticalLayout addAll(UIElement... uiElements)
-    {
-        return (SwingUIVerticalLayout)UIVerticalLayout.super.addAll(uiElements);
-    }
-
-    @Override
-    public SwingUIVerticalLayout addAll(Iterable<? extends UIElement> uiElements)
-    {
-        return (SwingUIVerticalLayout)UIVerticalLayout.super.addAll(uiElements);
     }
 
     @Override

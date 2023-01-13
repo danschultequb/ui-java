@@ -92,6 +92,24 @@ public interface UITests
                         test.assertNotNull(layout);
                     }
                 });
+
+                runner.test("with UIHorizontalLayout", (Test test) ->
+                {
+                    try (final UI ui = creator.run())
+                    {
+                        final UIHorizontalLayout layout = ui.create(UIHorizontalLayout.class).await();
+                        test.assertNotNull(layout);
+                    }
+                });
+
+                runner.test("with UICanvas", (Test test) ->
+                {
+                    try (final UI ui = creator.run())
+                    {
+                        final UICanvas canvas = ui.create(UICanvas.class).await();
+                        test.assertNotNull(canvas);
+                    }
+                });
             });
 
             runner.test("createUIText()", (Test test) ->
@@ -138,6 +156,15 @@ public interface UITests
                 {
                     final UITextBox textBox = ui.createUITextBox().await();
                     test.assertNotNull(textBox);
+                }
+            });
+
+            runner.test("createUICanvas()", (Test test) ->
+            {
+                try (final UI ui = creator.run())
+                {
+                    final UICanvas canvas = ui.createUICanvas().await();
+                    test.assertNotNull(canvas);
                 }
             });
 
