@@ -22,16 +22,6 @@ public class SwingUI extends UI.Base<SwingUI>
         this.setCreator(Iterable.create(UIHorizontalLayout.class, SwingUIHorizontalLayout.class), () -> SwingUIHorizontalLayout.create(this));
         this.setCreator(Iterable.create(UICanvas.class, SwingUICanvas.class), () -> SwingUICanvas.create(this));
         this.setCreator(Iterable.create(UIVerticalLayout.class, SwingUIVerticalLayout.class), () -> SwingUIVerticalLayout.create(this));
-        this.setCreator(Iterable.create(UIWindow.class, SwingUIWindow.class), () ->
-        {
-            final SwingUIWindow window = SwingUIWindow.create(this);
-            window.onDisposed(() ->
-            {
-                this.windows.remove(window);
-            });
-            this.windows.add(window);
-            return window;
-        });
 
         final java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
         final int screenResolution = toolkit.getScreenResolution();
@@ -45,12 +35,21 @@ public class SwingUI extends UI.Base<SwingUI>
 
     public Result<? extends UIWindow> createUIWindow()
     {
-        return this.create(UIWindow.class);
+        return this.createSwingUIWindow();
     }
 
     public Result<? extends SwingUIWindow> createSwingUIWindow()
     {
-        return this.create(SwingUIWindow.class);
+        return Result.create(() ->
+        {
+            final SwingUIWindow window = SwingUIWindow.create(this);
+            window.onDisposed(() ->
+            {
+                this.windows.remove(window);
+            });
+            this.windows.add(window);
+            return window;
+        });
     }
 
     public void setCurrentThreadAsyncRunner()

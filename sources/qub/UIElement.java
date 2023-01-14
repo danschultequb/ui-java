@@ -38,6 +38,33 @@ public interface UIElement
     }
 
     /**
+     * Get this {@link UIElement}'s dynamic size.
+     */
+    public default UIDynamicSize getDynamicSize()
+    {
+        return UIElementDynamicSize.create(this);
+    }
+
+    /**
+     * Run the provided {@link Action0} when this {@link UIElement}'s size changes.
+     * @param action The {@link Action0} to run when this {@link UIElement}'s size changes.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action0}.
+     */
+    public default Disposable onSizeChanged(Action0 action)
+    {
+        PreCondition.assertNotNull(action, "action");
+
+        return this.onSizeChanged((SizeChange sizeChange) -> { action.run(); });
+    }
+
+    /**
+     * Run the provided {@link Action1} when this {@link UIElement}'s size changes.
+     * @param action The {@link Action1} to run when this {@link UIElement}'s size changes.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action1}.
+     */
+    public Disposable onSizeChanged(Action1<SizeChange> action);
+
+    /**
      * A version of a {@link UIElement} that returns its own type from chainable methods.
      * @param <T> The actual type of the {@link UIElement}.
      */

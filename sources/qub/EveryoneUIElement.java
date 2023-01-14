@@ -2,6 +2,30 @@ package qub;
 
 public interface EveryoneUIElement extends UIElement
 {
+    /**
+     * Get this {@link EveryoneUIElement}'s parent.
+     */
+    public EveryoneUIElementParent getParent();
+
+    /**
+     * Set this {@link EveryoneUIElement}'s parent.
+     * @param parent The new parent for this {@link EveryoneUIElement}.
+     * @return This object for method chaining.
+     */
+    public EveryoneUIElement setParent(EveryoneUIElementParent parent);
+
+    /**
+     * Request that this {@link EveryoneUIElement} repaint itself.
+     */
+    public default void repaint()
+    {
+        final EveryoneUIElementParent parent = this.getParent();
+        if (parent != null)
+        {
+            parent.repaint();
+        }
+    }
+
     @Override
     public EveryoneUIElement setBackgroundColor(Color backgroundColor);
 
@@ -34,20 +58,42 @@ public interface EveryoneUIElement extends UIElement
     public EveryoneUIElement setHeight(Distance height);
 
     /**
-     * Set the pixel width and height of this {@link EveryoneSwingUIWindow}.
-     * @param width The pixel width of this {@link EveryoneSwingUIWindow}.
-     * @param height The pixel height of this {@link EveryoneSwingUIWindow}.
+     * Set the pixel width and height of this {@link EveryoneUIElement}.
+     * @param width The pixel width of this {@link EveryoneUIElement}.
+     * @param height The pixel height of this {@link EveryoneUIElement}.
      * @return This object for method chaining.
      */
     public EveryoneUIElement setSize(int width, int height);
 
     /**
-     * Set the {@link Distance} width and height of this {@link EveryoneSwingUIWindow}.
-     * @param width The new {@link Distance} width of this {@link EveryoneSwingUIWindow}.
-     * @param height The new {@link Distance} height of this {@link EveryoneSwingUIWindow}.
+     * Set the {@link UIDynamicSize} of this {@link EveryoneUIElement}. This will continue to update
+     * this {@link EveryoneUIElement}'s size whenever the provided {@link UIDynamicSize} changes.
+     * @param dynamicSize The new {@link UIDynamicSize} of this {@link EveryoneUIElement}.
+     * @return This object for method chaining.
+     */
+    public EveryoneUIElement setSize(UIDynamicSize dynamicSize);
+
+    /**
+     * Set the {@link Distance} width and height of this {@link EveryoneUIElement}.
+     * @param width The new {@link Distance} width of this {@link EveryoneUIElement}.
+     * @param height The new {@link Distance} height of this {@link EveryoneUIElement}.
      * @return This object for method chaining.
      */
     public EveryoneUIElement setSize(Distance width, Distance height);
+
+    /**
+     * Set the pixel size of this {@link EveryoneUIElement}.
+     * @param size The new pixel size of this {@link EveryoneUIElement}.
+     * @return This object for method chaining.
+     */
+    public EveryoneUIElement setSize(Size2Integer size);
+
+    /**
+     * Set the {@link Distance} size of this {@link EveryoneUIElement}.
+     * @param size The new {@link Distance} size of this {@link EveryoneUIElement}.
+     * @return This object for method chaining.
+     */
+    public EveryoneUIElement setSize(Size2Distance size);
 
     /**
      * Paint this {@link EveryoneUIElement} using the provided {@link UIPainter}.
@@ -61,6 +107,9 @@ public interface EveryoneUIElement extends UIElement
      */
     public static interface Typed<T extends EveryoneUIElement> extends EveryoneUIElement
     {
+        @Override
+        public T setParent(EveryoneUIElementParent parent);
+
         @Override
         public T setBackgroundColor(Color backgroundColor);
 
@@ -81,6 +130,15 @@ public interface EveryoneUIElement extends UIElement
 
         @Override
         public T setSize(Distance width, Distance height);
+
+        @Override
+        public T setSize(Size2Integer size);
+
+        @Override
+        public T setSize(Size2Distance size);
+
+        @Override
+        public T setSize(UIDynamicSize dynamicSize);
     }
 
     /**
@@ -91,8 +149,11 @@ public interface EveryoneUIElement extends UIElement
     public static class Base<T extends EveryoneUIElement> implements EveryoneUIElement.Typed<T>
     {
         private final EveryoneSwingUI ui;
+        private EveryoneUIElementParent parent;
         private int width;
         private int height;
+        private Disposable sizeChangedSubscription;
+        private RunnableEvent1<SizeChange> sizeChanged;
         private Color backgroundColor;
 
         protected Base(EveryoneSwingUI ui)
@@ -104,12 +165,31 @@ public interface EveryoneUIElement extends UIElement
         }
 
         @Override
+        public EveryoneUIElementParent getParent()
+        {
+            return this.parent;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T setParent(EveryoneUIElementParent parent)
+        {
+            this.parent = parent;
+
+            return (T)this;
+        }
+
+        @Override
         @SuppressWarnings("unchecked")
         public T setBackgroundColor(Color backgroundColor)
         {
             PreCondition.assertNotNull(backgroundColor, "backgroundColor");
 
-            this.backgroundColor = backgroundColor;
+            if (!this.backgroundColor.equals(backgroundColor))
+            {
+                this.backgroundColor = backgroundColor;
+                this.repaint();
+            }
 
             return (T)this;
         }
@@ -148,14 +228,9 @@ public interface EveryoneUIElement extends UIElement
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public T setWidth(int width)
         {
-            PreCondition.assertGreaterThanOrEqualTo(width, 0, "width");
-
-            this.width = width;
-
-            return (T)this;
+            return this.setSize(width, this.height);
         }
 
         @Override
@@ -180,14 +255,9 @@ public interface EveryoneUIElement extends UIElement
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public T setHeight(int height)
         {
-            PreCondition.assertGreaterThanOrEqualTo(height, 0, "height");
-
-            this.height = height;
-
-            return (T)this;
+            return this.setSize(this.width, height);
         }
 
         @Override
@@ -200,14 +270,58 @@ public interface EveryoneUIElement extends UIElement
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public T setSize(int width, int height)
+        {
+            return this.setSize(width, height, true);
+        }
+
+        @SuppressWarnings("unchecked")
+        private T setSize(int width, int height, boolean clearSizeChangedSubscription)
         {
             PreCondition.assertGreaterThanOrEqualTo(width, 0, "width");
             PreCondition.assertGreaterThanOrEqualTo(height, 0, "height");
 
-            this.width = width;
-            this.height = height;
+            if (clearSizeChangedSubscription && this.sizeChangedSubscription != null)
+            {
+                this.sizeChangedSubscription.dispose().await();
+                this.sizeChangedSubscription = null;
+            }
+
+            if (this.width != width || this.height != height)
+            {
+                MutableSizeChange sizeChange = null;
+                if (this.sizeChanged != null)
+                {
+                    sizeChange = SizeChange.create()
+                        .setPreviousSize(this.width, this.height)
+                        .setNewSize(width, height);
+                }
+
+                this.width = width;
+                this.height = height;
+
+                if (sizeChange != null)
+                {
+                    this.sizeChanged.run(sizeChange);
+                }
+
+                this.repaint();
+            }
+
+            return (T)this;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T setSize(UIDynamicSize dynamicSize)
+        {
+            PreCondition.assertNotNull(dynamicSize, "dynamicSize");
+
+            this.setSize(dynamicSize.getSize());
+            this.sizeChangedSubscription = dynamicSize.onSizeChanged((SizeChange sizeChange) ->
+            {
+                this.setSize(sizeChange.getNewWidth(), sizeChange.getNewHeight(), false);
+            });
 
             return (T)this;
         }
@@ -221,6 +335,34 @@ public interface EveryoneUIElement extends UIElement
             final int pixelWidth = this.ui.convertHorizontalDistanceToPixels(width);
             final int pixelHeight = this.ui.convertVerticalDistanceToPixels(height);
             return this.setSize(pixelWidth, pixelHeight);
+        }
+
+        @Override
+        public T setSize(Size2Integer size)
+        {
+            PreCondition.assertNotNull(size, "size");
+
+            return this.setSize(size.getWidthAsInt(), size.getHeightAsInt());
+        }
+
+        @Override
+        public T setSize(Size2Distance size)
+        {
+            PreCondition.assertNotNull(size, "size");
+
+            return this.setSize(size.getWidth(), size.getHeight());
+        }
+
+        @Override
+        public Disposable onSizeChanged(Action1<SizeChange> action)
+        {
+            PreCondition.assertNotNull(action, "action");
+
+            if (this.sizeChanged == null)
+            {
+                this.sizeChanged = RunnableEvent1.create();
+            }
+            return this.sizeChanged.subscribe(action);
         }
     }
 }

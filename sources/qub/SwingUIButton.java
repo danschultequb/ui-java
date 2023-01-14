@@ -1,15 +1,13 @@
 package qub;
 
-public class SwingUIButton implements UIButton.Typed<SwingUIButton>, JComponentUIElement.Typed<SwingUIButton>
+public class SwingUIButton extends JComponentUIElement.Base<SwingUIButton> implements UIButton.Typed<SwingUIButton>
 {
-    private final SwingUI ui;
     private final javax.swing.JButton button;
 
     private SwingUIButton(SwingUI ui)
     {
-        PreCondition.assertNotNull(ui, "ui");
+        super(ui);
 
-        this.ui = ui;
         this.button = new javax.swing.JButton();
     }
 
@@ -59,11 +57,5 @@ public class SwingUIButton implements UIButton.Typed<SwingUIButton>, JComponentU
         {
             this.button.removeActionListener(actionListener);
         });
-    }
-
-    @Override
-    public SwingUIButton setBackgroundColor(Color backgroundColor)
-    {
-        return JComponentUIElement.Typed.super.setBackgroundColor(backgroundColor);
     }
 }

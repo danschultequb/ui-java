@@ -21,7 +21,11 @@ public class EveryoneUICanvas extends EveryoneUIElement.Base<EveryoneUICanvas> i
     {
         PreCondition.assertNotNull(paintAction, "paintAction");
 
-        this.paintAction = paintAction;
+        if (this.paintAction != paintAction)
+        {
+            this.paintAction = paintAction;
+            this.repaint();
+        }
 
         return this;
     }

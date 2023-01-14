@@ -56,6 +56,12 @@ public interface JComponentUIElement extends UIElement
         return Size2.create(width, height);
     }
 
+    @Override
+    public default Disposable onSizeChanged(Action1<SizeChange> action)
+    {
+        return JavaAwtComponents.onSizeChanged(this.getJComponent(), action);
+    }
+
     /**
      * Get the {@link javax.swing.JComponent} that this {@link UIElement} wraps around.
      */
@@ -72,6 +78,29 @@ public interface JComponentUIElement extends UIElement
         public default T setBackgroundColor(Color backgroundColor)
         {
             return (T)JComponentUIElement.super.setBackgroundColor(backgroundColor);
+        }
+    }
+
+    /**
+     * An abstract base class implementation of {@link JComponentUIElement} that contains common
+     * properties and functions for all {@link JComponentUIElement} types.
+     * @param <T> The actual type of the {@link JComponentUIElement}.
+     */
+    public static abstract class Base<T extends JComponentUIElement> implements JComponentUIElement.Typed<T>
+    {
+        private final SwingUI ui;
+
+        protected Base(SwingUI ui)
+        {
+            PreCondition.assertNotNull(ui, "ui");
+
+            this.ui = ui;
+        }
+
+        @Override
+        public T setBackgroundColor(Color backgroundColor)
+        {
+            return JComponentUIElement.Typed.super.setBackgroundColor(backgroundColor);
         }
     }
 }

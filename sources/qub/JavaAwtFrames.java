@@ -85,6 +85,19 @@ public interface JavaAwtFrames
         JavaAwtFrames.setSize(frame, pixelWidth, pixelHeight);
     }
 
+    public static Disposable onSizeChanged(java.awt.Frame frame, Action1<SizeChange> action)
+    {
+        PreCondition.assertNotNull(frame, "frame");
+        PreCondition.assertNotNull(action, "action");
+
+        final JavaComponentListener componentListener = JavaComponentListener.create()
+            .setGetCurrentSizeFunction(() -> JavaAwtFrames.getSize(frame))
+            .setSizeChangedAction(action);
+
+        final java.awt.Component component = frame.getComponent(0);
+        return JavaAwtComponents.addComponentListener(component, componentListener);
+    }
+
     public static int getWidth(java.awt.Frame frame)
     {
         PreCondition.assertNotNull(frame, "frame");
@@ -165,5 +178,62 @@ public interface JavaAwtFrames
 
         final int pixelHeight = ui.convertVerticalDistanceToPixels(height);
         JavaAwtFrames.setHeight(frame, pixelHeight);
+    }
+
+    public static int getContentAreaWidth(java.awt.Frame frame)
+    {
+        PreCondition.assertNotNull(frame, "frame");
+
+        final java.awt.Insets insets = frame.getInsets();
+        final int width = JavaAwtFrames.getWidth(frame);
+        final int result = width - insets.left - insets.right;
+
+        PostCondition.assertGreaterThanOrEqualTo(result, 0, "result");
+
+        return result;
+    }
+
+    public static int getContentAreaHeight(java.awt.Frame frame)
+    {
+        PreCondition.assertNotNull(frame, "frame");
+
+        final java.awt.Insets insets = frame.getInsets();
+        final int height = JavaAwtFrames.getHeight(frame);
+        final int result = height - insets.top - insets.bottom;
+
+        PostCondition.assertGreaterThanOrEqualTo(result, 0, "result");
+
+        return result;
+    }
+
+    public static Size2Integer getContentAreaSize(java.awt.Frame frame)
+    {
+        PreCondition.assertNotNull(frame, "frame");
+
+        final java.awt.Insets insets = frame.getInsets();
+        final int width = JavaAwtFrames.getWidth(frame);
+        final int contentAreaWidth = width - (insets.left + insets.right);
+
+        final int height = JavaAwtFrames.getHeight(frame);
+        final int contentAreaHeight = height - (insets.top + insets.bottom);
+
+        final Size2Integer result = Size2.create(contentAreaWidth, contentAreaHeight);
+
+        PostCondition.assertNotNull(result, "result");
+
+        return result;
+    }
+
+    public static Disposable onContentAreaSizeChanged(java.awt.Frame frame, Action1<SizeChange> action)
+    {
+        PreCondition.assertNotNull(frame, "frame");
+        PreCondition.assertNotNull(action, "action");
+
+        final JavaComponentListener componentListener = JavaComponentListener.create()
+            .setGetCurrentSizeFunction(() -> JavaAwtFrames.getContentAreaSize(frame))
+            .setSizeChangedAction(action);
+
+        final java.awt.Component component = frame.getComponent(0);
+        return JavaAwtComponents.addComponentListener(component, componentListener);
     }
 }

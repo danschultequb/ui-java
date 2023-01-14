@@ -6,19 +6,32 @@ public interface UIWindowTests
     {
         runner.testGroup(UIWindow.class, () ->
         {
-            UIElementTests.test(runner, creator);
-
             runner.testGroup("setBackgroundColor(Color)", () ->
             {
-                runner.test("check return value type", (Test test) ->
+                runner.test("with null", (Test test) ->
                 {
-                    try (final UIWindow uiElement = creator.run())
-                    {
-                        final UIWindow setBackgroundColorResult = uiElement.setBackgroundColor(Color.red);
-                        test.assertSame(uiElement, setBackgroundColorResult);
-                        test.assertEqual(Color.red, uiElement.getBackgroundColor());
-                    }
+                    final UIWindow window = creator.run();
+                    final Color initialColor = window.getBackgroundColor();
+                    test.assertThrows(() -> window.setBackgroundColor(null),
+                        new PreConditionFailure("backgroundColor cannot be null."));
+                    test.assertEqual(initialColor, window.getBackgroundColor());
                 });
+
+                final Action1<Color> setBackgroundColorTest = (Color color) ->
+                {
+                    runner.test("with " + color, (Test test) ->
+                    {
+                        final UIWindow window = creator.run();
+                        final UIWindow setBackgroundColorResult = window.setBackgroundColor(color);
+                        test.assertSame(window, setBackgroundColorResult);
+                        test.assertEqual(color, window.getBackgroundColor());
+                    });
+                };
+
+                setBackgroundColorTest.run(Color.blue);
+                setBackgroundColorTest.run(Color.red);
+                setBackgroundColorTest.run(Color.white);
+                setBackgroundColorTest.run(Color.create(1, 2, 3, Color.ComponentMax));
             });
 
             runner.testGroup("setTitle(String)", () ->

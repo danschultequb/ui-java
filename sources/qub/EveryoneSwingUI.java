@@ -19,16 +19,10 @@ public class EveryoneSwingUI extends UI.Base<EveryoneSwingUI>
         this.setCreator(Iterable.create(UIText.class, EveryoneUIText.class), () -> EveryoneUIText.create(this));
         this.setCreator(Iterable.create(UITextBox.class, EveryoneUITextBox.class), () -> EveryoneUITextBox.create(this));
         this.setCreator(Iterable.create(UIVerticalLayout.class, EveryoneUIVerticalLayout.class), () -> EveryoneUIVerticalLayout.create(this));
-        this.setCreator(Iterable.create(UIWindow.class, EveryoneSwingUIWindow.class), () ->
-        {
-            final EveryoneSwingUIWindow window = EveryoneSwingUIWindow.create(this);
-            window.onDisposed(() ->
-            {
-                this.windows.remove(window);
-            });
-            this.windows.add(window);
-            return window;
-        });
+
+        final java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
+        final int screenResolution = toolkit.getScreenResolution();
+        this.setPixelsPerInch(screenResolution);
     }
 
     public static EveryoneSwingUI create(AsyncScheduler asyncScheduler)
@@ -38,12 +32,21 @@ public class EveryoneSwingUI extends UI.Base<EveryoneSwingUI>
 
     public Result<? extends UIWindow> createUIWindow()
     {
-        return this.create(UIWindow.class);
+        return this.createEveryoneUIWindow();
     }
 
     public Result<? extends EveryoneSwingUIWindow> createEveryoneUIWindow()
     {
-        return this.create(EveryoneSwingUIWindow.class);
+        return Result.create(() ->
+        {
+            final EveryoneSwingUIWindow window = EveryoneSwingUIWindow.create(this);
+            window.onDisposed(() ->
+            {
+                this.windows.remove(window);
+            });
+            this.windows.add(window);
+            return window;
+        });
     }
 
     public void setCurrentThreadAsyncRunner()

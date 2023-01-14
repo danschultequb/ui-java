@@ -60,6 +60,30 @@ public class SwingUIWindow implements UIWindow.Typed<SwingUIWindow>
         return JavaAwtFrames.getTitle(this.jFrame);
     }
 
+    @Override
+    public int getContentAreaWidth()
+    {
+        return JavaAwtFrames.getContentAreaWidth(this.jFrame);
+    }
+
+    @Override
+    public int getContentAreaHeight()
+    {
+        return JavaAwtFrames.getContentAreaHeight(this.jFrame);
+    }
+
+    @Override
+    public Size2Integer getContentAreaSize()
+    {
+        return JavaAwtFrames.getContentAreaSize(this.jFrame);
+    }
+
+    @Override
+    public Disposable onContentAreaSizeChanged(Action1<SizeChange> action)
+    {
+        return JavaAwtFrames.onContentAreaSizeChanged(this.jFrame, action);
+    }
+
     /**
      * Get whether this {@link SwingUIWindow} is visible.
      */
@@ -231,6 +255,12 @@ public class SwingUIWindow implements UIWindow.Typed<SwingUIWindow>
     public Size2Integer getSize()
     {
         return JavaAwtFrames.getSize(this.jFrame);
+    }
+
+    @Override
+    public Disposable onSizeChanged(Action1<SizeChange> action)
+    {
+        return JavaAwtFrames.onSizeChanged(this.jFrame, action);
     }
 
     @Override

@@ -1,15 +1,13 @@
 package qub;
 
-public class SwingUICanvas implements JComponentUIElement.Typed<SwingUICanvas>, UICanvas.Typed<SwingUICanvas>
+public class SwingUICanvas extends JComponentUIElement.Base<SwingUICanvas> implements UICanvas.Typed<SwingUICanvas>
 {
-    private final SwingUI ui;
     private final JComponentCanvas jComponentCanvas;
 
     protected SwingUICanvas(SwingUI ui)
     {
-        PreCondition.assertNotNull(ui, "ui");
+        super(ui);
 
-        this.ui = ui;
         this.jComponentCanvas = JComponentCanvas.create();
     }
 
@@ -26,30 +24,6 @@ public class SwingUICanvas implements JComponentUIElement.Typed<SwingUICanvas>, 
         this.jComponentCanvas.setPaintAction(paintAction);
 
         return this;
-    }
-
-    @Override
-    public SwingUICanvas setBackgroundColor(Color backgroundColor)
-    {
-        return JComponentUIElement.Typed.super.setBackgroundColor(backgroundColor);
-    }
-
-    @Override
-    public Color getBackgroundColor()
-    {
-        return JComponentUIElement.Typed.super.getBackgroundColor();
-    }
-
-    @Override
-    public int getWidth()
-    {
-        return this.jComponentCanvas.getWidth();
-    }
-
-    @Override
-    public int getHeight()
-    {
-        return this.jComponentCanvas.getHeight();
     }
 
     @Override

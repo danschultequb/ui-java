@@ -1,6 +1,6 @@
 package qub;
 
-public class EveryoneSwingUIWindow implements EveryoneUIElement.Typed<EveryoneSwingUIWindow>, UIWindow.Typed<EveryoneSwingUIWindow>
+public class EveryoneSwingUIWindow implements UIWindow.Typed<EveryoneSwingUIWindow>, EveryoneUIElementParent
 {
     private final EveryoneSwingUI ui;
 
@@ -54,6 +54,30 @@ public class EveryoneSwingUIWindow implements EveryoneUIElement.Typed<EveryoneSw
     }
 
     @Override
+    public int getContentAreaWidth()
+    {
+        return JavaAwtFrames.getContentAreaWidth(this.jFrame);
+    }
+
+    @Override
+    public int getContentAreaHeight()
+    {
+        return JavaAwtFrames.getContentAreaHeight(this.jFrame);
+    }
+
+    @Override
+    public Size2Integer getContentAreaSize()
+    {
+        return JavaAwtFrames.getContentAreaSize(this.jFrame);
+    }
+
+    @Override
+    public Disposable onContentAreaSizeChanged(Action1<SizeChange> action)
+    {
+        return JavaAwtFrames.onContentAreaSizeChanged(this.jFrame, action);
+    }
+
+    @Override
     public EveryoneSwingUIWindow setTitle(String title)
     {
         JavaAwtFrames.setTitle(this.jFrame, title);
@@ -67,7 +91,11 @@ public class EveryoneSwingUIWindow implements EveryoneUIElement.Typed<EveryoneSw
         return JavaAwtFrames.getWidth(this.jFrame);
     }
 
-    @Override
+    /**
+     * Set the pixel width of this {@link EveryoneSwingUIWindow}.
+     * @param width The pixel width of this {@link EveryoneSwingUIWindow}.
+     * @return This object for method chaining.
+     */
     public EveryoneSwingUIWindow setWidth(int width)
     {
         PreCondition.assertNotDisposed(this, "this");
@@ -77,6 +105,11 @@ public class EveryoneSwingUIWindow implements EveryoneUIElement.Typed<EveryoneSw
         return this;
     }
 
+    /**
+     * Set the {@link Distance} width of this {@link EveryoneSwingUIWindow}.
+     * @param width The {@link Distance} width of this {@link EveryoneSwingUIWindow}.
+     * @return This object for method chaining.
+     */
     public EveryoneSwingUIWindow setWidth(Distance width)
     {
         PreCondition.assertNotDisposed(this, "this");
@@ -99,6 +132,16 @@ public class EveryoneSwingUIWindow implements EveryoneUIElement.Typed<EveryoneSw
     }
 
     @Override
+    public Disposable onSizeChanged(Action1<SizeChange> action)
+    {
+        return JavaAwtFrames.onSizeChanged(this.jFrame, action);
+    }
+
+    /**
+     * Set the pixel height of this {@link EveryoneSwingUIWindow}.
+     * @param height The pixel height of this {@link EveryoneSwingUIWindow}.
+     * @return This object for method chaining.
+     */
     public EveryoneSwingUIWindow setHeight(int height)
     {
         PreCondition.assertNotDisposed(this, "this");
@@ -108,7 +151,11 @@ public class EveryoneSwingUIWindow implements EveryoneUIElement.Typed<EveryoneSw
         return this;
     }
 
-    @Override
+    /**
+     * Set the {@link Distance} height of this {@link EveryoneSwingUIWindow}.
+     * @param height The {@link Distance} height of this {@link EveryoneSwingUIWindow}.
+     * @return This object for method chaining.
+     */
     public EveryoneSwingUIWindow setHeight(Distance height)
     {
         PreCondition.assertNotDisposed(this, "this");
@@ -146,6 +193,30 @@ public class EveryoneSwingUIWindow implements EveryoneUIElement.Typed<EveryoneSw
         JavaAwtFrames.setSize(this.jFrame, this.ui, width, height);
 
         return this;
+    }
+
+    /**
+     * Set the pixel size of this {@link EveryoneSwingUIWindow}.
+     * @param size The new pixel size of this {@link EveryoneSwingUIWindow}.
+     * @return This object for method chaining.
+     */
+    public EveryoneSwingUIWindow setSize(Size2Integer size)
+    {
+        PreCondition.assertNotNull(size, "size");
+
+        return this.setSize(size.getWidthAsInt(), size.getHeightAsInt());
+    }
+
+    /**
+     * Set the {@link Distance} size of this {@link EveryoneSwingUIWindow}.
+     * @param size The new {@link Distance} size of this {@link EveryoneSwingUIWindow}.
+     * @return This object for method chaining.
+     */
+    public EveryoneSwingUIWindow setSize(Size2Distance size)
+    {
+        PreCondition.assertNotNull(size, "size");
+
+        return this.setSize(size.getWidth(), size.getHeight());
     }
 
     /**
@@ -193,13 +264,22 @@ public class EveryoneSwingUIWindow implements EveryoneUIElement.Typed<EveryoneSw
         PreCondition.assertNotNull(uiElement, "uiElement");
         PreCondition.assertInstanceOf(uiElement, EveryoneUIElement.class, "uiElement");
 
+        if (this.content != null)
+        {
+            this.content.setParent(null);
+        }
+
         this.content = (EveryoneUIElement)uiElement;
-        this.jFrame.invalidate();
+        this.content.setParent(this);
+        this.repaint();
 
         return this;
     }
 
-    @Override
+    /**
+     * Paint this {@link EveryoneSwingUIWindow} using the provided {@link UIPainter}.
+     * @param painter The {@link UIPainter} to use to paint this {@link EveryoneSwingUIWindow}.
+     */
     public void paint(UIPainter painter)
     {
         PreCondition.assertNotNull(painter, "painter");
@@ -256,5 +336,11 @@ public class EveryoneSwingUIWindow implements EveryoneUIElement.Typed<EveryoneSw
     public void await()
     {
         this.disposeTask.await();
+    }
+
+    @Override
+    public void repaint()
+    {
+        this.jFrame.repaint();
     }
 }

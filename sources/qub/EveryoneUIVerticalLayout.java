@@ -1,6 +1,6 @@
 package qub;
 
-public class EveryoneUIVerticalLayout extends EveryoneUIElement.Base<EveryoneUIVerticalLayout> implements UIVerticalLayout.Typed<EveryoneUIVerticalLayout>
+public class EveryoneUIVerticalLayout extends EveryoneUIElement.Base<EveryoneUIVerticalLayout> implements UIVerticalLayout.Typed<EveryoneUIVerticalLayout>, EveryoneUIElementParent
 {
     private EveryoneUIVerticalLayout(EveryoneSwingUI ui)
     {
@@ -18,5 +18,11 @@ public class EveryoneUIVerticalLayout extends EveryoneUIElement.Base<EveryoneUIV
         PreCondition.assertNotNull(uiElement, "uiElement");
 
         return this;
+    }
+
+    @Override
+    public void repaint()
+    {
+        super.repaint();
     }
 }

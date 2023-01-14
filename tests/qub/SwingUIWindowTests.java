@@ -33,8 +33,8 @@ public interface SwingUIWindowTests
                     {
                         runner.test("with " + color, (Test test) ->
                         {
-                            final UIElement uiElement = creator.run();
-                            test.assertThrows(() -> uiElement.setBackgroundColor(color),
+                            final SwingUIWindow window = creator.run();
+                            test.assertThrows(() -> window.setBackgroundColor(color),
                                 new java.awt.IllegalComponentStateException("The frame is decorated"));
                         });
                     };
@@ -554,17 +554,15 @@ public interface SwingUIWindowTests
                 {
                     runner.test("with " + height, (Test test) ->
                     {
-                        try (final SwingUI ui = SwingUI.create(mainAsyncRunner))
+                        try (final SwingUI ui = SwingUI.create(mainAsyncRunner);
+                             final SwingUIWindow window = SwingUIWindow.create(ui))
                         {
-                            try (final SwingUIWindow window = SwingUIWindow.create(ui))
-                            {
-                                final Size2Integer pixelSize = window.getSize();
+                            final Size2Integer pixelSize = window.getSize();
 
-                                test.assertThrows(() -> window.setHeight(height),
-                                    expected);
+                            test.assertThrows(() -> window.setHeight(height),
+                                expected);
 
-                                test.assertEqual(pixelSize, window.getSize());
-                            }
+                            test.assertEqual(pixelSize, window.getSize());
                         }
                     });
                 };
@@ -614,6 +612,85 @@ public interface SwingUIWindowTests
                 setHeightTest.run(Distance.centimeters(4), Iterable.create(188, 302));
             });
 
+            runner.testGroup("getContentAreaWidth()", () ->
+            {
+                runner.test("when not visible", (Test test) ->
+                {
+                    try (final SwingUIWindow window = creator.run())
+                    {
+                        final int contentAreaWidth = window.getContentAreaWidth();
+                        test.assertGreaterThan(contentAreaWidth, 0);
+                        test.assertGreaterThanOrEqualTo(window.getWidth(), contentAreaWidth);
+                    }
+                });
+
+                runner.test("when visible", (Test test) ->
+                {
+                    try (final SwingUIWindow window = creator.run())
+                    {
+                        window.setVisible(true);
+
+                        final int contentAreaWidth = window.getContentAreaWidth();
+                        test.assertGreaterThan(contentAreaWidth, 0);
+                        test.assertGreaterThanOrEqualTo(window.getWidth(), contentAreaWidth);
+                    }
+                });
+            });
+
+            runner.testGroup("getContentAreaHeight()", () ->
+            {
+                runner.test("when not visible", (Test test) ->
+                {
+                    try (final SwingUIWindow window = creator.run())
+                    {
+                        final int contentAreaHeight = window.getContentAreaHeight();
+                        test.assertGreaterThanOrEqualTo(contentAreaHeight, 0);
+                        test.assertGreaterThanOrEqualTo(window.getHeight(), contentAreaHeight);
+                    }
+                });
+
+                runner.test("when visible", (Test test) ->
+                {
+                    try (final SwingUIWindow window = creator.run())
+                    {
+                        window.setVisible(true);
+
+                        final int contentAreaHeight = window.getContentAreaHeight();
+                        test.assertGreaterThan(contentAreaHeight, 0);
+                        test.assertGreaterThanOrEqualTo(window.getHeight(), contentAreaHeight);
+                    }
+                });
+            });
+
+            runner.testGroup("getContentAreaSize()", () ->
+            {
+                runner.test("when not visible", (Test test) ->
+                {
+                    try (final SwingUIWindow window = creator.run())
+                    {
+                        final Size2Integer contentAreaSize = window.getContentAreaSize();
+                        test.assertGreaterThanOrEqualTo(contentAreaSize.getWidth(), 0);
+                        test.assertGreaterThanOrEqualTo(window.getWidth(), contentAreaSize.getWidth());
+                        test.assertGreaterThanOrEqualTo(contentAreaSize.getHeight(), 0);
+                        test.assertGreaterThanOrEqualTo(window.getHeight(), contentAreaSize.getHeight());
+                    }
+                });
+
+                runner.test("when visible", (Test test) ->
+                {
+                    try (final SwingUIWindow window = creator.run())
+                    {
+                        window.setVisible(true);
+
+                        final Size2Integer contentAreaSize = window.getContentAreaSize();
+                        test.assertGreaterThanOrEqualTo(contentAreaSize.getWidth(), 0);
+                        test.assertGreaterThanOrEqualTo(window.getWidth(), contentAreaSize.getWidth());
+                        test.assertGreaterThanOrEqualTo(contentAreaSize.getHeight(), 0);
+                        test.assertGreaterThanOrEqualTo(window.getHeight(), contentAreaSize.getHeight());
+                    }
+                });
+            });
+
             runner.testGroup("getContent()", () ->
             {
                 runner.test("before content has been set", (Test test) ->
@@ -655,6 +732,8 @@ public interface SwingUIWindowTests
                     window.setHeight(Distance.inches(3));
 
                     final UICanvas canvas = ui.createUICanvas().await();
+                    canvas.setBackgroundColor(Color.green);
+                    // canvas.setSize(window.getDynamicContentAreaSize().scaleWidth(0.5));
                     canvas.setPaintAction((UIPainter painter) ->
                     {
                         final int canvasWidth = canvas.getWidth();

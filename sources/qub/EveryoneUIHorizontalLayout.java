@@ -1,6 +1,6 @@
 package qub;
 
-public class EveryoneUIHorizontalLayout extends EveryoneUIElement.Base<EveryoneUIHorizontalLayout> implements UIHorizontalLayout.Typed<EveryoneUIHorizontalLayout>
+public class EveryoneUIHorizontalLayout extends EveryoneUIElement.Base<EveryoneUIHorizontalLayout> implements UIHorizontalLayout.Typed<EveryoneUIHorizontalLayout>, EveryoneUIElementParent
 {
     private EveryoneUIHorizontalLayout(EveryoneSwingUI ui)
     {
@@ -18,5 +18,11 @@ public class EveryoneUIHorizontalLayout extends EveryoneUIElement.Base<EveryoneU
         PreCondition.assertNotNull(uiElement, "uiElement");
 
         return this;
+    }
+
+    @Override
+    public void repaint()
+    {
+        super.repaint();
     }
 }
