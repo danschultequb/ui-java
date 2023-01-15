@@ -66,12 +66,12 @@ public interface EveryoneUIElement extends UIElement
     public EveryoneUIElement setSize(int width, int height);
 
     /**
-     * Set the {@link UIDynamicSize} of this {@link EveryoneUIElement}. This will continue to update
-     * this {@link EveryoneUIElement}'s size whenever the provided {@link UIDynamicSize} changes.
-     * @param dynamicSize The new {@link UIDynamicSize} of this {@link EveryoneUIElement}.
+     * Set the {@link DynamicSize2Integer} of this {@link EveryoneUIElement}. This will continue to update
+     * this {@link EveryoneUIElement}'s size whenever the provided {@link DynamicSize2Integer} changes.
+     * @param dynamicSize The new {@link DynamicSize2Integer} of this {@link EveryoneUIElement}.
      * @return This object for method chaining.
      */
-    public EveryoneUIElement setSize(UIDynamicSize dynamicSize);
+    public EveryoneUIElement setDynamicSize(DynamicSize2Integer dynamicSize);
 
     /**
      * Set the {@link Distance} width and height of this {@link EveryoneUIElement}.
@@ -138,7 +138,7 @@ public interface EveryoneUIElement extends UIElement
         public T setSize(Size2Distance size);
 
         @Override
-        public T setSize(UIDynamicSize dynamicSize);
+        public T setDynamicSize(DynamicSize2Integer dynamicSize);
     }
 
     /**
@@ -249,9 +249,12 @@ public interface EveryoneUIElement extends UIElement
         }
 
         @Override
-        public Size2Integer getSize()
+        public DynamicSize2Integer getSize()
         {
-            return Size2Integer.create(this.width, this.height);
+            return DynamicSize2Integer.create()
+                .setGetWidthFunction(this::getWidth)
+                .setGetHeightFunction(this::getHeight)
+                .setOnChangedFunction(this::onSizeChanged);
         }
 
         @Override
@@ -313,12 +316,12 @@ public interface EveryoneUIElement extends UIElement
 
         @Override
         @SuppressWarnings("unchecked")
-        public T setSize(UIDynamicSize dynamicSize)
+        public T setDynamicSize(DynamicSize2Integer dynamicSize)
         {
             PreCondition.assertNotNull(dynamicSize, "dynamicSize");
 
-            this.setSize(dynamicSize.getSize());
-            this.sizeChangedSubscription = dynamicSize.onSizeChanged((SizeChange sizeChange) ->
+            this.setSize(dynamicSize);
+            this.sizeChangedSubscription = dynamicSize.onChanged((SizeChange sizeChange) ->
             {
                 this.setSize(sizeChange.getNewWidth(), sizeChange.getNewHeight(), false);
             });

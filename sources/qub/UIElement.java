@@ -30,19 +30,18 @@ public interface UIElement
     /**
      * Get the pixel size of this {@link UIElement}.
      */
-    public default Size2Integer getSize()
-    {
-        final int width = this.getWidth();
-        final int height = this.getHeight();
-        return Size2.create(width, height);
-    }
+    public Size2Integer getSize();
 
     /**
-     * Get this {@link UIElement}'s dynamic size.
+     * Get the dynamic pixel size of this {@link UIElement} that will always return the current size
+     * of this {@link UIElement}.
      */
-    public default UIDynamicSize getDynamicSize()
+    public default DynamicSize2Integer getDynamicSize()
     {
-        return UIElementDynamicSize.create(this);
+        return DynamicSize2Integer.create()
+            .setGetWidthFunction(this::getWidth)
+            .setGetHeightFunction(this::getHeight)
+            .setOnChangedFunction(this::onSizeChanged);
     }
 
     /**

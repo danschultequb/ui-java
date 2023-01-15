@@ -51,9 +51,7 @@ public interface JComponentUIElement extends UIElement
     @Override
     public default Size2Integer getSize()
     {
-        final int width = this.getWidth();
-        final int height = this.getHeight();
-        return Size2.create(width, height);
+        return JavaAwtComponents.getSize(this.getJComponent());
     }
 
     @Override
