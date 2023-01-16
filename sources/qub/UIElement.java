@@ -23,14 +23,43 @@ public interface UIElement
     public int getWidth();
 
     /**
+     * Set the pixel width of this {@link UIElement}.
+     * @param width The new pixel width of this {@link UIElement}.
+     * @return This object for method chaining.
+     */
+    public UIElement setWidth(int width);
+
+    /**
      * Get the pixel height of this {@link UIElement}.
      */
     public int getHeight();
 
     /**
+     * Set the pixel height of this {@link UIElement}.
+     * @param height The new pixel height of this {@link UIElement}.
+     * @return This object for method chaining.
+     */
+    public UIElement setHeight(int height);
+
+    /**
      * Get the pixel size of this {@link UIElement}.
      */
     public Size2Integer getSize();
+
+    /**
+     * Set the pixel width and height of this {@link UIElement}.
+     * @param width The pixel width of this {@link UIElement}.
+     * @param height The pixel height of this {@link UIElement}.
+     * @return This object for method chaining.
+     */
+    public UIElement setSize(int width, int height);
+
+    /**
+     * Set the pixel size of this {@link UIElement}.
+     * @param size The new pixel size of this {@link UIElement}.
+     * @return This object for method chaining.
+     */
+    public UIElement setSize(Size2Integer size);
 
     /**
      * Get the dynamic pixel size of this {@link UIElement} that will always return the current size
@@ -43,6 +72,14 @@ public interface UIElement
             .setGetHeightFunction(this::getHeight)
             .setOnChangedFunction(this::onSizeChanged);
     }
+
+    /**
+     * Set the {@link DynamicSize2Integer} of this {@link UIElement}. This will continue to update
+     * this {@link UIElement}'s size whenever the provided {@link DynamicSize2Integer} changes.
+     * @param dynamicSize The new {@link DynamicSize2Integer} of this {@link UIElement}.
+     * @return This object for method chaining.
+     */
+    public UIElement setDynamicSize(DynamicSize2Integer dynamicSize);
 
     /**
      * Run the provided {@link Action0} when this {@link UIElement}'s size changes.
@@ -71,5 +108,20 @@ public interface UIElement
     {
         @Override
         public T setBackgroundColor(Color backgroundColor);
+
+        @Override
+        public T setWidth(int width);
+
+        @Override
+        public T setHeight(int height);
+
+        @Override
+        public T setSize(int width, int height);
+
+        @Override
+        public T setSize(Size2Integer size);
+
+        @Override
+        public T setDynamicSize(DynamicSize2Integer dynamicSize);
     }
 }

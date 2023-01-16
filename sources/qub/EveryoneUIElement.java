@@ -29,11 +29,7 @@ public interface EveryoneUIElement extends UIElement
     @Override
     public EveryoneUIElement setBackgroundColor(Color backgroundColor);
 
-    /**
-     * Set the pixel width of this {@link EveryoneUIElement}.
-     * @param width The pixel width of this {@link EveryoneUIElement}.
-     * @return This object for method chaining.
-     */
+    @Override
     public EveryoneUIElement setWidth(int width);
 
     /**
@@ -43,11 +39,7 @@ public interface EveryoneUIElement extends UIElement
      */
     public EveryoneUIElement setWidth(Distance width);
 
-    /**
-     * Set the pixel height of this {@link EveryoneUIElement}.
-     * @param height The pixel height of this {@link EveryoneUIElement}.
-     * @return This object for method chaining.
-     */
+    @Override
     public EveryoneUIElement setHeight(int height);
 
     /**
@@ -57,21 +49,8 @@ public interface EveryoneUIElement extends UIElement
      */
     public EveryoneUIElement setHeight(Distance height);
 
-    /**
-     * Set the pixel width and height of this {@link EveryoneUIElement}.
-     * @param width The pixel width of this {@link EveryoneUIElement}.
-     * @param height The pixel height of this {@link EveryoneUIElement}.
-     * @return This object for method chaining.
-     */
+    @Override
     public EveryoneUIElement setSize(int width, int height);
-
-    /**
-     * Set the {@link DynamicSize2Integer} of this {@link EveryoneUIElement}. This will continue to update
-     * this {@link EveryoneUIElement}'s size whenever the provided {@link DynamicSize2Integer} changes.
-     * @param dynamicSize The new {@link DynamicSize2Integer} of this {@link EveryoneUIElement}.
-     * @return This object for method chaining.
-     */
-    public EveryoneUIElement setDynamicSize(DynamicSize2Integer dynamicSize);
 
     /**
      * Set the {@link Distance} width and height of this {@link EveryoneUIElement}.
@@ -81,11 +60,7 @@ public interface EveryoneUIElement extends UIElement
      */
     public EveryoneUIElement setSize(Distance width, Distance height);
 
-    /**
-     * Set the pixel size of this {@link EveryoneUIElement}.
-     * @param size The new pixel size of this {@link EveryoneUIElement}.
-     * @return This object for method chaining.
-     */
+    @Override
     public EveryoneUIElement setSize(Size2Integer size);
 
     /**
@@ -94,6 +69,9 @@ public interface EveryoneUIElement extends UIElement
      * @return This object for method chaining.
      */
     public EveryoneUIElement setSize(Size2Distance size);
+
+    @Override
+    public EveryoneUIElement setDynamicSize(DynamicSize2Integer dynamicSize);
 
     /**
      * Paint this {@link EveryoneUIElement} using the provided {@link UIPainter}.

@@ -29,6 +29,15 @@ public interface JavaAwtComponents
         return Size2.create(component.getWidth(), component.getHeight());
     }
 
+    public static void setSize(java.awt.Component component, int width, int height)
+    {
+        PreCondition.assertNotNull(component, "component");
+        PreCondition.assertGreaterThanOrEqualTo(width, 0, "width");
+        PreCondition.assertGreaterThanOrEqualTo(height, 0, "height");
+
+        component.setSize(width, height);
+    }
+
     public static Disposable addComponentListener(java.awt.Component component, java.awt.event.ComponentListener componentListener)
     {
         PreCondition.assertNotNull(component, "component");

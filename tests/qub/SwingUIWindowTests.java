@@ -733,7 +733,7 @@ public interface SwingUIWindowTests
 
                     final UICanvas canvas = ui.createUICanvas().await();
                     canvas.setBackgroundColor(Color.green);
-                    // canvas.setSize(window.getDynamicContentAreaSize().scaleWidth(0.5));
+                    canvas.setSize(window.getContentAreaDynamicSize().scale(0.5));
                     canvas.setPaintAction((UIPainter painter) ->
                     {
                         final int canvasWidth = canvas.getWidth();

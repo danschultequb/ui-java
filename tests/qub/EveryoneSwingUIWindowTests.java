@@ -656,9 +656,9 @@ public interface EveryoneSwingUIWindowTests
                     window.setWidth(Distance.inches(3));
                     window.setHeight(Distance.inches(3));
 
-                    final EveryoneUICanvas canvas = ui.create(EveryoneUICanvas.class).await();
+                    final UICanvas canvas = ui.createUICanvas().await();
                     canvas.setBackgroundColor(Color.green);
-                    canvas.setDynamicSize(window.getContentAreaDynamicSize().scaleWidth(0.3));
+                    canvas.setDynamicSize(window.getContentAreaDynamicSize().scaleWidth(0.5));
                     canvas.setPaintAction((UIPainter painter) ->
                     {
                         final int canvasWidth = canvas.getWidth();
