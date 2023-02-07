@@ -69,4 +69,10 @@ public class FakeUIPainter implements UIPainter.Typed<FakeUIPainter>
 
         return this;
     }
+
+    @Override
+    public TextMeasurements getTextMeasurements(String text)
+    {
+        return null;
+    }
 }

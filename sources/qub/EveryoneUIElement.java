@@ -32,21 +32,13 @@ public interface EveryoneUIElement extends UIElement
     @Override
     public EveryoneUIElement setWidth(int width);
 
-    /**
-     * Set the {@link Distance} width of this {@link EveryoneUIElement}.
-     * @param width The {@link Distance} width of this {@link EveryoneUIElement}.
-     * @return This object for method chaining.
-     */
+    @Override
     public EveryoneUIElement setWidth(Distance width);
 
     @Override
     public EveryoneUIElement setHeight(int height);
 
-    /**
-     * Set the {@link Distance} height of this {@link EveryoneUIElement}.
-     * @param height The {@link Distance} height of this {@link EveryoneUIElement}.
-     * @return This object for method chaining.
-     */
+    @Override
     public EveryoneUIElement setHeight(Distance height);
 
     @Override

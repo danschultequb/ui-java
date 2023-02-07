@@ -142,6 +142,75 @@ public interface UIPainter
     public UIPainter drawText(int leftX, int baselineY, String text);
 
     /**
+     * Draw text using the provided {@link DrawTextOptions}.
+     * @param options The {@link DrawTextOptions} to use when drawing the text.
+     * @return This object for method chaining.
+     */
+    public default UIPainter drawText(DrawTextOptions options)
+    {
+        PreCondition.assertNotNull(options, "options");
+        PreCondition.assertNotNull(options.getText(), "options.getText()");
+        PreCondition.assertTrue(options.getLeftX() != null || options.getCenterX() != null || options.getRightX() != null, "options.getLeftX() != null || options.getCenterX() != null || options.getRightX() != null");
+        PreCondition.assertTrue(options.getTopY() != null || options.getCenterY() != null || options.getBaselineY() != null || options.getBottomY() != null, "options.getTopY() != null || options.getCenterY() != null || options.getBaselineY() != null || options.getBottomY() != null");
+
+        final String text = options.getText();
+
+        Integer leftX = options.getLeftX();
+        Integer baselineY = options.getBaselineY();
+        if (leftX == null || baselineY == null)
+        {
+            final TextMeasurements textMeasurements = this.getTextMeasurements(text);
+
+            if (leftX == null)
+            {
+                final int textWidth = textMeasurements.getWidth();
+
+                final Integer centerX = options.getCenterX();
+                if (centerX != null)
+                {
+                    leftX = centerX - (textWidth / 2);
+                }
+                else
+                {
+                    leftX = options.getRightX() - textWidth;
+                }
+            }
+
+            if (baselineY == null)
+            {
+                final Integer topY = options.getTopY();
+                if (topY != null)
+                {
+                    baselineY = topY + textMeasurements.getAscent();
+                }
+                else
+                {
+                    final Integer bottomY = options.getBottomY();
+                    if (bottomY != null)
+                    {
+                        baselineY = bottomY - textMeasurements.getDescent();
+                    }
+                    else
+                    {
+                        final int centerY = options.getCenterY();
+                        final int ascent = textMeasurements.getAscent();
+                        final int height = ascent + textMeasurements.getDescent();
+                        baselineY = centerY - (height / 2) + ascent;
+                    }
+                }
+            }
+        }
+
+        return this.drawText(leftX, baselineY, text);
+    }
+
+    /**
+     * Get {@link TextMeasurements} for the provided text.
+     * @param text The text to measure.
+     */
+    public TextMeasurements getTextMeasurements(String text);
+
+    /**
      * A version of a {@link UIPainter} that returns its own type from chainable methods.
      * @param <T> The actual type of the {@link UIPainter}.
      */
@@ -192,5 +261,12 @@ public interface UIPainter
 
         @Override
         public T drawText(int leftX, int baselineY, String text);
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public default T drawText(DrawTextOptions options)
+        {
+            return (T)UIPainter.super.drawText(options);
+        }
     }
 }

@@ -50,25 +50,21 @@ public interface Color
 
     /**
      * Get the red component of this {@link Color} (between 0 and 255).
-     * @return The red component of this {@link Color} (between 0 and 255).
      */
     public int getRed();
 
     /**
      * Get the green component of this {@link Color} (between 0 and 255).
-     * @return The green component of this {@link Color} (between 0 and 255).
      */
     public int getGreen();
 
     /**
      * Get the blue component of this {@link Color} (between 0 and 255).
-     * @return The blue component of this {@link Color} (between 0 and 255).
      */
     public int getBlue();
 
     /**
      * Get the alpha (opacity) component of this {@link Color} (between 0 and 255).
-     * @return The alpha (opacity) component of this {@link Color} (between 0 and 255).
      */
     public int getAlpha();
 
@@ -81,27 +77,32 @@ public interface Color
     }
 
     /**
+     * Get the JSON representation of this {@link Color}.
+     */
+    public default JSONObject toJson()
+    {
+        return JSONObject.create()
+            .setNumber("red", this.getRed())
+            .setNumber("green", this.getGreen())
+            .setNumber("blue", this.getBlue())
+            .setNumber("alpha", this.getAlpha());
+    }
+
+    /**
      * Get the {@link String} representation of the provided {@link Color}.
      * @param color The {@link Color} to get a {@link String} representation of.
-     * @return The {@link String} representation of the provided {@link Color}.
      */
     public static String toString(Color color)
     {
         PreCondition.assertNotNull(color, "color");
 
-        return JSONObject.create()
-            .setNumber("red", color.getRed())
-            .setNumber("green", color.getGreen())
-            .setNumber("blue", color.getBlue())
-            .setNumber("alpha", color.getAlpha())
-            .toString();
+        return color.toJson().toString();
     }
 
     /**
      * Get whether the provided {@link Color} is equal to the provided {@link Object}.
      * @param lhs The {@link Color} to compare against the {@link Object}.
      * @param rhs The {@link Object} to compare against the {@link Color}.
-     * @return Whether the provided {@link Color} is equal to the provided {@link Object}.
      */
     public static boolean equal(Color lhs, Object rhs)
     {
@@ -113,7 +114,6 @@ public interface Color
     /**
      * Get whether this {@link Color} is equal to the provided {@link Color}.
      * @param rhs The {@link Color} to compare against this {@link Color}.
-     * @return Whether this {@link Color} is equal to the provided {@link Color}.
      */
     public default boolean equals(Color rhs)
     {
@@ -144,7 +144,6 @@ public interface Color
     /**
      * Get the hash code of the provided {@link Color}.
      * @param color The {@link Color} to get the hash code of.
-     * @return The hash code of the provided {@link Color}.
      */
     public static int hashCode(Color color)
     {

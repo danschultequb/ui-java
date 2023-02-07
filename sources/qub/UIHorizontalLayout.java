@@ -8,6 +8,27 @@ public interface UIHorizontalLayout extends UIElement
     @Override
     public UIHorizontalLayout setBackgroundColor(Color backgroundColor);
 
+    @Override
+    public UIHorizontalLayout setWidth(int width);
+
+    @Override
+    public UIHorizontalLayout setWidth(Distance width);
+
+    @Override
+    public UIHorizontalLayout setHeight(int height);
+
+    @Override
+    public UIHorizontalLayout setHeight(Distance height);
+
+    @Override
+    public UIHorizontalLayout setSize(int width, int height);
+
+    @Override
+    public UIHorizontalLayout setSize(Size2Integer size);
+
+    @Override
+    public UIHorizontalLayout setDynamicSize(DynamicSize2Integer dynamicSize);
+
     /**
      * Add the provided {@link UIElement} to this {@link UIHorizontalLayout}.
      * @param uiElement The {@link UIElement} to add to this {@link UIHorizontalLayout}.
@@ -52,6 +73,27 @@ public interface UIHorizontalLayout extends UIElement
     {
         @Override
         public T setBackgroundColor(Color backgroundColor);
+
+        @Override
+        public T setWidth(int width);
+
+        @Override
+        public T setWidth(Distance width);
+
+        @Override
+        public T setHeight(int height);
+
+        @Override
+        public T setHeight(Distance height);
+
+        @Override
+        public T setSize(int width, int height);
+
+        @Override
+        public T setSize(Size2Integer size);
+
+        @Override
+        public T setDynamicSize(DynamicSize2Integer dynamicSize);
 
         @Override
         public T add(UIElement uiElement);

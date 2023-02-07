@@ -105,13 +105,29 @@ public class DrawRectangleOptions
         return this.lineColor;
     }
 
+    /**
+     * Get the JSON representation of this {@link DrawRectangleOptions}.
+     */
     public JSONObject toJson()
     {
-        return JSONObject.create()
-            .setNumber(DrawRectangleOptions.leftXPropertyName, this.getLeftX())
-            .setNumber(DrawRectangleOptions.topYPropertyName, this.getTopY())
-            .setNumber(DrawRectangleOptions.widthPropertyName, this.getWidth())
-            .setNumber(DrawRectangleOptions.heightPropertyName, this.getHeight());
+        final JSONObject result = JSONObject.create();
+        result.setNumber(DrawRectangleOptions.leftXPropertyName, this.getLeftX());
+        result.setNumber(DrawRectangleOptions.topYPropertyName, this.getTopY());
+        result.setNumber(DrawRectangleOptions.widthPropertyName, this.getWidth());
+        result.setNumber(DrawRectangleOptions.heightPropertyName, this.getHeight());
+
+        if (this.lineColor != null)
+        {
+            result.setObject(DrawRectangleOptions.lineColorPropertyName, this.lineColor.toJson());
+        }
+        if (this.fillColor != null)
+        {
+            result.setObject(DrawRectangleOptions.fillColorPropertyName, this.fillColor.toJson());
+        }
+
+        PostCondition.assertNotNull(result, "result");
+
+        return result;
     }
 
     @Override
@@ -133,7 +149,7 @@ public class DrawRectangleOptions
             this.topY == rhs.topY &&
             this.width == rhs.width &&
             this.height == rhs.height &&
-            Color.equal(this.fillColor, rhs.fillColor) &&
-            Color.equal(this.lineColor, rhs.lineColor);
+            Comparer.equal(this.fillColor, rhs.fillColor) &&
+            Comparer.equal(this.lineColor, rhs.lineColor);
     }
 }

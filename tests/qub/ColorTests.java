@@ -33,6 +33,7 @@ public interface ColorTests
                         test.assertEqual(green, color.getGreen());
                         test.assertEqual(blue, color.getBlue());
                         test.assertEqual(255, color.getAlpha());
+                        test.assertFalse(color.isTransparent());
                     });
                 };
 
@@ -69,9 +70,11 @@ public interface ColorTests
                         test.assertEqual(green, color.getGreen());
                         test.assertEqual(blue, color.getBlue());
                         test.assertEqual(alpha, color.getAlpha());
+                        test.assertEqual(alpha == 0, color.isTransparent());
                     });
                 };
 
+                createTest.run(0, 0, 0, 0);
                 createTest.run(1, 2, 3, 4);
                 createTest.run(255, 0, 128, 184);
             });

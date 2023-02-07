@@ -118,4 +118,13 @@ public class SwingUIPainter implements UIPainter.Typed<SwingUIPainter>
 
         return this;
     }
+
+    @Override
+    public TextMeasurements getTextMeasurements(String text)
+    {
+        PreCondition.assertNotNull(text, "text");
+
+        final java.awt.FontMetrics fontMetrics = this.graphics.getFontMetrics();
+        return JavaAwtFontMetricsTextMeasurements.create(text, fontMetrics);
+    }
 }

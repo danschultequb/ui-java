@@ -23,11 +23,18 @@ public interface UIElement
     public int getWidth();
 
     /**
-     * Set the pixel width of this {@link UIElement}.
-     * @param width The new pixel width of this {@link UIElement}.
+     * Set the pixel width of this {@link EveryoneUIElement}.
+     * @param width The pixel width of this {@link EveryoneUIElement}.
      * @return This object for method chaining.
      */
     public UIElement setWidth(int width);
+
+    /**
+     * Set the {@link Distance} width of this {@link EveryoneUIElement}.
+     * @param width The pixel width of this {@link EveryoneUIElement}.
+     * @return This object for method chaining.
+     */
+    public UIElement setWidth(Distance width);
 
     /**
      * Get the pixel height of this {@link UIElement}.
@@ -35,11 +42,18 @@ public interface UIElement
     public int getHeight();
 
     /**
-     * Set the pixel height of this {@link UIElement}.
-     * @param height The new pixel height of this {@link UIElement}.
+     * Set the pixel height of this {@link EveryoneUIElement}.
+     * @param height The pixel height of this {@link EveryoneUIElement}.
      * @return This object for method chaining.
      */
     public UIElement setHeight(int height);
+
+    /**
+     * Set the {@link Distance} height of this {@link EveryoneUIElement}.
+     * @param height The {@link Distance} height of this {@link EveryoneUIElement}.
+     * @return This object for method chaining.
+     */
+    public UIElement setHeight(Distance height);
 
     /**
      * Get the pixel size of this {@link UIElement}.
@@ -113,7 +127,13 @@ public interface UIElement
         public T setWidth(int width);
 
         @Override
+        public T setWidth(Distance width);
+
+        @Override
         public T setHeight(int height);
+
+        @Override
+        public T setHeight(Distance height);
 
         @Override
         public T setSize(int width, int height);

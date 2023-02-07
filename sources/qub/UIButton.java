@@ -8,6 +8,27 @@ public interface UIButton extends UIElement
     @Override
     public UIButton setBackgroundColor(Color backgroundColor);
 
+    @Override
+    public UIButton setWidth(int width);
+
+    @Override
+    public UIButton setWidth(Distance width);
+
+    @Override
+    public UIButton setHeight(int height);
+
+    @Override
+    public UIButton setHeight(Distance height);
+
+    @Override
+    public UIButton setSize(int width, int height);
+
+    @Override
+    public UIButton setSize(Size2Integer size);
+
+    @Override
+    public UIButton setDynamicSize(DynamicSize2Integer dynamicSize);
+
     /**
      * Get the text of this {@link UIButton}.
      */
@@ -35,6 +56,27 @@ public interface UIButton extends UIElement
     {
         @Override
         public T setBackgroundColor(Color backgroundColor);
+
+        @Override
+        public T setWidth(int width);
+
+        @Override
+        public T setWidth(Distance width);
+
+        @Override
+        public T setHeight(int height);
+
+        @Override
+        public T setHeight(Distance height);
+
+        @Override
+        public T setSize(int width, int height);
+
+        @Override
+        public T setSize(Size2Integer size);
+
+        @Override
+        public T setDynamicSize(DynamicSize2Integer dynamicSize);
 
         @Override
         public T setText(String text);

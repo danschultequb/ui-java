@@ -90,4 +90,13 @@ public class EveryoneSwingUI extends UI.Base<EveryoneSwingUI>
             return result;
         });
     }
+
+    @Override
+    public TextMeasurements getTextMeasurements(String text)
+    {
+        PreCondition.assertNotNull(text, "text");
+
+        final java.awt.FontMetrics fontMetrics = JavaAwtFontMetrics.getDefault();
+        return JavaAwtFontMetricsTextMeasurements.create(text, fontMetrics);
+    }
 }

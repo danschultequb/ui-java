@@ -27,7 +27,12 @@ public class EveryoneUIText extends EveryoneUIElement.Base<EveryoneUIText> imple
     {
         PreCondition.assertNotNull(text, "text");
 
-        this.text = text;
+        if (!Comparer.equal(this.text, text))
+        {
+            this.text = text;
+
+            this.repaint();
+        }
 
         return this;
     }
@@ -36,5 +41,13 @@ public class EveryoneUIText extends EveryoneUIElement.Base<EveryoneUIText> imple
     public void paint(UIPainter painter)
     {
         super.paint(painter);
+
+        if (!Strings.isNullOrEmpty(this.text))
+        {
+            painter.drawText(DrawTextOptions.create()
+                .setLeftX(0)
+                .setTopY(0)
+                .setText(this.text));
+        }
     }
 }

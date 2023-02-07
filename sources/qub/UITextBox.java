@@ -8,6 +8,27 @@ public interface UITextBox extends UIElement
     @Override
     public UITextBox setBackgroundColor(Color backgroundColor);
 
+    @Override
+    public UITextBox setWidth(int width);
+
+    @Override
+    public UITextBox setWidth(Distance width);
+
+    @Override
+    public UITextBox setHeight(int height);
+
+    @Override
+    public UITextBox setHeight(Distance height);
+
+    @Override
+    public UITextBox setSize(int width, int height);
+
+    @Override
+    public UITextBox setSize(Size2Integer size);
+
+    @Override
+    public UITextBox setDynamicSize(DynamicSize2Integer dynamicSize);
+
     /**
      * Get the number of characters in the text.
      */
@@ -70,6 +91,27 @@ public interface UITextBox extends UIElement
     {
         @Override
         public T setBackgroundColor(Color backgroundColor);
+
+        @Override
+        public T setWidth(int width);
+
+        @Override
+        public T setWidth(Distance width);
+
+        @Override
+        public T setHeight(int height);
+
+        @Override
+        public T setHeight(Distance height);
+
+        @Override
+        public T setSize(int width, int height);
+
+        @Override
+        public T setSize(Size2Integer size);
+
+        @Override
+        public T setDynamicSize(DynamicSize2Integer dynamicSize);
 
         @Override
         public T setText(String text);

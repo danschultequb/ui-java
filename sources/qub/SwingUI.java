@@ -1,5 +1,7 @@
 package qub;
 
+import java.awt.Font;
+
 /**
  * A {@link UI} implementation that uses Swing UI {@link javax.swing.JComponent}s.
  */
@@ -92,5 +94,14 @@ public class SwingUI extends UI.Base<SwingUI>
             }
             return result;
         });
+    }
+
+    @Override
+    public TextMeasurements getTextMeasurements(String text)
+    {
+        PreCondition.assertNotNull(text, "text");
+
+        final java.awt.FontMetrics fontMetrics = JavaAwtFontMetrics.getDefault();
+        return JavaAwtFontMetricsTextMeasurements.create(text, fontMetrics);
     }
 }

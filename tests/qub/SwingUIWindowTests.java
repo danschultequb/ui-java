@@ -728,55 +728,15 @@ public interface SwingUIWindowTests
                 try (final SwingUI ui = SwingUI.create(mainAsyncRunner);
                      final SwingUIWindow window = SwingUIWindow.create(ui))
                 {
+                    window.setTitle(test.getFullName());
                     window.setWidth(Distance.inches(3));
                     window.setHeight(Distance.inches(3));
 
-                    final UICanvas canvas = ui.createUICanvas().await();
-                    canvas.setBackgroundColor(Color.green);
-                    canvas.setSize(window.getContentAreaDynamicSize().scale(0.5));
-                    canvas.setPaintAction((UIPainter painter) ->
-                    {
-                        final int canvasWidth = canvas.getWidth();
-                        final int canvasHeight = canvas.getHeight();
+                    final UIText text = ui.createUIText().await()
+                        .setBackgroundColor(Color.green)
+                        .setText("Hello World!");
 
-                        final int leftX;
-                        final int topY;
-                        final int boardSize;
-                        if (canvasWidth < canvasHeight)
-                        {
-                            boardSize = canvasWidth;
-                            leftX = 0;
-                            topY = (canvasHeight - canvasWidth) / 2;
-                        }
-                        else
-                        {
-                            boardSize = canvasHeight;
-                            leftX = (canvasWidth - canvasHeight) / 2;
-                            topY = 0;
-                        }
-                        final int rightX = leftX + boardSize;
-                        final int bottomY = topY + boardSize;
-
-                        final int oneThirdSize = boardSize / 3;
-                        final int twoThirdSize = oneThirdSize * 2;
-
-                        final int leftLineX = leftX + oneThirdSize;
-                        final int rightLineX = leftX + twoThirdSize;
-
-                        final int topLineY = topY + oneThirdSize;
-                        final int bottomLineY = topY + twoThirdSize;
-
-                        painter.drawLine(leftLineX, topY, leftLineX, bottomY);
-                        painter.drawLine(rightLineX, topY, rightLineX, bottomY);
-                        painter.drawLine(leftX, topLineY, rightX, topLineY);
-                        painter.drawLine(leftX, bottomLineY, rightX, bottomLineY);
-
-                        painter.drawOval(leftX, topY, oneThirdSize, oneThirdSize);
-                        painter.drawOval(leftLineX, topLineY, oneThirdSize, oneThirdSize);
-                        painter.drawOval(rightLineX, bottomLineY, oneThirdSize, oneThirdSize);
-                    });
-
-                    window.setContent(canvas);
+                    window.setContent(text);
 
                     window.setVisible(true);
                     window.await();

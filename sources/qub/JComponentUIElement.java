@@ -44,6 +44,9 @@ public interface JComponentUIElement extends UIElement
     }
 
     @Override
+    public JComponentUIElement setWidth(Distance width);
+
+    @Override
     public default int getHeight()
     {
         final javax.swing.JComponent jComponent = this.getJComponent();
@@ -59,6 +62,9 @@ public interface JComponentUIElement extends UIElement
     {
         return this.setSize(this.getWidth(), height);
     }
+
+    @Override
+    public JComponentUIElement setHeight(Distance height);
 
     @Override
     public default Size2Integer getSize()
@@ -117,11 +123,17 @@ public interface JComponentUIElement extends UIElement
         }
 
         @Override
+        public T setWidth(Distance width);
+
+        @Override
         @SuppressWarnings("unchecked")
         public default T setHeight(int height)
         {
             return (T)JComponentUIElement.super.setHeight(height);
         }
+
+        @Override
+        public T setHeight(Distance height);
 
         @Override
         @SuppressWarnings("unchecked")
@@ -161,6 +173,48 @@ public interface JComponentUIElement extends UIElement
             return JComponentUIElement.Typed.super.setBackgroundColor(backgroundColor);
         }
 
+        @Override
+        public T setWidth(int width)
+        {
+            return JComponentUIElement.Typed.super.setWidth(width);
+        }
+
+        @Override
+        public T setWidth(Distance width)
+        {
+            PreCondition.assertNotNull(width, "width");
+            PreCondition.assertGreaterThanOrEqualTo(width, Distance.zero, "width");
+
+            return this.setWidth(this.ui.convertHorizontalDistanceToPixels(width));
+        }
+
+        @Override
+        public T setHeight(int height)
+        {
+            return JComponentUIElement.Typed.super.setHeight(height);
+        }
+
+        @Override
+        public T setHeight(Distance height)
+        {
+            PreCondition.assertNotNull(height, "height");
+            PreCondition.assertGreaterThanOrEqualTo(height, Distance.zero, "height");
+
+            return this.setHeight(this.ui.convertVerticalDistanceToPixels(height));
+        }
+
+        @Override
+        public T setSize(Size2Integer size)
+        {
+            return JComponentUIElement.Typed.super.setSize(size);
+        }
+
+        @Override
+        public T setSize(int width, int height)
+        {
+            return this.setSize(width, height, true);
+        }
+
         private T setSize(int width, int height, boolean clearSizeChangedSubscription)
         {
             PreCondition.assertGreaterThanOrEqualTo(width, 0, "width");
@@ -173,12 +227,6 @@ public interface JComponentUIElement extends UIElement
             }
 
             return JComponentUIElement.Typed.super.setSize(width, height);
-        }
-
-        @Override
-        public T setSize(int width, int height)
-        {
-            return this.setSize(width, height, true);
         }
 
         @Override

@@ -207,6 +207,12 @@ public interface UI extends Disposable
     }
 
     /**
+     * Get {@link TextMeasurements} for the provided text.
+     * @param text The text to measure.
+     */
+    public TextMeasurements getTextMeasurements(String text);
+
+    /**
      * An abstract base class implementation of {@link UI} that contains common
      * properties and functions for all {@link UI} types.
      * @param <UIType> The actual type of the {@link UI}.
