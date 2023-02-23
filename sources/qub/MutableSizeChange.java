@@ -123,4 +123,16 @@ public class MutableSizeChange implements SizeChange
     {
         return Size2.create(this.newWidth, this.newHeight);
     }
+
+    @Override
+    public String toString()
+    {
+        return SizeChange.toString(this);
+    }
+
+    @Override
+    public boolean equals(Object rhs)
+    {
+        return SizeChange.equals(this, rhs);
+    }
 }

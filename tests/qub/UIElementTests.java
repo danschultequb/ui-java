@@ -37,380 +37,412 @@ public interface UIElementTests
                 setBackgroundColorTest.run(Color.create(1, 2, 3, Color.ComponentMax));
             });
 
-//            runner.testGroup("setWidth(Distance)", () ->
-//            {
-//                final Action2<Distance,Throwable> setWidthErrorTest = (Distance width, Throwable expected) ->
-//                {
-//                    runner.test("with " + width, (Test test) ->
-//                    {
-//                        try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                        {
-//                            final UIElement uiElement = creator.run(process);
-//                            test.assertThrows(() -> uiElement.setWidth(width), expected);
-//                        }
-//                    });
-//                };
-//
-//                setWidthErrorTest.run(null, new PreConditionFailure("width cannot be null."));
-//                setWidthErrorTest.run(Distance.inches(-1), new PreConditionFailure("width (-1.0 Inches) must be greater than or equal to 0.0 Inches."));
-//
-//                final Action1<Distance> setWidthTest = (Distance width) ->
-//                {
-//                    runner.test("with " + width, (Test test) ->
-//                    {
-//                        try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                        {
-//                            final UIElement uiElement = creator.run(process);
-//
-//                            final UIElement setWidthResult = uiElement.setWidth(width);
-//                            test.assertSame(uiElement, setWidthResult);
-//
-//                            test.assertEqual(width, uiElement.getPixelWidth());
-//                        }
-//                    });
-//                };
-//
-//                setWidthTest.run(Distance.inches(1));
-//                setWidthTest.run(Distance.inches(5));
-//            });
-//
-//            runner.testGroup("setHeight(Distance)", () ->
-//            {
-//                final Action2<Distance,Throwable> setHeightErrorTest = (Distance height, Throwable expected) ->
-//                {
-//                    runner.test("with " + height, (Test test) ->
-//                    {
-//                        try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                        {
-//                            final UIElement uiElement = creator.run(process);
-//                            test.assertThrows(() -> uiElement.setHeight(height), expected);
-//                        }
-//                    });
-//                };
-//
-//                setHeightErrorTest.run(null, new PreConditionFailure("height cannot be null."));
-//                setHeightErrorTest.run(Distance.inches(-1), new PreConditionFailure("height (-1.0 Inches) must be greater than or equal to 0.0 Inches."));
-//
-//                final Action1<Distance> setHeightTest = (Distance height) ->
-//                {
-//                    runner.test("with " + height, (Test test) ->
-//                    {
-//                        try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                        {
-//                            final UIElement uiElement = creator.run(process);
-//
-//                            final UIElement setHeightResult = uiElement.setHeight(height);
-//                            test.assertSame(uiElement, setHeightResult);
-//
-//                            test.assertEqual(height, uiElement.getHeight());
-//                        }
-//                    });
-//                };
-//
-//                setHeightTest.run(Distance.inches(1));
-//                setHeightTest.run(Distance.inches(5));
-//            });
-//
-//            runner.testGroup("setSize(Size2D)", () ->
-//            {
-//                final Action2<Size2D,Throwable> setSizeErrorTest = (Size2D size, Throwable expected) ->
-//                {
-//                    runner.test("with " + size, (Test test) ->
-//                    {
-//                        try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                        {
-//                            final UIElement uiElement = creator.run(process);
-//                            test.assertThrows(() -> uiElement.setSize(size), expected);
-//                        }
-//                    });
-//                };
-//
-//                setSizeErrorTest.run(null, new PreConditionFailure("size cannot be null."));
-//
-//                final Action1<Size2D> setSizeTest = (Size2D size) ->
-//                {
-//                    runner.test("with " + size, (Test test) ->
-//                    {
-//                        try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                        {
-//                            final UIElement uiElement = creator.run(process);
-//                            final UIElement setSizeResult = uiElement.setSize(size);
-//                            test.assertSame(uiElement, setSizeResult);
-//                            test.assertEqual(size, uiElement.getSize());
-//                        }
-//                    });
-//                };
-//
-//                setSizeTest.run(Size2D.create(Distance.zero, Distance.zero));
-//                setSizeTest.run(Size2D.create(Distance.zero, Distance.inches(1)));
-//                setSizeTest.run(Size2D.create(Distance.inches(1), Distance.zero));
-//                setSizeTest.run(Size2D.create(Distance.inches(2), Distance.inches(3)));
-//            });
-//
-//            runner.testGroup("setSize(Distance,Distance)", () ->
-//            {
-//                final Action3<Distance,Distance,Throwable> setSizeErrorTest = (Distance width, Distance height, Throwable expected) ->
-//                {
-//                    runner.test("with " + English.andList(width, height), (Test test) ->
-//                    {
-//                        try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                        {
-//                            final UIElement uiElement = creator.run(process);
-//                            test.assertThrows(() -> uiElement.setSize(width, height), expected);
-//                        }
-//                    });
-//                };
-//
-//                setSizeErrorTest.run(null, Distance.inches(1), new PreConditionFailure("width cannot be null."));
-//                setSizeErrorTest.run(Distance.inches(-1), Distance.inches(1), new PreConditionFailure("width (-1.0 Inches) must be greater than or equal to 0.0 Inches."));
-//                setSizeErrorTest.run(Distance.zero, null, new PreConditionFailure("height cannot be null."));
-//                setSizeErrorTest.run(Distance.zero, Distance.inches(-1), new PreConditionFailure("height (-1.0 Inches) must be greater than or equal to 0.0 Inches."));
-//
-//                final Action2<Distance,Distance> setSizeTest = (Distance width, Distance height) ->
-//                {
-//                    runner.test("with " + English.andList(width, height), (Test test) ->
-//                    {
-//                        try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                        {
-//                            final UIElement uiElement = creator.run(process);
-//                            final UIElement setSizeResult = uiElement.setSize(width, height);
-//                            test.assertSame(uiElement, setSizeResult);
-//                            test.assertEqual(width, uiElement.getPixelWidth());
-//                            test.assertEqual(height, uiElement.getHeight());
-//                        }
-//                    });
-//                };
-//
-//                setSizeTest.run(Distance.zero, Distance.zero);
-//                setSizeTest.run(Distance.zero, Distance.inches(2));
-//                setSizeTest.run(Distance.inches(1.5), Distance.zero);
-//                setSizeTest.run(Distance.inches(5), Distance.inches(4));
-//            });
-//
-//            runner.testGroup("onSizeChanged(Action0)", () ->
-//            {
-//                runner.test("with null", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        test.assertThrows(() -> uiElement.onSizeChanged(null),
-//                            new PreConditionFailure("callback cannot be null."));
-//                    }
-//                });
-//
-//                runner.test("with non-null", runner.skip(false), (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        final long currentThreadId = CurrentThread.getId();
-//                        final LongValue eventThreadId = LongValue.create();
-//
-//                        final IntegerValue value = IntegerValue.create(0);
-//                        final Disposable subscription = uiElement.onSizeChanged(() ->
-//                        {
-//                            eventThreadId.set(CurrentThread.getId());
-//                            value.increment();
-//                        });
-//                        test.assertNotNull(subscription);
-//                        test.assertFalse(subscription.isDisposed());
-//                        test.assertFalse(eventThreadId.hasValue());
-//                        test.assertEqual(0, value.get());
-//
-//                        uiElement.setSize(Distance.inches(10), Distance.inches(12));
-//
-//                        test.assertEqual(currentThreadId, eventThreadId.get());
-//                        test.assertEqual(1, value.get());
-//
-//                        test.assertTrue(subscription.dispose().await());
-//                        test.assertEqual(1, value.get());
-//
-//                        eventThreadId.clear();
-//                        value.set(0);
-//
-//                        uiElement.setSize(Distance.inches(9), Distance.inches(11));
-//
-//                        test.assertFalse(eventThreadId.hasValue());
-//                        test.assertEqual(0, value.get());
-//                    }
-//                });
-//            });
-//
-//            runner.test("getPadding()", (Test test) ->
-//            {
-//                try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                {
-//                    final UIElement uiElement = creator.run(process);
-//                    final UIPadding padding = uiElement.getPadding();
-//                    test.assertNotNull(padding);
-//                    test.assertEqual(padding, uiElement.getPadding());
-//                }
-//            });
-//
-//            runner.testGroup("setPadding(UIPadding)", () ->
-//            {
-//                runner.test("with null", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        final UIPadding padding = uiElement.getPadding();
-//                        test.assertThrows(() -> uiElement.setPadding(null),
-//                            new PreConditionFailure("padding cannot be null."));
-//                        test.assertEqual(padding, uiElement.getPadding());
-//                    }
-//                });
-//
-//                runner.test("with non-null", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        final UIPadding padding = UIPadding.create(Distance.inches(1), Distance.inches(2), Distance.inches(3), Distance.inches(4));
-//                        final UIElement setPaddingResult = uiElement.setPadding(padding);
-//                        test.assertSame(uiElement, setPaddingResult);
-//                        test.assertEqual(padding, uiElement.getPadding());
-//                    }
-//                });
-//            });
-//
-//            runner.testGroup("onPaddingChanged(Action0)", () ->
-//            {
-//                runner.test("with null", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        test.assertThrows(() -> uiElement.onPaddingChanged((Action0)null),
-//                            new PreConditionFailure("callback cannot be null."));
-//                    }
-//                });
-//
-//                runner.test("when padding set to equal padding", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        final IntegerValue changes = IntegerValue.create(0);
-//                        uiElement.onPaddingChanged(changes::increment);
-//
-//                        uiElement.setPadding(uiElement.getPadding());
-//
-//                        test.assertEqual(0, changes.get());
-//                    }
-//                });
-//
-//                runner.test("when padding set to different padding", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        final IntegerValue changes = IntegerValue.create(0);
-//                        uiElement.onPaddingChanged(changes::increment);
-//
-//                        uiElement.setPadding(UIPadding.create(Distance.inches(1)));
-//
-//                        test.assertEqual(1, changes.get());
-//                    }
-//                });
-//            });
-//
-//            runner.testGroup("getContentSpaceSize()", () ->
-//            {
-//                runner.test("with no padding", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        uiElement.setPadding(UIPadding.zero);
-//
-//                        final Size2D contentSpaceSize = uiElement.getContentSpaceSize();
-//                        final Size2D size = uiElement.getSize();
-//                        test.assertEqual(size, contentSpaceSize);
-//                    }
-//                });
-//
-//                runner.test("with padding", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        final UIPadding padding = UIPadding.create(Distance.inches(0.01));
-//                        uiElement.setPadding(padding);
-//
-//                        final Size2D contentSpaceSize = uiElement.getContentSpaceSize();
-//                        final Distance width = uiElement.getPixelWidth();
-//                        final Distance expectedWidth = width.greaterThan(padding.getPixelWidth()) ? width.minus(padding.getPixelWidth()) : Distance.zero;
-//                        final Distance height = uiElement.getHeight();
-//                        final Distance expectedHeight = height.greaterThan(padding.getHeight()) ? height.minus(padding.getHeight()) : Distance.zero;
-//                        final Size2D expectedSize = Size2D.create(expectedWidth, expectedHeight);
-//                        test.assertEqual(expectedSize, contentSpaceSize, Size2D.create(Distance.inches(0.00001), Distance.inches(0.00001)));
-//                    }
-//                });
-//            });
-//
-//            runner.testGroup("getContentSpaceWidth()", () ->
-//            {
-//                runner.test("with no padding", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        uiElement.setPadding(UIPadding.zero);
-//
-//                        final Distance contentSpaceWidth = uiElement.getContentSpaceWidth();
-//                        final Distance width = uiElement.getPixelWidth();
-//                        test.assertEqual(width, contentSpaceWidth);
-//                    }
-//                });
-//
-//                runner.test("with padding", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        final UIPadding padding = UIPadding.create(Distance.inches(0.01));
-//                        uiElement.setPadding(padding);
-//
-//                        final Distance contentSpaceWidth = uiElement.getContentSpaceWidth();
-//                        final Distance width = uiElement.getPixelWidth();
-//                        final Distance expectedWidth = width.greaterThan(padding.getPixelWidth()) ? width.minus(padding.getPixelWidth()) : Distance.zero;
-//                        test.assertEqual(expectedWidth, contentSpaceWidth, Distance.inches(0.00001));
-//                    }
-//                });
-//            });
-//
-//            runner.testGroup("getContentSpaceHeight()", () ->
-//            {
-//                runner.test("with no padding", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        uiElement.setPadding(UIPadding.zero);
-//
-//                        final Distance contentSpaceHeight = uiElement.getContentSpaceHeight();
-//                        final Distance width = uiElement.getHeight();
-//                        test.assertEqual(width, contentSpaceHeight);
-//                    }
-//                });
-//
-//                runner.test("with padding", (Test test) ->
-//                {
-//                    try (final FakeDesktopProcess process = FakeDesktopProcess.create())
-//                    {
-//                        final UIElement uiElement = creator.run(process);
-//                        final UIPadding padding = UIPadding.create(Distance.inches(0.01));
-//                        uiElement.setPadding(padding);
-//
-//                        final Distance contentSpaceHeight = uiElement.getContentSpaceHeight();
-//                        final Distance height = uiElement.getHeight();
-//                        final Distance expectedHeight = height.greaterThan(padding.getHeight()) ? height.minus(padding.getHeight()) : Distance.zero;
-//                        test.assertEqual(expectedHeight, contentSpaceHeight, Distance.inches(0.00001));
-//                    }
-//                });
-//            });
+            runner.testGroup("setWidth(int)", () ->
+            {
+                final Action2<Integer,Throwable> setWidthErrorTest = (Integer width, Throwable expected) ->
+                {
+                    runner.test("with " + width, (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final int originalWidth = uiElement.getWidth();
+
+                        test.assertThrows(() -> uiElement.setWidth(width),
+                            expected);
+
+                        test.assertEqual(originalWidth, uiElement.getWidth());
+                    });
+                };
+
+                setWidthErrorTest.run(-10, new PreConditionFailure("width (-10) must be greater than or equal to 0."));
+                setWidthErrorTest.run(-1, new PreConditionFailure("width (-1) must be greater than or equal to 0."));
+
+                final Action1<Integer> setWidthTest = (Integer width) ->
+                {
+                    runner.test("with " + width, (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final UIElement setWidthResult = uiElement.setWidth(width);
+                        test.assertSame(uiElement, setWidthResult);
+                        test.assertEqual(width, uiElement.getWidth());
+                    });
+                };
+
+                setWidthTest.run(0);
+                setWidthTest.run(1);
+                setWidthTest.run(100);
+            });
+
+            runner.testGroup("setWidth(Distance)", () ->
+            {
+                final Action2<Distance,Throwable> setWidthErrorTest = (Distance width, Throwable expected) ->
+                {
+                    runner.test("with " + width, (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final int originalWidth = uiElement.getWidth();
+
+                        test.assertThrows(() -> uiElement.setWidth(width),
+                            expected);
+
+                        test.assertEqual(originalWidth, uiElement.getWidth());
+                    });
+                };
+
+                setWidthErrorTest.run(Distance.inches(-10), new PreConditionFailure("width (-10.0 Inches) must be greater than or equal to 0.0 Inches."));
+                setWidthErrorTest.run(Distance.millimeters(-1), new PreConditionFailure("width (-1.0 Millimeters) must be greater than or equal to 0.0 Inches."));
+            });
+
+            runner.testGroup("setHeight(int)", () ->
+            {
+                final Action2<Integer,Throwable> setHeightErrorTest = (Integer height, Throwable expected) ->
+                {
+                    runner.test("with " + height, (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final int originalHeight = uiElement.getHeight();
+
+                        test.assertThrows(() -> uiElement.setHeight(height),
+                            expected);
+
+                        test.assertEqual(originalHeight, uiElement.getHeight());
+                    });
+                };
+
+                setHeightErrorTest.run(-10, new PreConditionFailure("height (-10) must be greater than or equal to 0."));
+                setHeightErrorTest.run(-1, new PreConditionFailure("height (-1) must be greater than or equal to 0."));
+
+                final Action1<Integer> setHeightTest = (Integer height) ->
+                {
+                    runner.test("with " + height, (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final UIElement setHeightResult = uiElement.setHeight(height);
+                        test.assertSame(uiElement, setHeightResult);
+                        test.assertEqual(height, uiElement.getHeight());
+                    });
+                };
+
+                setHeightTest.run(0);
+                setHeightTest.run(1);
+                setHeightTest.run(100);
+            });
+
+            runner.testGroup("setHeight(Distance)", () ->
+            {
+                final Action2<Distance,Throwable> setHeightErrorTest = (Distance height, Throwable expected) ->
+                {
+                    runner.test("with " + height, (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final int originalHeight = uiElement.getHeight();
+
+                        test.assertThrows(() -> uiElement.setHeight(height),
+                            expected);
+
+                        test.assertEqual(originalHeight, uiElement.getHeight());
+                    });
+                };
+
+                setHeightErrorTest.run(Distance.inches(-10), new PreConditionFailure("height (-10.0 Inches) must be greater than or equal to 0.0 Inches."));
+                setHeightErrorTest.run(Distance.millimeters(-1), new PreConditionFailure("height (-1.0 Millimeters) must be greater than or equal to 0.0 Inches."));
+            });
+
+            runner.testGroup("setSize(int,int)", () ->
+            {
+                final Action3<Integer,Integer,Throwable> setSizeErrorTest = (Integer width, Integer height, Throwable expected) ->
+                {
+                    runner.test("with " + English.andList(width, height), (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final Size2Integer size = uiElement.getSize();
+
+                        test.assertThrows(() -> uiElement.setSize(width, height),
+                            expected);
+
+                        test.assertEqual(size, uiElement.getSize());
+                    });
+                };
+
+                setSizeErrorTest.run(-10, 10, new PreConditionFailure("width (-10) must be greater than or equal to 0."));
+                setSizeErrorTest.run(-1, 10, new PreConditionFailure("width (-1) must be greater than or equal to 0."));
+                setSizeErrorTest.run(1, -10, new PreConditionFailure("height (-10) must be greater than or equal to 0."));
+                setSizeErrorTest.run(1, -1, new PreConditionFailure("height (-1) must be greater than or equal to 0."));
+
+                final Action2<Integer,Integer> setSizeTest = (Integer width, Integer height) ->
+                {
+                    runner.test("with " + English.andList(width, height), (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final UIElement setSizeResult = uiElement.setSize(width, height);
+                        test.assertSame(uiElement, setSizeResult);
+                        test.assertEqual(width, uiElement.getWidth());
+                        test.assertEqual(height, uiElement.getHeight());
+                        test.assertEqual(Size2Integer.create(width, height), uiElement.getSize());
+                    });
+                };
+
+                setSizeTest.run(0, 0);
+                setSizeTest.run(0, 1);
+                setSizeTest.run(0, 10);
+                setSizeTest.run(1, 0);
+                setSizeTest.run(1, 1);
+                setSizeTest.run(1, 10);
+                setSizeTest.run(10, 0);
+                setSizeTest.run(10, 1);
+                setSizeTest.run(10, 10);
+            });
+
+            runner.testGroup("setSize(Size2Integer)", () ->
+            {
+                runner.test("with null", (Test test) ->
+                {
+                    final UIElement uiElement = creator.run();
+                    final Size2Integer size = uiElement.getSize();
+
+                    test.assertThrows(() -> uiElement.setSize((Size2Integer)null),
+                        new PreConditionFailure("size cannot be null."));
+
+                    test.assertEqual(size, uiElement.getSize());
+                });
+
+                final Action1<Size2Integer> setSizeTest = (Size2Integer size) ->
+                {
+                    runner.test("with " + size, (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final UIElement setSizeResult = uiElement.setSize(size);
+                        test.assertSame(uiElement, setSizeResult);
+                        test.assertEqual(size.getWidthAsInt(), uiElement.getWidth());
+                        test.assertEqual(size.getHeightAsInt(), uiElement.getHeight());
+                        test.assertEqual(size, uiElement.getSize());
+                    });
+                };
+
+                setSizeTest.run(Size2.create(0, 0));
+                setSizeTest.run(Size2.create(0, 1));
+                setSizeTest.run(Size2.create(0, 10));
+                setSizeTest.run(Size2.create(1, 0));
+                setSizeTest.run(Size2.create(1, 1));
+                setSizeTest.run(Size2.create(1, 10));
+                setSizeTest.run(Size2.create(10, 0));
+                setSizeTest.run(Size2.create(10, 1));
+                setSizeTest.run(Size2.create(10, 10));
+            });
+
+            runner.test("getDynamicSize()",
+                (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                (Test test, Synchronization synchronization) ->
+            {
+                final UIElement uiElement = creator.run();
+                final Size2Integer size1 = uiElement.getSize();
+
+                final DynamicSize2Integer dynamicSize = uiElement.getDynamicSize();
+                test.assertNotNull(dynamicSize);
+                test.assertEqual(uiElement.getSize(), dynamicSize);
+
+                uiElement.setSize(uiElement.getWidth() + 1, uiElement.getHeight() + 1);
+                final Size2Integer size2 = uiElement.getSize();
+                test.assertNotEqual(size1, size2);
+                test.assertEqual(size2, dynamicSize);
+
+                final Gate gate = synchronization.createGate(false);
+
+                final List<SizeChange> sizeChanges = List.create();
+                try (final Disposable subscription = dynamicSize.onChanged((SizeChange sizeChange) ->
+                    {
+                        sizeChanges.add(sizeChange);
+                        gate.open();
+                    }))
+                {
+                    test.assertEqual(Iterable.create(), sizeChanges);
+
+                    uiElement.setSize(uiElement.getWidth() + 1, uiElement.getHeight() + 1);
+                    gate.passThrough().await();
+                    gate.close();
+                    final Size2Integer size3 = uiElement.getSize();
+                    test.assertNotEqual(size1, size3);
+                    test.assertNotEqual(size2, size3);
+                    test.assertEqual(size3, dynamicSize);
+                    test.assertEqual(
+                        Iterable.create(
+                            SizeChange.create()
+                                .setPreviousSize(size2)
+                                .setNewSize(size3)),
+                        sizeChanges);
+
+                    subscription.dispose().await();
+
+                    uiElement.setSize(uiElement.getWidth() + 1, uiElement.getHeight() + 1);
+                    final Size2Integer size4 = uiElement.getSize();
+                    test.assertNotEqual(size1, size4);
+                    test.assertNotEqual(size2, size4);
+                    test.assertNotEqual(size3, size4);
+                    test.assertEqual(size4, dynamicSize);
+                    test.assertEqual(
+                        Iterable.create(
+                            SizeChange.create()
+                                .setPreviousSize(size2)
+                                .setNewSize(size3)),
+                        sizeChanges);
+                }
+            });
+
+            runner.testGroup("setDynamicSize(DynamicSize2Integer)", () ->
+            {
+                runner.test("with null", (Test test) ->
+                {
+                    final UIElement uiElement = creator.run();
+                    final Size2Integer size = uiElement.getSize();
+
+                    test.assertThrows(() -> uiElement.setDynamicSize(null),
+                        new PreConditionFailure("dynamicSize cannot be null."));
+
+                    test.assertEqual(size, uiElement.getSize());
+                });
+
+                runner.test("with non-null", (Test test) ->
+                {
+                    final UIElement uiElement = creator.run();
+                    final Size2Integer size1 = uiElement.getSize();
+
+                    final RunnableEvent1<SizeChange> sizeChangeEvent = Event1.create();
+                    final MutableSize2Integer mutableSize = Size2Integer.create()
+                        .setWidth(size1.getWidth() + 1)
+                        .setHeight(size1.getHeight() + 2);
+                    final DynamicSize2Integer dynamicSize = DynamicSize2Integer.create()
+                        .setGetWidthFunction(mutableSize::getWidth)
+                        .setGetHeightFunction(mutableSize::getHeight)
+                        .setOnChangedFunction(sizeChangeEvent::subscribe);
+                    final UIElement setDynamicSizeResult = uiElement.setDynamicSize(dynamicSize);
+                    test.assertSame(uiElement, setDynamicSizeResult);
+                    test.assertEqual(mutableSize, uiElement.getSize());
+
+                    final Size2Integer size2 = uiElement.getSize();
+                    mutableSize.set(size2.getWidth() + 1, size2.getHeight() + 2);
+                    sizeChangeEvent.run(SizeChange.create()
+                        .setPreviousSize(size2)
+                        .setNewSize(mutableSize));
+                    test.assertEqual(mutableSize, uiElement.getSize());
+                });
+            });
+
+            runner.testGroup("onSizeChanged(Action0)", () ->
+            {
+                runner.test("with null", (Test test) ->
+                {
+                    final UIElement uiElement = creator.run();
+
+                    test.assertThrows(() -> uiElement.onSizeChanged((Action0)null),
+                        new PreConditionFailure("action cannot be null."));
+                });
+
+                runner.test("with non-null",
+                    (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                    (Test test, Synchronization synchronization) ->
+                {
+                    final UIElement uiElement = creator.run();
+
+                    final List<Size2Integer> sizes = List.create();
+                    final Gate gate = synchronization.createGate(false);
+                    try (final Disposable subscription = uiElement.onSizeChanged(() ->
+                    {
+                        sizes.add(uiElement.getSize());
+                        gate.open();
+                    }))
+                    {
+                        final Size2Integer size1 = Size2.create(uiElement.getWidth() + 1, uiElement.getHeight() + 1);
+                        uiElement.setSize(size1);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(Iterable.create(size1), sizes);
+
+                        final Size2Integer size2 = Size2.create(uiElement.getWidth() + 1, uiElement.getHeight() + 1);
+                        uiElement.setSize(size2);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(Iterable.create(size1, size2), sizes);
+
+                        subscription.dispose().await();
+
+                        final Size2Integer size3 = Size2.create(uiElement.getWidth() + 1, uiElement.getHeight() + 1);
+                        uiElement.setSize(size3);
+
+                        test.assertEqual(Iterable.create(size1, size2), sizes);
+                    }
+                });
+            });
+
+            runner.testGroup("onSizeChanged(Action1<SizeChange>)", () ->
+            {
+                runner.test("with null", (Test test) ->
+                {
+                    final UIElement uiElement = creator.run();
+
+                    test.assertThrows(() -> uiElement.onSizeChanged((Action1<SizeChange>)null),
+                        new PreConditionFailure("action cannot be null."));
+                });
+
+                runner.test("with non-null",
+                    (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                    (Test test, Synchronization synchronization) ->
+                {
+                    final UIElement uiElement = creator.run();
+                    final Size2Integer size0 = uiElement.getSize();
+
+                    final List<SizeChange> sizes = List.create();
+                    final Gate gate = synchronization.createGate(false);
+                    try (final Disposable subscription = uiElement.onSizeChanged((SizeChange sizeChange) ->
+                    {
+                        sizes.add(sizeChange);
+                        gate.open();
+                    }))
+                    {
+                        final Size2Integer size1 = Size2.create(uiElement.getWidth() + 1, uiElement.getHeight() + 1);
+                        uiElement.setSize(size1);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(
+                            Iterable.create(
+                                SizeChange.create()
+                                    .setPreviousSize(size0)
+                                    .setNewSize(size1)),
+                            sizes);
+
+                        final Size2Integer size2 = Size2.create(uiElement.getWidth() + 1, uiElement.getHeight() + 1);
+                        uiElement.setSize(size2);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(
+                            Iterable.create(
+                                SizeChange.create()
+                                    .setPreviousSize(size0)
+                                    .setNewSize(size1),
+                                SizeChange.create()
+                                    .setPreviousSize(size1)
+                                    .setNewSize(size2)),
+                            sizes);
+
+                        subscription.dispose().await();
+
+                        final Size2Integer size3 = Size2.create(uiElement.getWidth() + 1, uiElement.getHeight() + 1);
+                        uiElement.setSize(size3);
+
+                        test.assertEqual(
+                            Iterable.create(
+                                SizeChange.create()
+                                    .setPreviousSize(size0)
+                                    .setNewSize(size1),
+                                SizeChange.create()
+                                    .setPreviousSize(size1)
+                                    .setNewSize(size2)),
+                            sizes);
+                    }
+                });
+            });
         });
     }
 }
