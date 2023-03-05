@@ -9,7 +9,8 @@ public class FakeUIPainter implements UIPainter.Typed<FakeUIPainter>
     private boolean ignoreTransparentDraws;
     private Color fillColor;
     private Color lineColor;
-    private MutableTransform2 transform;
+    private final MutableTransform2 transform;
+    private final MutableSize2Integer clipSize;
 
     private FakeUIPainter()
     {
@@ -20,6 +21,7 @@ public class FakeUIPainter implements UIPainter.Typed<FakeUIPainter>
         this.setIgnoreTransparentDraws(true);
 
         this.transform = Transform2.create();
+        this.clipSize = Size2.create(Integers.maximum, Integers.maximum);
     }
 
     public static FakeUIPainter create()
@@ -243,6 +245,30 @@ public class FakeUIPainter implements UIPainter.Typed<FakeUIPainter>
 
         this.transform.set(transform);
 
+        return this;
+    }
+
+    @Override
+    public Size2Integer getClip()
+    {
+        return this.clipSize;
+    }
+
+    @Override
+    public FakeUIPainter setClip(UIPainterSetClipSizeOptions options)
+    {
+        PreCondition.assertNotNull(options, "options");
+
+        if (options.getResetClip())
+        {
+            this.clipSize.set(options.getWidth(), options.getHeight());
+        }
+        else
+        {
+            this.clipSize.set(
+                Math.minimum(this.clipSize.getWidthAsInt(), options.getWidth()),
+                Math.minimum(this.clipSize.getHeightAsInt(), options.getHeight()));
+        }
         return this;
     }
 

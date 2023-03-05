@@ -648,7 +648,7 @@ public interface EveryoneSwingUIWindowTests
                 });
             });
 
-            runner.test("sandbox", runner.skip(false), (Test test) ->
+            runner.test("sandbox", runner.skip(true), (Test test) ->
             {
                 try (final EveryoneSwingUI ui = uiCreator.run();
                      final EveryoneSwingUIWindow window = ui.createEveryoneUIWindow().await())
@@ -658,10 +658,10 @@ public interface EveryoneSwingUIWindowTests
                     window.setHeight(Distance.inches(3));
 
                     window.setContent(
-                        ui.createUIHorizontalLayout().await()
+                        ui.createUIVerticalLayout().await()
                             .setDynamicSize(window.getContentAreaDynamicSize().scale(0.5))
                             .setBackgroundColor(Color.red)
-                            .setVerticalAlignment(VerticalAlignment.Center)
+                            .setHorizontalAlignment(HorizontalAlignment.Center)
                             .add(ui.createUIButton().await()
                                 .setBackgroundColor(Color.green)
                                 .setText("Hello World!")

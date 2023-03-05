@@ -732,11 +732,19 @@ public interface SwingUIWindowTests
                     window.setWidth(Distance.inches(3));
                     window.setHeight(Distance.inches(3));
 
-                    final UIText text = ui.createUIText().await()
-                        .setBackgroundColor(Color.green)
-                        .setText("Hello World!");
-
-                    window.setContent(text);
+                    window.setContent(
+                        ui.createUIVerticalLayout().await()
+                            .setDynamicSize(window.getContentAreaDynamicSize().scale(0.5))
+                            .setBackgroundColor(Color.red)
+                            .setHorizontalAlignment(HorizontalAlignment.Center)
+                            .add(ui.createUIButton().await()
+                                .setBackgroundColor(Color.green)
+                                .setText("Hello World!")
+                                .setSize(100, 50))
+                            .add(ui.createUIText().await()
+                                .setText("abc")
+                                .setSize(200, 100)
+                                .setBackgroundColor(Color.blue)));
 
                     window.setVisible(true);
                     window.await();

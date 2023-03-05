@@ -73,7 +73,7 @@ public class EveryoneUIVerticalLayout extends EveryoneUIElement.Base<EveryoneUIV
         {
             for (final EveryoneUIElement uiElement : this.elements)
             {
-                try (final Disposable childTransform = painter.saveTransform())
+                try (final Disposable savedState = painter.saveState())
                 {
                     if (this.horizontalAlignment != HorizontalAlignment.Left)
                     {
@@ -85,6 +85,7 @@ public class EveryoneUIVerticalLayout extends EveryoneUIElement.Base<EveryoneUIV
                         }
                     }
 
+                    painter.setClip(uiElement.getWidth(), uiElement.getHeight());
                     uiElement.paint(painter);
                 }
 

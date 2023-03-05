@@ -252,6 +252,29 @@ public class SwingUIPainter implements UIPainter.Typed<SwingUIPainter>
     }
 
     @Override
+    public Size2Integer getClip()
+    {
+        final java.awt.Rectangle clipBounds = this.graphics.getClipBounds();
+        return Size2.create(clipBounds.width, clipBounds.height);
+    }
+
+    @Override
+    public SwingUIPainter setClip(UIPainterSetClipSizeOptions options)
+    {
+        PreCondition.assertNotNull(options, "options");
+
+        if (options.getResetClip())
+        {
+            this.graphics.setClip(0, 0, options.getWidth(), options.getHeight());
+        }
+        else
+        {
+            this.graphics.clipRect(0, 0, options.getWidth(), options.getHeight());
+        }
+        return this;
+    }
+
+    @Override
     public Transform2 getTransform()
     {
         return AffineTransform2.create(this.graphics.getTransform());

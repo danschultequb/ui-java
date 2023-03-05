@@ -157,9 +157,8 @@ public interface UIPainter
     public UIPainter setTransform(Transform2 transform);
 
     /**
-     * Preserve the current state of this {@link UIPainter}'s {@link Transform2}. The preserved
-     * {@link Transform2} will be restored this {@link UIPainter} when the returned
-     * {@link Disposable} is disposed.
+     * Save the current {@link Transform2} of this {@link UIPainter}. The saved {@link Transform2}
+     * will be restored when the returned {@link Disposable} is disposed.
      */
     public default Disposable saveTransform()
     {
@@ -168,6 +167,87 @@ public interface UIPainter
         {
             this.setTransform(transformBackup);
         });
+    }
+
+    /**
+     * Get the clip of this {@link UIPainter}. Any draw operations that are outside the clip (based
+     * on the current transform), will not be drawn.
+     */
+    public Size2Integer getClip();
+
+    /**
+     * Set the clip of this {@link UIPainter}. Any draw operations that are outside the clip will
+     * not be drawn.
+     * @param width The width of the clip size.
+     * @param height The height of the clip size.
+     * @return This object for method chaining.
+     */
+    public default UIPainter setClip(int width, int height)
+    {
+        return this.setClip(options -> options.setSize(width, height));
+    }
+
+    /**
+     * Set the clip of this {@link UIPainter}. Any draw operations that are outside the clip will
+     * not be drawn.
+     * @param size The clip size.
+     * @return This object for method chaining.
+     */
+    public default UIPainter setClip(Size2Integer size)
+    {
+        PreCondition.assertNotNull(size, "size");
+
+        return this.setClip(options -> options.setSize(size));
+    }
+
+    /**
+     * Set the clip of this {@link UIPainter}. Any draw operations that are outside the clip will
+     * not be drawn.
+     * @param optionsAction The {@link Action1} that populates the options to use to set the clip of
+     *                      this {@link UIPainter}.
+     * @return This object for method chaining.
+     */
+    public default UIPainter setClip(Action1<UIPainterSetClipSizeOptions> optionsAction)
+    {
+        PreCondition.assertNotNull(optionsAction, "optionsAction");
+
+        final UIPainterSetClipSizeOptions options = UIPainterSetClipSizeOptions.create();
+        optionsAction.run(options);
+        return this.setClip(options);
+    }
+
+    /**
+     * Set the clip of this {@link UIPainter}. Any draw operations that are outside the clip will
+     * not be drawn.
+     * @param options The options to use to set the clip of this {@link UIPainter}.
+     * @return This object for method chaining.
+     */
+    public UIPainter setClip(UIPainterSetClipSizeOptions options);
+
+    /**
+     * Save the current clip of this {@link UIPainter}'s. The saved clip will be restored when the
+     * returned {@link Disposable} is disposed.
+     */
+    public default Disposable saveClip()
+    {
+        final Size2Integer clipSize = this.getClip();
+        return Disposable.create(() ->
+        {
+            this.setClip(options -> options
+                .setSize(clipSize)
+                .setResetClip(true));
+        });
+    }
+
+    /**
+     * Save the current state of this {@link UIPainter} ({@link Transform2}, clip, etc.). The saved
+     * state will be restored when the returned {@link Disposable} is disposed.
+     */
+    public default Disposable saveState()
+    {
+        return Disposable.create(
+            this.saveTransform(),
+            this.saveClip());
     }
 
     /**
@@ -232,5 +312,29 @@ public interface UIPainter
 
         @Override
         public T setTransform(Transform2 transform);
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public default T setClip(int width, int height)
+        {
+            return (T)UIPainter.super.setClip(width, height);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public default T setClip(Size2Integer size)
+        {
+            return (T)UIPainter.super.setClip(size);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public default T setClip(Action1<UIPainterSetClipSizeOptions> optionsAction)
+        {
+            return (T)UIPainter.super.setClip(optionsAction);
+        }
+
+        @Override
+        public T setClip(UIPainterSetClipSizeOptions options);
     }
 }

@@ -286,7 +286,11 @@ public class EveryoneSwingUIWindow implements UIWindow.Typed<EveryoneSwingUIWind
 
         if (this.content != null)
         {
-            this.content.paint(painter);
+            try (final Disposable savedState = painter.saveState())
+            {
+                painter.setClip(this.content.getWidth(), this.content.getHeight());
+                this.content.paint(painter);
+            }
         }
     }
 
