@@ -1,5 +1,7 @@
 package qub;
 
+import javax.swing.*;
+
 /**
  * A {@link UIElement} that contains a {@link javax.swing.JComponent}.
  */
@@ -272,6 +274,24 @@ public interface JComponentUIElement extends UIElement
             });
 
             return (T)this;
+        }
+
+        @Override
+        public int getContentWidth()
+        {
+            return this.getWidth();
+        }
+
+        @Override
+        public int getContentHeight()
+        {
+            return this.getHeight();
+        }
+
+        @Override
+        public Disposable onContentSizeChanged(Action1<SizeChange> action)
+        {
+            return this.onSizeChanged(action);
         }
     }
 }

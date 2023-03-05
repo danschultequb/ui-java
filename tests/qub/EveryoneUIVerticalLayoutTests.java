@@ -164,7 +164,7 @@ public interface EveryoneUIVerticalLayoutTests
                                 .setBackgroundColor(Color.blue)),
                         Iterable.create(
                             FakeDrawRectangleOperation.create()
-                                .setSize(0, 0)
+                                .setSize(200, 150)
                                 .setLineColor(Color.transparent)
                                 .setFillColor(Color.red),
                             FakeDrawRectangleOperation.create()

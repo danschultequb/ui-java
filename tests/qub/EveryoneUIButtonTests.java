@@ -70,7 +70,7 @@ public interface EveryoneUIButtonTests
                             .setLeftX(0)
                             .setTopY(0)
                             .setWidth(0)
-                            .setHeight(0)
+                            .setHeight(16)
                             .setLineColor(Color.black)
                             .setFillColor(Color.transparent)));
                 paintTest.run(

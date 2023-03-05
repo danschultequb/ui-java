@@ -22,6 +22,8 @@ public interface EveryoneUITextTests
                 runner.test("when value changes", (Test test) ->
                 {
                     final EveryoneUIText uiText = creator.run();
+                    test.assertEqual(0, uiText.getContentWidth());
+                    test.assertEqual(0, uiText.getContentHeight());
 
                     final BooleanValue triggered = BooleanValue.create();
                     final FakeEveryoneUIElementParent parent = FakeEveryoneUIElementParent.create()
@@ -32,12 +34,16 @@ public interface EveryoneUITextTests
                     test.assertSame(uiText, setTextResult);
                     test.assertEqual("hello world!", uiText.getText());
                     test.assertTrue(triggered.get());
+                    test.assertEqual(63, uiText.getContentWidth());
+                    test.assertEqual(16, uiText.getContentHeight());
                 });
 
                 runner.test("when value doesn't change", (Test test) ->
                 {
                     final EveryoneUIText uiText = creator.run()
                         .setText("abc");
+                    test.assertEqual(20, uiText.getContentWidth());
+                    test.assertEqual(16, uiText.getContentHeight());
 
                     final BooleanValue triggered = BooleanValue.create();
                     final FakeEveryoneUIElementParent parent = FakeEveryoneUIElementParent.create()
@@ -48,6 +54,8 @@ public interface EveryoneUITextTests
                     test.assertSame(uiText, setTextResult);
                     test.assertEqual("abc", uiText.getText());
                     test.assertFalse(triggered.hasValue());
+                    test.assertEqual(20, uiText.getContentWidth());
+                    test.assertEqual(16, uiText.getContentHeight());
                 });
             });
 

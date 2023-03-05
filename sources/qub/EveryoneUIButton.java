@@ -33,6 +33,9 @@ public class EveryoneUIButton extends EveryoneUIElement.Base<EveryoneUIButton> i
         {
             this.text = text;
 
+            final TextMeasurements measurements = this.ui.getTextMeasurements(text);
+            this.setContentSize(measurements.getWidth(), measurements.getHeight());
+
             this.repaint();
         }
 

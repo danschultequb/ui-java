@@ -130,12 +130,15 @@ public interface EveryoneUIElement extends UIElement
         private static final String heightPropertyName = "height";
         private static final String backgroundColorPropertyName = "backgroundColor";
 
-        private final EveryoneSwingUI ui;
+        protected final EveryoneSwingUI ui;
         private EveryoneUIElementParent parent;
         private int width;
         private int height;
         private Disposable sizeChangedSubscription;
         private RunnableEvent1<SizeChange> sizeChanged;
+        private int contentWidth;
+        private int contentHeight;
+        private RunnableEvent1<SizeChange> contentSizeChanged;
         private Color backgroundColor;
 
         protected Base(EveryoneSwingUI ui)
@@ -144,6 +147,8 @@ public interface EveryoneUIElement extends UIElement
 
             this.ui = ui;
             this.backgroundColor = Color.transparent;
+
+            this.setDynamicSize(this.getContentDynamicSize());
         }
 
         @Override
@@ -295,7 +300,7 @@ public interface EveryoneUIElement extends UIElement
 
             if (this.width != width || this.height != height)
             {
-                MutableSizeChange sizeChange = null;
+                SizeChange sizeChange = null;
                 if (this.sizeChanged != null)
                 {
                     sizeChange = SizeChange.create()
@@ -371,6 +376,55 @@ public interface EveryoneUIElement extends UIElement
                 this.sizeChanged = RunnableEvent1.create();
             }
             return this.sizeChanged.subscribe(action);
+        }
+
+        @Override
+        public int getContentWidth()
+        {
+            return this.contentWidth;
+        }
+
+        @Override
+        public int getContentHeight()
+        {
+            return this.contentHeight;
+        }
+
+        protected void setContentSize(int contentWidth, int contentHeight)
+        {
+            PreCondition.assertGreaterThanOrEqualTo(contentWidth, 0, "contentWidth");
+            PreCondition.assertGreaterThanOrEqualTo(contentHeight, 0, "contentHeight");
+
+            if (this.contentWidth != contentWidth || this.contentHeight != contentHeight)
+            {
+                SizeChange sizeChange = null;
+                if (this.contentSizeChanged != null)
+                {
+                    sizeChange = SizeChange.create()
+                        .setPreviousSize(this.contentWidth, this.contentHeight)
+                        .setNewSize(contentWidth, contentHeight);
+                }
+
+                this.contentWidth = contentWidth;
+                this.contentHeight = contentHeight;
+
+                if (sizeChange != null)
+                {
+                    this.contentSizeChanged.run(sizeChange);
+                }
+            }
+        }
+
+        @Override
+        public Disposable onContentSizeChanged(Action1<SizeChange> action)
+        {
+            PreCondition.assertNotNull(action, "action");
+
+            if (this.contentSizeChanged == null)
+            {
+                this.contentSizeChanged = RunnableEvent1.create();
+            }
+            return this.contentSizeChanged.subscribe(action);
         }
     }
 }

@@ -28,6 +28,16 @@ public class EveryoneUIHorizontalLayout extends EveryoneUIElement.Base<EveryoneU
         PreCondition.assertInstanceOf(uiElement, EveryoneUIElement.class, "uiElement");
 
         this.elements.add((EveryoneUIElement)uiElement);
+
+        int contentWidth = 0;
+        int contentHeight = 0;
+        for (final EveryoneUIElement element : this.elements)
+        {
+            contentWidth += element.getWidth();
+            contentHeight = Math.maximum(contentHeight, element.getHeight());
+        }
+        this.setContentSize(contentWidth, contentHeight);
+
         this.repaint();
 
         return this;

@@ -32,6 +32,12 @@ public class JavaAwtFontMetricsTextMeasurements implements TextMeasurements
     }
 
     @Override
+    public int getHeight()
+    {
+        return this.fontMetrics.getHeight();
+    }
+
+    @Override
     public int getWidth()
     {
         return this.fontMetrics.stringWidth(this.text);

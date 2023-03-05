@@ -91,8 +91,8 @@ public interface UIElement
     public UIElement setSize(Size2Distance size);
 
     /**
-     * Get the dynamic pixel size of this {@link UIElement} that will always return the current size
-     * of this {@link UIElement}.
+     * Get the dynamic size of this {@link UIElement} that will always return the current size of
+     * this {@link UIElement}.
      */
     public default DynamicSize2Integer getDynamicSize()
     {
@@ -128,6 +128,55 @@ public interface UIElement
      * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action1}.
      */
     public Disposable onSizeChanged(Action1<SizeChange> action);
+
+    /**
+     * Get the width of this {@link UIElement}'s content.
+     */
+    public int getContentWidth();
+
+    /**
+     * Get the height of this {@link UIElement}'s content.
+     */
+    public int getContentHeight();
+
+    /**
+     * Get the size of this {@link UIElement}'s content.
+     */
+    public default Size2Integer getContentSize()
+    {
+        return Size2.create(this.getContentWidth(), this.getContentHeight());
+    }
+
+    /**
+     * Run the provided {@link Action0} when this {@link UIElement}'s content size changes.
+     * @param action The {@link Action0} to run when this {@link UIElement}'s content size changes.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action0}.
+     */
+    public default Disposable onContentSizeChanged(Action0 action)
+    {
+        PreCondition.assertNotNull(action, "action");
+
+        return this.onContentSizeChanged((SizeChange sizeChange) -> { action.run(); });
+    }
+
+    /**
+     * Run the provided {@link Action1} when this {@link UIElement}'s content size changes.
+     * @param action The {@link Action1} to run when this {@link UIElement}'s content size changes.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action1}.
+     */
+    public Disposable onContentSizeChanged(Action1<SizeChange> action);
+
+    /**
+     * Get the dynamic size of this {@link UIElement}'s content that will always return the current
+     * size of this {@link UIElement}'s content.
+     */
+    public default DynamicSize2Integer getContentDynamicSize()
+    {
+        return FunctionDynamicSize2Integer.create()
+            .setGetWidthFunction(this::getContentWidth)
+            .setGetHeightFunction(this::getContentHeight)
+            .setOnChangedFunction(this::onContentSizeChanged);
+    }
 
     /**
      * A version of a {@link UIElement} that returns its own type from chainable methods.

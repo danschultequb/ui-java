@@ -28,6 +28,16 @@ public class EveryoneUIVerticalLayout extends EveryoneUIElement.Base<EveryoneUIV
         PreCondition.assertInstanceOf(uiElement, EveryoneUIElement.class, "uiElement");
 
         this.elements.add((EveryoneUIElement)uiElement);
+
+        int contentWidth = 0;
+        int contentHeight = 0;
+        for (final EveryoneUIElement element : this.elements)
+        {
+            contentWidth = Math.maximum(contentWidth, element.getWidth());
+            contentHeight += element.getHeight();
+        }
+        this.setContentSize(contentWidth, contentHeight);
+
         this.repaint();
 
         return this;
