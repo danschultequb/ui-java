@@ -658,10 +658,10 @@ public interface EveryoneSwingUIWindowTests
                     window.setHeight(Distance.inches(3));
 
                     window.setContent(
-                        ui.createUIVerticalLayout().await()
+                        ui.createUIHorizontalLayout().await()
                             .setDynamicSize(window.getContentAreaDynamicSize().scale(0.5))
                             .setBackgroundColor(Color.red)
-                            .setHorizontalAlignment(HorizontalAlignment.Center)
+                            .setVerticalAlignment(VerticalAlignment.Center)
                             .add(ui.createUIButton().await()
                                 .setBackgroundColor(Color.green)
                                 .setText("Hello World!")

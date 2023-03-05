@@ -66,6 +66,21 @@ public interface UIHorizontalLayout extends UIElement
     }
 
     /**
+     * Get the {@link VerticalAlignment} of the {@link UIElement}s that are added to this
+     * {@link UIHorizontalLayout}.
+     */
+    public VerticalAlignment getVerticalAlignment();
+
+    /**
+     * Set the {@link VerticalAlignment} of the {@link UIElement}s that are added to this
+     * {@link UIHorizontalLayout}.
+     * @param verticalAlignment The {@link VerticalAlignment} of the {@link UIElement}s that are
+     *                            added to this {@link UIHorizontalLayout}.
+     * @return This object for method chaining.
+     */
+    public UIHorizontalLayout setVerticalAlignment(VerticalAlignment verticalAlignment);
+
+    /**
      * A version of a {@link UIHorizontalLayout} that returns its own type from chainable methods.
      * @param <T> The actual type of the {@link UIHorizontalLayout}.
      */
