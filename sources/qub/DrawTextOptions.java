@@ -13,6 +13,7 @@ public class DrawTextOptions
     private static final String baselineYPropertyName = "baselineY";
     private static final String bottomYPropertyName = "bottomY";
     private static final String textPropertyName = "text";
+    private static final String lineColorPropertyName = "lineColor";
 
     private Integer leftX;
     private Integer centerX;
@@ -24,6 +25,8 @@ public class DrawTextOptions
     private Integer bottomY;
 
     private String text;
+
+    private Color lineColor;
 
     private DrawTextOptions()
     {
@@ -37,6 +40,39 @@ public class DrawTextOptions
         return new DrawTextOptions();
     }
 
+    public static DrawTextOptions create(DrawTextOptions toCopy)
+    {
+        PreCondition.assertNotNull(toCopy, "toCopy");
+
+        return DrawTextOptions.create()
+            .set(toCopy);
+    }
+
+    public DrawTextOptions set(DrawTextOptions toCopy)
+    {
+        PreCondition.assertNotNull(toCopy, "toCopy");
+
+        this.leftX = toCopy.getLeftX();
+        this.centerX = toCopy.getCenterX();
+        this.rightX = toCopy.getRightX();
+        this.topY = toCopy.getTopY();
+        this.centerY = toCopy.getCenterY();
+        this.baselineY = toCopy.getBaselineY();
+        this.bottomY = toCopy.getBottomY();
+        this.text = toCopy.getText();
+        this.lineColor = toCopy.getLineColor();
+
+        return this;
+    }
+
+    /**
+     * Get whether this {@link DrawTextOptions} has an x-coordinate value.
+     */
+    public boolean hasX()
+    {
+        return this.leftX != null || this.centerX != null || this.rightX != null;
+    }
+
     /**
      * Set the left edge of where the text will be drawn.
      * @param leftX The left edge of where the text will be drawn at.
@@ -44,8 +80,7 @@ public class DrawTextOptions
      */
     public DrawTextOptions setLeftX(int leftX)
     {
-        PreCondition.assertNull(this.getCenterX(), "this.getCenterX()");
-        PreCondition.assertNull(this.getRightX(), "this.getRightX()");
+        PreCondition.assertFalse(this.hasX(), "this.hasX()");
 
         this.leftX = leftX;
 
@@ -62,8 +97,7 @@ public class DrawTextOptions
 
     public DrawTextOptions setCenterX(int centerX)
     {
-        PreCondition.assertNull(this.getLeftX(), "this.getLeftX()");
-        PreCondition.assertNull(this.getRightX(), "this.getRightX()");
+        PreCondition.assertFalse(this.hasX(), "this.hasX()");
 
         this.centerX = centerX;
 
@@ -77,8 +111,7 @@ public class DrawTextOptions
 
     public DrawTextOptions setRightX(int rightX)
     {
-        PreCondition.assertNull(this.getLeftX(), "this.getLeftX()");
-        PreCondition.assertNull(this.getCenterX(), "this.getCenterX()");
+        PreCondition.assertFalse(this.hasX(), "this.hasX()");
 
         this.rightX = rightX;
 
@@ -90,11 +123,17 @@ public class DrawTextOptions
         return this.rightX;
     }
 
+    /**
+     * Get whether this {@link DrawTextOptions} has a y-coordinate value.
+     */
+    public boolean hasY()
+    {
+        return this.topY != null || this.centerY != null || this.baselineY != null || this.bottomY != null;
+    }
+
     public DrawTextOptions setTopY(int topY)
     {
-        PreCondition.assertNull(this.getCenterY(), "this.getCenterY()");
-        PreCondition.assertNull(this.getBaselineY(), "this.getBaselineY()");
-        PreCondition.assertNull(this.getBottomY(), "this.getBottomY()");
+        PreCondition.assertFalse(this.hasY(), "this.hasY()");
 
         this.topY = topY;
 
@@ -108,9 +147,7 @@ public class DrawTextOptions
 
     public DrawTextOptions setCenterY(int centerY)
     {
-        PreCondition.assertNull(this.getTopY(), "this.getTopY()");
-        PreCondition.assertNull(this.getBaselineY(), "this.getBaselineY()");
-        PreCondition.assertNull(this.getBottomY(), "this.getBottomY()");
+        PreCondition.assertFalse(this.hasY(), "this.hasY()");
 
         this.centerY = centerY;
 
@@ -124,9 +161,7 @@ public class DrawTextOptions
 
     public DrawTextOptions setBaselineY(int baselineY)
     {
-        PreCondition.assertNull(this.getTopY(), "this.getTopY()");
-        PreCondition.assertNull(this.getCenterY(), "this.getCenterY()");
-        PreCondition.assertNull(this.getBottomY(), "this.getBottomY()");
+        PreCondition.assertFalse(this.hasY(), "this.hasY()");
 
         this.baselineY = baselineY;
 
@@ -140,9 +175,7 @@ public class DrawTextOptions
 
     public DrawTextOptions setBottomY(int bottomY)
     {
-        PreCondition.assertNull(this.getTopY(), "this.getTopY()");
-        PreCondition.assertNull(this.getCenterY(), "this.getCenterY()");
-        PreCondition.assertNull(this.getBaselineY(), "this.getBaselineY()");
+        PreCondition.assertFalse(this.hasY(), "this.hasY()");
 
         this.bottomY = bottomY;
 
@@ -168,6 +201,23 @@ public class DrawTextOptions
         return this.text;
     }
 
+    public DrawTextOptions setLineColor(Color lineColor)
+    {
+        PreCondition.assertNotNull(lineColor, "lineColor");
+
+        this.lineColor = lineColor;
+
+        return this;
+    }
+
+    public Color getLineColor()
+    {
+        return this.lineColor;
+    }
+
+    /**
+     * Get the JSON representation of this {@link DrawTextOptions} object.
+     */
     public JSONObject toJson()
     {
         final JSONObject result = JSONObject.create();
@@ -203,6 +253,10 @@ public class DrawTextOptions
         {
             result.setString(DrawTextOptions.textPropertyName, this.text);
         }
+        if (this.lineColor != null)
+        {
+            result.setObject(DrawTextOptions.lineColorPropertyName, this.lineColor.toJson());
+        }
 
         PostCondition.assertNotNull(result, "result");
 
@@ -218,7 +272,7 @@ public class DrawTextOptions
     @Override
     public boolean equals(Object rhs)
     {
-        return rhs instanceof DrawTextOptions && this.equals((DrawTextOptions)rhs);
+        return rhs instanceof DrawTextOptions rhsOptions && this.equals(rhsOptions);
     }
 
     public boolean equals(DrawTextOptions rhs)
@@ -231,6 +285,7 @@ public class DrawTextOptions
             Comparer.equal(this.centerY, rhs.centerY) &&
             Comparer.equal(this.baselineY, rhs.baselineY) &&
             Comparer.equal(this.bottomY, rhs.bottomY) &&
-            Comparer.equal(this.text, rhs.text);
+            Comparer.equal(this.text, rhs.text) &&
+            Comparer.equal(this.lineColor, rhs.lineColor);
     }
 }

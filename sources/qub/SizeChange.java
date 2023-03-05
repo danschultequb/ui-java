@@ -88,7 +88,7 @@ public interface SizeChange
     {
         PreCondition.assertNotNull(lhs, "lhs");
 
-        return rhs instanceof SizeChange && lhs.equals((SizeChange)rhs);
+        return rhs instanceof SizeChange rhsChange && lhs.equals(rhsChange);
     }
 
     /**

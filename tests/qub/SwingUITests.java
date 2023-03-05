@@ -2,17 +2,28 @@ package qub;
 
 public interface SwingUITests
 {
+    public static SwingUI createUI(AsyncScheduler mainAsyncRunner)
+    {
+        PreCondition.assertNotNull(mainAsyncRunner, "mainAsyncRunner");
+
+        return SwingUI.create(mainAsyncRunner)
+            .setHorizontalPixelsPerInch(100)
+            .setVerticalPixelsPerInch(200);
+    }
+
     public static void test(TestRunner runner)
     {
         runner.testGroup(SwingUI.class,
             (TestResources resources) -> Tuple.create(resources.getMainAsyncRunner()),
             (AsyncScheduler mainAsyncRunner) ->
         {
-            UITests.test(runner, () -> SwingUI.create(mainAsyncRunner));
+            final Function0<SwingUI> creator = () -> SwingUITests.createUI(mainAsyncRunner);
+
+            UITests.test(runner, creator);
 
             runner.test("createUIWindow()", (Test test) ->
             {
-                try (final SwingUI ui = SwingUI.create(mainAsyncRunner);
+                try (final SwingUI ui = creator.run();
                      final UIWindow window = ui.createUIWindow().await())
                 {
                     test.assertFalse(window.isDisposed());
@@ -25,7 +36,7 @@ public interface SwingUITests
 
             runner.test("createSwingUIWindow()", (Test test) ->
             {
-                try (final SwingUI ui = SwingUI.create(mainAsyncRunner);
+                try (final SwingUI ui = creator.run();
                      final SwingUIWindow window = ui.createSwingUIWindow().await())
                 {
                     test.assertFalse(window.isDisposed());
@@ -40,7 +51,7 @@ public interface SwingUITests
             {
                 runner.test("with one window", (Test test) ->
                 {
-                    try (final SwingUI ui = SwingUI.create(mainAsyncRunner))
+                    try (final SwingUI ui = creator.run())
                     {
                         final SwingUIWindow window = ui.createSwingUIWindow().await();
                         test.assertFalse(window.isDisposed());

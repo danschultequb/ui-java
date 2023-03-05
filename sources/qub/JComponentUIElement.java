@@ -73,6 +73,14 @@ public interface JComponentUIElement extends UIElement
     }
 
     @Override
+    public default JComponentUIElement setSize(int width, int height)
+    {
+        JavaAwtComponents.setSize(this.getJComponent(), width, height);
+
+        return this;
+    }
+
+    @Override
     public default JComponentUIElement setSize(Size2Integer size)
     {
         PreCondition.assertNotNull(size, "size");
@@ -81,11 +89,14 @@ public interface JComponentUIElement extends UIElement
     }
 
     @Override
-    public default JComponentUIElement setSize(int width, int height)
-    {
-        JavaAwtComponents.setSize(this.getJComponent(), width, height);
+    public JComponentUIElement setSize(Distance width, Distance height);
 
-        return this;
+    @Override
+    public default JComponentUIElement setSize(Size2Distance size)
+    {
+        PreCondition.assertNotNull(size, "size");
+
+        return this.setSize(size.getWidth(), size.getHeight());
     }
 
     @Override
@@ -147,6 +158,16 @@ public interface JComponentUIElement extends UIElement
         public default T setSize(int width, int height)
         {
             return (T)JComponentUIElement.super.setSize(width, height);
+        }
+
+        @Override
+        public T setSize(Distance width, Distance height);
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public default T setSize(Size2Distance size)
+        {
+            return (T)JComponentUIElement.super.setSize(size);
         }
     }
 
@@ -227,6 +248,15 @@ public interface JComponentUIElement extends UIElement
             }
 
             return JComponentUIElement.Typed.super.setSize(width, height);
+        }
+
+        @Override
+        public T setSize(Distance width, Distance height)
+        {
+            PreCondition.assertGreaterThanOrEqualTo(width, Distance.zero, "width");
+            PreCondition.assertGreaterThanOrEqualTo(height, Distance.zero, "height");
+
+            return this.setSize(this.ui.convertHorizontalDistanceToPixels(width), this.ui.convertVerticalDistanceToPixels(height));
         }
 
         @Override

@@ -112,6 +112,62 @@ public interface DrawOvalOptionsTests
                 setHeightTest.run(1);
             });
 
+            runner.testGroup("setLineColor(Color)", () ->
+            {
+                runner.test("with null", (Test test) ->
+                {
+                    final DrawOvalOptions options = DrawOvalOptions.create();
+
+                    test.assertThrows(() -> options.setLineColor(null),
+                        new PreConditionFailure("lineColor cannot be null."));
+
+                    test.assertNull(options.getLineColor());
+                });
+
+                final Action1<Color> setLineColorTest = (Color lineColor) ->
+                {
+                    runner.test("with " + lineColor, (Test test) ->
+                    {
+                        final DrawOvalOptions options = DrawOvalOptions.create();
+                        final DrawOvalOptions setLineColorResult = options.setLineColor(lineColor);
+                        test.assertSame(options, setLineColorResult);
+                        test.assertEqual(lineColor, options.getLineColor());
+                    });
+                };
+
+                setLineColorTest.run(Color.red);
+                setLineColorTest.run(Color.green);
+                setLineColorTest.run(Color.transparent);
+            });
+
+            runner.testGroup("setFillColor(Color)", () ->
+            {
+                runner.test("with null", (Test test) ->
+                {
+                    final DrawOvalOptions options = DrawOvalOptions.create();
+
+                    test.assertThrows(() -> options.setFillColor(null),
+                        new PreConditionFailure("fillColor cannot be null."));
+
+                    test.assertNull(options.getFillColor());
+                });
+
+                final Action1<Color> setFillColorTest = (Color fillColor) ->
+                {
+                    runner.test("with " + fillColor, (Test test) ->
+                    {
+                        final DrawOvalOptions options = DrawOvalOptions.create();
+                        final DrawOvalOptions setFillColorResult = options.setFillColor(fillColor);
+                        test.assertSame(options, setFillColorResult);
+                        test.assertEqual(fillColor, options.getFillColor());
+                    });
+                };
+
+                setFillColorTest.run(Color.red);
+                setFillColorTest.run(Color.green);
+                setFillColorTest.run(Color.transparent);
+            });
+
             runner.testGroup("toJson()", () ->
             {
                 final Action2<DrawOvalOptions,JSONObject> toJsonTest = (DrawOvalOptions options, JSONObject expected) ->

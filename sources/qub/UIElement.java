@@ -76,12 +76,27 @@ public interface UIElement
     public UIElement setSize(Size2Integer size);
 
     /**
+     * Set the {@link Distance} width and height of this {@link UIElement}.
+     * @param width The new {@link Distance} width of this {@link UIElement}.
+     * @param height The new {@link Distance} height of this {@link UIElement}.
+     * @return This object for method chaining.
+     */
+    public UIElement setSize(Distance width, Distance height);
+
+    /**
+     * Set the {@link Distance} size of this {@link UIElement}.
+     * @param size The new {@link Distance} size of this {@link UIElement}.
+     * @return This object for method chaining.
+     */
+    public UIElement setSize(Size2Distance size);
+
+    /**
      * Get the dynamic pixel size of this {@link UIElement} that will always return the current size
      * of this {@link UIElement}.
      */
     public default DynamicSize2Integer getDynamicSize()
     {
-        return DynamicSize2Integer.create()
+        return FunctionDynamicSize2Integer.create()
             .setGetWidthFunction(this::getWidth)
             .setGetHeightFunction(this::getHeight)
             .setOnChangedFunction(this::onSizeChanged);
@@ -140,6 +155,12 @@ public interface UIElement
 
         @Override
         public T setSize(Size2Integer size);
+
+        @Override
+        public T setSize(Distance width, Distance height);
+
+        @Override
+        public T setSize(Size2Distance size);
 
         @Override
         public T setDynamicSize(DynamicSize2Integer dynamicSize);

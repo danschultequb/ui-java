@@ -10,7 +10,7 @@ public interface SwingUITextTests
         {
             final Function0<SwingUIText> creator = () ->
             {
-                final SwingUI ui = SwingUI.create(mainAsyncRunner);
+                final SwingUI ui = SwingUITests.createUI(mainAsyncRunner);
                 return ui.create(SwingUIText.class).await();
             };
 

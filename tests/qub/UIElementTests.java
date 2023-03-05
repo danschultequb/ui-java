@@ -34,6 +34,7 @@ public interface UIElementTests
                 setBackgroundColorTest.run(Color.blue);
                 setBackgroundColorTest.run(Color.red);
                 setBackgroundColorTest.run(Color.white);
+                setBackgroundColorTest.run(Color.create(1, 2, 3));
                 setBackgroundColorTest.run(Color.create(1, 2, 3, Color.ComponentMax));
             });
 
@@ -70,6 +71,36 @@ public interface UIElementTests
                 setWidthTest.run(0);
                 setWidthTest.run(1);
                 setWidthTest.run(100);
+
+                runner.test("after having a dynamic size",
+                    (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                    (Test test, Synchronization synchronization) ->
+                {
+                    final Size2Integer size1 = Size2.create(100, 200);
+                    final MutableDynamicSize2Integer dynamicSize = DynamicSize2Integer.create(size1);
+                    final Gate gate = synchronization.createGate(false);
+                    final UIElement uiElement = creator.run()
+                        .setDynamicSize(dynamicSize);
+                    try (final Disposable subscription = uiElement.onSizeChanged(gate::open))
+                    {
+                        test.assertEqual(size1, uiElement.getSize());
+
+                        final Size2Integer size2 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size2);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(size2, uiElement.getSize());
+
+                        uiElement.setWidth(100);
+
+                        final Size2Integer size4 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size4);
+
+                        test.assertEqual(Size2.create(100, size2.getHeight()), uiElement.getSize());
+                        test.assertEqual(size4, dynamicSize);
+                    }
+                });
             });
 
             runner.testGroup("setWidth(Distance)", () ->
@@ -90,6 +121,53 @@ public interface UIElementTests
 
                 setWidthErrorTest.run(Distance.inches(-10), new PreConditionFailure("width (-10.0 Inches) must be greater than or equal to 0.0 Inches."));
                 setWidthErrorTest.run(Distance.millimeters(-1), new PreConditionFailure("width (-1.0 Millimeters) must be greater than or equal to 0.0 Inches."));
+
+                final Action2<Distance,Integer> setWidthTest = (Distance width, Integer expected) ->
+                {
+                    runner.test("with " + width, (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+
+                        final UIElement setWidthResult = uiElement.setWidth(width);
+                        test.assertSame(uiElement, setWidthResult);
+                        test.assertEqual(expected, uiElement.getWidth());
+                    });
+                };
+
+                setWidthTest.run(Distance.zero, 0);
+                setWidthTest.run(Distance.millimeters(1), 3);
+                setWidthTest.run(Distance.millimeters(10), 39);
+                setWidthTest.run(Distance.inches(1), 100);
+
+                runner.test("after having a dynamic size",
+                    (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                    (Test test, Synchronization synchronization) ->
+                {
+                    final Size2Integer size1 = Size2.create(100, 200);
+                    final MutableDynamicSize2Integer dynamicSize = DynamicSize2Integer.create(size1);
+                    final Gate gate = synchronization.createGate(false);
+                    final UIElement uiElement = creator.run()
+                        .setDynamicSize(dynamicSize);
+                    try (final Disposable subscription = uiElement.onSizeChanged(gate::open))
+                    {
+                        test.assertEqual(size1, uiElement.getSize());
+
+                        final Size2Integer size2 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size2);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(size2, uiElement.getSize());
+
+                        uiElement.setWidth(Distance.inches(1));
+
+                        final Size2Integer size4 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size4);
+
+                        test.assertEqual(Size2.create(100, size2.getHeight()), uiElement.getSize());
+                        test.assertEqual(size4, dynamicSize);
+                    }
+                });
             });
 
             runner.testGroup("setHeight(int)", () ->
@@ -125,6 +203,36 @@ public interface UIElementTests
                 setHeightTest.run(0);
                 setHeightTest.run(1);
                 setHeightTest.run(100);
+
+                runner.test("after having a dynamic size",
+                    (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                    (Test test, Synchronization synchronization) ->
+                {
+                    final Size2Integer size1 = Size2.create(100, 200);
+                    final MutableDynamicSize2Integer dynamicSize = DynamicSize2Integer.create(size1);
+                    final Gate gate = synchronization.createGate(false);
+                    final UIElement uiElement = creator.run()
+                        .setDynamicSize(dynamicSize);
+                    try (final Disposable subscription = uiElement.onSizeChanged(gate::open))
+                    {
+                        test.assertEqual(size1, uiElement.getSize());
+
+                        final Size2Integer size2 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size2);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(size2, uiElement.getSize());
+
+                        uiElement.setHeight(200);
+
+                        final Size2Integer size3 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size3);
+
+                        test.assertEqual(Size2.create(size2.getWidth(), 200), uiElement.getSize());
+                        test.assertEqual(size3, dynamicSize);
+                    }
+                });
             });
 
             runner.testGroup("setHeight(Distance)", () ->
@@ -145,6 +253,53 @@ public interface UIElementTests
 
                 setHeightErrorTest.run(Distance.inches(-10), new PreConditionFailure("height (-10.0 Inches) must be greater than or equal to 0.0 Inches."));
                 setHeightErrorTest.run(Distance.millimeters(-1), new PreConditionFailure("height (-1.0 Millimeters) must be greater than or equal to 0.0 Inches."));
+
+                final Action2<Distance,Integer> setHeightTest = (Distance height, Integer expected) ->
+                {
+                    runner.test("with " + height, (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+
+                        final UIElement setHeightResult = uiElement.setHeight(height);
+                        test.assertSame(uiElement, setHeightResult);
+                        test.assertEqual(expected, uiElement.getHeight());
+                    });
+                };
+
+                setHeightTest.run(Distance.zero, 0);
+                setHeightTest.run(Distance.millimeters(1), 7);
+                setHeightTest.run(Distance.millimeters(10), 78);
+                setHeightTest.run(Distance.inches(1), 200);
+
+                runner.test("after having a dynamic size",
+                    (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                    (Test test, Synchronization synchronization) ->
+                {
+                    final Size2Integer size1 = Size2.create(100, 200);
+                    final MutableDynamicSize2Integer dynamicSize = DynamicSize2Integer.create(size1);
+                    final Gate gate = synchronization.createGate(false);
+                    final UIElement uiElement = creator.run()
+                        .setDynamicSize(dynamicSize);
+                    try (final Disposable subscription = uiElement.onSizeChanged(gate::open))
+                    {
+                        test.assertEqual(size1, uiElement.getSize());
+
+                        final Size2Integer size2 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size2);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(size2, uiElement.getSize());
+
+                        uiElement.setHeight(Distance.inches(1));
+
+                        final Size2Integer size3 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size3);
+
+                        test.assertEqual(Size2.create(size2.getWidth(), 200), uiElement.getSize());
+                        test.assertEqual(size3, dynamicSize);
+                    }
+                });
             });
 
             runner.testGroup("setSize(int,int)", () ->
@@ -190,6 +345,37 @@ public interface UIElementTests
                 setSizeTest.run(10, 0);
                 setSizeTest.run(10, 1);
                 setSizeTest.run(10, 10);
+
+                runner.test("after having a dynamic size",
+                    (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                    (Test test, Synchronization synchronization) ->
+                {
+                    final Size2Integer size1 = Size2.create(100, 200);
+                    final MutableDynamicSize2Integer dynamicSize = DynamicSize2Integer.create(size1);
+                    final Gate gate = synchronization.createGate(false);
+                    final UIElement uiElement = creator.run()
+                        .setDynamicSize(dynamicSize);
+                    try (final Disposable subscription = uiElement.onSizeChanged(gate::open))
+                    {
+                        test.assertEqual(size1, uiElement.getSize());
+
+                        final Size2Integer size2 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size2);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(size2, uiElement.getSize());
+
+                        final Size2Integer size3 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        uiElement.setSize(size3);
+
+                        final Size2Integer size4 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size4);
+
+                        test.assertEqual(size3, uiElement.getSize());
+                        test.assertEqual(size4, dynamicSize);
+                    }
+                });
             });
 
             runner.testGroup("setSize(Size2Integer)", () ->
@@ -227,6 +413,112 @@ public interface UIElementTests
                 setSizeTest.run(Size2.create(10, 0));
                 setSizeTest.run(Size2.create(10, 1));
                 setSizeTest.run(Size2.create(10, 10));
+
+                runner.test("after having a dynamic size",
+                    (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                    (Test test, Synchronization synchronization) ->
+                {
+                    final Size2Integer size1 = Size2.create(100, 200);
+                    final MutableDynamicSize2Integer dynamicSize = DynamicSize2Integer.create(size1);
+                    final Gate gate = synchronization.createGate(false);
+                    final UIElement uiElement = creator.run()
+                        .setDynamicSize(dynamicSize);
+                    try (final Disposable subscription = uiElement.onSizeChanged(gate::open))
+                    {
+                        test.assertEqual(size1, uiElement.getSize());
+
+                        final Size2Integer size2 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size2);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(size2, uiElement.getSize());
+
+                        final Size2Integer size3 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        uiElement.setSize(size3);
+
+                        final Size2Integer size4 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size4);
+
+                        test.assertEqual(size3, uiElement.getSize());
+                        test.assertEqual(size4, dynamicSize);
+                    }
+                });
+            });
+
+            runner.testGroup("setSize(Distance,Distance)", () ->
+            {
+                final Action3<Distance,Distance,Throwable> setSizeErrorTest = (Distance width, Distance height, Throwable expected) ->
+                {
+                    runner.test("with " + English.andList(width, height), (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final Size2Integer size = uiElement.getSize();
+
+                        test.assertThrows(() -> uiElement.setSize(width, height),
+                            expected);
+
+                        test.assertEqual(size, uiElement.getSize());
+                    });
+                };
+
+                setSizeErrorTest.run(Distance.inches(-10), Distance.inches(10), new PreConditionFailure("width (-10.0 Inches) must be greater than or equal to 0.0 Inches."));
+                setSizeErrorTest.run(Distance.inches(-1), Distance.inches(10), new PreConditionFailure("width (-1.0 Inches) must be greater than or equal to 0.0 Inches."));
+                setSizeErrorTest.run(Distance.inches(1), Distance.inches(-10), new PreConditionFailure("height (-10.0 Inches) must be greater than or equal to 0.0 Inches."));
+                setSizeErrorTest.run(Distance.inches(1), Distance.inches(-1), new PreConditionFailure("height (-1.0 Inches) must be greater than or equal to 0.0 Inches."));
+
+                final Action3<Distance,Distance,Size2Integer> setSizeTest = (Distance width, Distance height, Size2Integer expected) ->
+                {
+                    runner.test("with " + English.andList(width, height), (Test test) ->
+                    {
+                        final UIElement uiElement = creator.run();
+                        final UIElement setSizeResult = uiElement.setSize(width, height);
+                        test.assertSame(uiElement, setSizeResult);
+                        test.assertEqual(expected.getWidth(), uiElement.getWidth());
+                        test.assertEqual(expected.getHeight(), uiElement.getHeight());
+                        test.assertEqual(expected, uiElement.getSize());
+                    });
+                };
+
+                setSizeTest.run(Distance.zero, Distance.zero, Size2.create(0, 0));
+                setSizeTest.run(Distance.zero, Distance.inches(1), Size2.create(0, 200));
+                setSizeTest.run(Distance.zero, Distance.inches(10), Size2.create(0, 2000));
+                setSizeTest.run(Distance.inches(1), Distance.zero, Size2.create(100, 0));
+                setSizeTest.run(Distance.inches(1), Distance.inches(1), Size2.create(100, 200));
+                setSizeTest.run(Distance.inches(1), Distance.inches(10), Size2.create(100, 2000));
+                setSizeTest.run(Distance.inches(10), Distance.zero, Size2.create(1000, 0));
+                setSizeTest.run(Distance.inches(10), Distance.inches(1), Size2.create(1000, 200));
+                setSizeTest.run(Distance.inches(10), Distance.inches(10), Size2.create(1000, 2000));
+
+                runner.test("after having a dynamic size",
+                    (TestResources resources) -> Tuple.create(resources.getSynchronization()),
+                    (Test test, Synchronization synchronization) ->
+                {
+                    final Size2Integer size1 = Size2.create(100, 200);
+                    final MutableDynamicSize2Integer dynamicSize = DynamicSize2Integer.create(size1);
+                    final Gate gate = synchronization.createGate(false);
+                    final UIElement uiElement = creator.run()
+                        .setDynamicSize(dynamicSize);
+                    try (final Disposable subscription = uiElement.onSizeChanged(gate::open))
+                    {
+                        test.assertEqual(size1, uiElement.getSize());
+
+                        final Size2Integer size2 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size2);
+                        gate.passThrough().await();
+                        gate.close();
+
+                        test.assertEqual(size2, uiElement.getSize());
+
+                        uiElement.setSize(Distance.inches(5), Distance.inches(7));
+
+                        final Size2Integer size3 = Size2.create(dynamicSize.getWidth() + 1, dynamicSize.getHeight() + 1);
+                        dynamicSize.set(size3);
+
+                        test.assertEqual(Size2.create(500, 1400), uiElement.getSize());
+                        test.assertEqual(size3, dynamicSize);
+                    }
+                });
             });
 
             runner.test("getDynamicSize()",
@@ -305,24 +597,14 @@ public interface UIElementTests
                     final UIElement uiElement = creator.run();
                     final Size2Integer size1 = uiElement.getSize();
 
-                    final RunnableEvent1<SizeChange> sizeChangeEvent = Event1.create();
-                    final MutableSize2Integer mutableSize = Size2Integer.create()
-                        .setWidth(size1.getWidth() + 1)
-                        .setHeight(size1.getHeight() + 2);
-                    final DynamicSize2Integer dynamicSize = DynamicSize2Integer.create()
-                        .setGetWidthFunction(mutableSize::getWidth)
-                        .setGetHeightFunction(mutableSize::getHeight)
-                        .setOnChangedFunction(sizeChangeEvent::subscribe);
+                    final MutableDynamicSize2Integer dynamicSize = DynamicSize2Integer.create(size1.getWidth() + 1, size1.getHeight() + 1);
                     final UIElement setDynamicSizeResult = uiElement.setDynamicSize(dynamicSize);
                     test.assertSame(uiElement, setDynamicSizeResult);
-                    test.assertEqual(mutableSize, uiElement.getSize());
+                    test.assertEqual(dynamicSize, uiElement.getSize());
 
                     final Size2Integer size2 = uiElement.getSize();
-                    mutableSize.set(size2.getWidth() + 1, size2.getHeight() + 2);
-                    sizeChangeEvent.run(SizeChange.create()
-                        .setPreviousSize(size2)
-                        .setNewSize(mutableSize));
-                    test.assertEqual(mutableSize, uiElement.getSize());
+                    dynamicSize.set(size2.getWidth() + 1, size2.getHeight() + 2);
+                    test.assertEqual(dynamicSize, uiElement.getSize());
                 });
             });
 

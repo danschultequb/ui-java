@@ -220,6 +220,25 @@ public interface DrawLineOptionsTests
                 setYTest.run(1);
             });
 
+            runner.testGroup("setLineColor(Color)", () ->
+            {
+                final Action1<Color> setLineColorTest = (Color lineColor) ->
+                {
+                    runner.test("with " + lineColor, (Test test) ->
+                    {
+                        final DrawLineOptions options = DrawLineOptions.create();
+                        final DrawLineOptions setLineColorResult = options.setLineColor(lineColor);
+                        test.assertSame(options, setLineColorResult);
+                        test.assertEqual(lineColor, options.getLineColor());
+                    });
+                };
+
+                setLineColorTest.run(Color.red);
+                setLineColorTest.run(Color.black);
+                setLineColorTest.run(Color.transparent);
+                setLineColorTest.run(Color.create(1, 2, 3, 4));
+            });
+
             runner.testGroup("toJson()", () ->
             {
                 final Action2<DrawLineOptions,JSONObject> toJsonTest = (DrawLineOptions options, JSONObject expected) ->
@@ -269,6 +288,19 @@ public interface DrawLineOptionsTests
                         .setNumber("startY", 0)
                         .setNumber("endX", 0)
                         .setNumber("endY", 4));
+                toJsonTest.run(
+                    DrawLineOptions.create()
+                        .setLineColor(Color.red),
+                    JSONObject.create()
+                        .setNumber("startX", 0)
+                        .setNumber("startY", 0)
+                        .setNumber("endX", 0)
+                        .setNumber("endY", 0)
+                        .setObject("lineColor", JSONObject.create()
+                            .setNumber("red", 255)
+                            .setNumber("green", 0)
+                            .setNumber("blue", 0)
+                            .setNumber("alpha", 255)));
             });
 
             runner.testGroup("toString()", () ->

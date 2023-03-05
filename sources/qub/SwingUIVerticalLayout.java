@@ -3,6 +3,7 @@ package qub;
 public class SwingUIVerticalLayout extends JComponentUIElement.Base<SwingUIVerticalLayout> implements UIVerticalLayout.Typed<SwingUIVerticalLayout>
 {
     private final javax.swing.JPanel jPanel;
+    private float awtHorizontalAlignment;
 
     private SwingUIVerticalLayout(SwingUI ui)
     {
@@ -10,6 +11,8 @@ public class SwingUIVerticalLayout extends JComponentUIElement.Base<SwingUIVerti
 
         this.jPanel = new javax.swing.JPanel();
         this.jPanel.setLayout(new javax.swing.BoxLayout(this.jPanel, javax.swing.BoxLayout.Y_AXIS));
+
+        this.awtHorizontalAlignment = java.awt.Component.LEFT_ALIGNMENT;
     }
 
     public static SwingUIVerticalLayout create(SwingUI ui)
@@ -27,9 +30,60 @@ public class SwingUIVerticalLayout extends JComponentUIElement.Base<SwingUIVerti
         final javax.swing.JComponent jComponent = jComponentUIElement.getJComponent();
         this.jPanel.add(jComponent);
 
-        jComponent.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+        jComponent.setAlignmentX(this.awtHorizontalAlignment);
 
         return this;
+    }
+
+    @Override
+    public SwingUIVerticalLayout setHorizontalAlignment(HorizontalAlignment horizontalAlignment)
+    {
+        PreCondition.assertNotNull(horizontalAlignment, "horizontalAlignment");
+
+        float awtHorizontalAlignment;
+        switch (horizontalAlignment)
+        {
+            case Right -> awtHorizontalAlignment = java.awt.Component.RIGHT_ALIGNMENT;
+            case Center -> awtHorizontalAlignment = java.awt.Component.CENTER_ALIGNMENT;
+            default -> awtHorizontalAlignment = java.awt.Component.LEFT_ALIGNMENT;
+        }
+
+        if (this.awtHorizontalAlignment != awtHorizontalAlignment)
+        {
+            this.awtHorizontalAlignment = awtHorizontalAlignment;
+
+            for (final java.awt.Component component : this.jPanel.getComponents())
+            {
+                if (component instanceof javax.swing.JComponent jComponent)
+                {
+                    jComponent.setAlignmentX(this.awtHorizontalAlignment);
+                }
+            }
+        }
+
+        return this;
+    }
+
+    @Override
+    public HorizontalAlignment getHorizontalAlignment()
+    {
+        HorizontalAlignment result;
+        if (this.awtHorizontalAlignment == java.awt.Component.RIGHT_ALIGNMENT)
+        {
+            result = HorizontalAlignment.Right;
+        }
+        else if (this.awtHorizontalAlignment == java.awt.Component.CENTER_ALIGNMENT)
+        {
+            result = HorizontalAlignment.Center;
+        }
+        else
+        {
+            result = HorizontalAlignment.Left;
+        }
+
+        PostCondition.assertNotNull(result, "result");
+
+        return result;
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface SwingUITextBoxTests
         {
             final Function0<SwingUITextBox> creator = () ->
             {
-                final SwingUI ui = SwingUI.create(mainAsyncRunner);
+                final SwingUI ui = SwingUITests.createUI(mainAsyncRunner);
                 return ui.create(SwingUITextBox.class).await();
             };
 

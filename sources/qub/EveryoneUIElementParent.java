@@ -8,5 +8,5 @@ public interface EveryoneUIElementParent
     /**
      * Request that this {@link EveryoneUIElementParent} repaint itself.
      */
-    void repaint();
+    public void repaint();
 }

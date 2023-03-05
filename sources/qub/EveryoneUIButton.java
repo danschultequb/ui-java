@@ -2,6 +2,8 @@ package qub;
 
 public class EveryoneUIButton extends EveryoneUIElement.Base<EveryoneUIButton> implements UIButton.Typed<EveryoneUIButton>
 {
+    private static final String textPropertyName = "text";
+
     private String text;
 
     private EveryoneUIButton(EveryoneSwingUI ui)
@@ -27,7 +29,12 @@ public class EveryoneUIButton extends EveryoneUIElement.Base<EveryoneUIButton> i
     {
         PreCondition.assertNotNull(text, "text");
 
-        this.text = text;
+        if (!Comparer.equal(this.text, text))
+        {
+            this.text = text;
+
+            this.repaint();
+        }
 
         return this;
     }
@@ -45,9 +52,24 @@ public class EveryoneUIButton extends EveryoneUIElement.Base<EveryoneUIButton> i
     {
         super.paint(painter);
 
-        final int pixelWidth = this.getWidth();
-        final int pixelHeight = this.getHeight();
+        final int width = this.getWidth();
+        final int height = this.getHeight();
+        painter.drawRectangle(0, 0, width, height);
 
-        painter.drawRectangle(0, 0, pixelWidth, pixelHeight);
+        final String text = this.getText();
+        if (!Strings.isNullOrEmpty(text))
+        {
+            painter.drawText(DrawTextOptions.create()
+                .setCenterX(width / 2)
+                .setCenterY(height / 2)
+                .setText(text));
+        }
+    }
+
+    @Override
+    public JSONObject toJson()
+    {
+        return super.toJson()
+            .setString(EveryoneUIButton.textPropertyName, this.getText());
     }
 }

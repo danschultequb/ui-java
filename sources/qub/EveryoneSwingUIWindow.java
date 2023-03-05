@@ -68,10 +68,7 @@ public class EveryoneSwingUIWindow implements UIWindow.Typed<EveryoneSwingUIWind
     @Override
     public Size2Integer getContentAreaSize()
     {
-        return DynamicSize2Integer.create()
-            .setGetWidthFunction(this::getContentAreaWidth)
-            .setGetHeightFunction(this::getContentAreaHeight)
-            .setOnChangedFunction(this::onContentAreaSizeChanged);
+        return JavaAwtFrames.getContentAreaSize(this.jFrame);
     }
 
     @Override
@@ -129,12 +126,9 @@ public class EveryoneSwingUIWindow implements UIWindow.Typed<EveryoneSwingUIWind
     }
 
     @Override
-    public DynamicSize2Integer getSize()
+    public Size2Integer getSize()
     {
-        return DynamicSize2Integer.create()
-            .setGetWidthFunction(this::getWidth)
-            .setGetHeightFunction(this::getHeight)
-            .setOnChangedFunction(this::onSizeChanged);
+        return JavaAwtFrames.getSize(this.jFrame);
     }
 
     @Override

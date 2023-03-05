@@ -144,6 +144,31 @@ public interface UIVerticalLayoutTests
                     test.assertSame(verticalLayout, addResult);
                 });
             });
+
+            runner.testGroup("setHorizontalAlignment(HorizontalAlignment)", () ->
+            {
+                runner.test("with null", (Test test) ->
+                {
+                    final UIVerticalLayout layout = creator.run();
+                    final HorizontalAlignment horizontalAlignment = layout.getHorizontalAlignment();
+
+                    test.assertThrows(() -> layout.setHorizontalAlignment(null),
+                        new PreConditionFailure("horizontalAlignment cannot be null."));
+
+                    test.assertEqual(horizontalAlignment, layout.getHorizontalAlignment());
+                });
+
+                for (final HorizontalAlignment horizontalAlignment : HorizontalAlignment.values())
+                {
+                    runner.test("with " + horizontalAlignment, (Test test) ->
+                    {
+                        final UIVerticalLayout layout = creator.run();
+                        final UIVerticalLayout setHorizontalAlignmentResult = layout.setHorizontalAlignment(horizontalAlignment);
+                        test.assertSame(layout, setHorizontalAlignmentResult);
+                        test.assertEqual(horizontalAlignment, layout.getHorizontalAlignment());
+                    });
+                }
+            });
         });
     }
 }

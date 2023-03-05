@@ -26,18 +26,22 @@ public interface DrawTextOptionsTests
                 {
                     runner.test(testName, (Test test) ->
                     {
+                        final Integer leftX = options.getLeftX();
                         test.assertThrows(() -> options.setLeftX(5),
                             expected);
-                        test.assertNull(options.getLeftX());
+                        test.assertEqual(leftX, options.getLeftX());
                     });
                 };
 
+                setLeftXErrorTest.run("with existing leftX value set",
+                    DrawTextOptions.create().setLeftX(1),
+                    new PreConditionFailure("this.hasX() cannot be true."));
                 setLeftXErrorTest.run("with existing centerX value set",
                     DrawTextOptions.create().setCenterX(1),
-                    new PreConditionFailure("this.getCenterX() must be null."));
+                    new PreConditionFailure("this.hasX() cannot be true."));
                 setLeftXErrorTest.run("with existing rightX value set",
                     DrawTextOptions.create().setRightX(2),
-                    new PreConditionFailure("this.getRightX() must be null."));
+                    new PreConditionFailure("this.hasX() cannot be true."));
 
                 final Action3<String,DrawTextOptions,Integer> setLeftXTest = (String testName, DrawTextOptions options, Integer leftX) ->
                 {
@@ -54,9 +58,6 @@ public interface DrawTextOptionsTests
                 setLeftXTest.run("with no x-value set",
                     DrawTextOptions.create(),
                     20);
-                setLeftXTest.run("with existing leftX value set",
-                    DrawTextOptions.create().setLeftX(20),
-                    30);
             });
 
             runner.testGroup("setCenterX(int)", () ->
@@ -65,18 +66,22 @@ public interface DrawTextOptionsTests
                 {
                     runner.test(testName, (Test test) ->
                     {
+                        final Integer centerX = options.getCenterX();
                         test.assertThrows(() -> options.setCenterX(5),
                             expected);
-                        test.assertNull(options.getCenterX());
+                        test.assertEqual(centerX, options.getCenterX());
                     });
                 };
 
                 setCenterXErrorTest.run("with existing leftX value set",
                     DrawTextOptions.create().setLeftX(1),
-                    new PreConditionFailure("this.getLeftX() must be null."));
+                    new PreConditionFailure("this.hasX() cannot be true."));
+                setCenterXErrorTest.run("with existing centerX value set",
+                    DrawTextOptions.create().setCenterX(1),
+                    new PreConditionFailure("this.hasX() cannot be true."));
                 setCenterXErrorTest.run("with existing rightX value set",
                     DrawTextOptions.create().setRightX(2),
-                    new PreConditionFailure("this.getRightX() must be null."));
+                    new PreConditionFailure("this.hasX() cannot be true."));
 
                 final Action3<String,DrawTextOptions,Integer> setCenterXTest = (String testName, DrawTextOptions options, Integer centerX) ->
                 {
@@ -93,9 +98,6 @@ public interface DrawTextOptionsTests
                 setCenterXTest.run("with no x-value set",
                     DrawTextOptions.create(),
                     20);
-                setCenterXTest.run("with existing centerX value set",
-                    DrawTextOptions.create().setCenterX(20),
-                    30);
             });
 
             runner.testGroup("setRightX(int)", () ->
@@ -104,18 +106,22 @@ public interface DrawTextOptionsTests
                 {
                     runner.test(testName, (Test test) ->
                     {
+                        final Integer rightX = options.getRightX();
                         test.assertThrows(() -> options.setRightX(5),
                             expected);
-                        test.assertNull(options.getRightX());
+                        test.assertEqual(rightX, options.getRightX());
                     });
                 };
 
                 setRightXErrorTest.run("with existing leftX value set",
                     DrawTextOptions.create().setLeftX(1),
-                    new PreConditionFailure("this.getLeftX() must be null."));
+                    new PreConditionFailure("this.hasX() cannot be true."));
                 setRightXErrorTest.run("with existing centerX value set",
                     DrawTextOptions.create().setCenterX(2),
-                    new PreConditionFailure("this.getCenterX() must be null."));
+                    new PreConditionFailure("this.hasX() cannot be true."));
+                setRightXErrorTest.run("with existing rightX value set",
+                    DrawTextOptions.create().setRightX(2),
+                    new PreConditionFailure("this.hasX() cannot be true."));
 
                 final Action3<String,DrawTextOptions,Integer> setRightXTest = (String testName, DrawTextOptions options, Integer rightX) ->
                 {
@@ -132,9 +138,6 @@ public interface DrawTextOptionsTests
                 setRightXTest.run("with no x-value set",
                     DrawTextOptions.create(),
                     20);
-                setRightXTest.run("with existing rightX value set",
-                    DrawTextOptions.create().setRightX(20),
-                    30);
             });
 
             runner.testGroup("setTopY(int)", () ->
@@ -143,21 +146,25 @@ public interface DrawTextOptionsTests
                 {
                     runner.test(testName, (Test test) ->
                     {
+                        final Integer topY = options.getTopY();
                         test.assertThrows(() -> options.setTopY(5),
                             expected);
-                        test.assertNull(options.getTopY());
+                        test.assertEqual(topY, options.getTopY());
                     });
                 };
 
+                setTopYErrorTest.run("with existing topY value set",
+                    DrawTextOptions.create().setTopY(2),
+                    new PreConditionFailure("this.hasY() cannot be true."));
                 setTopYErrorTest.run("with existing centerY value set",
                     DrawTextOptions.create().setCenterY(2),
-                    new PreConditionFailure("this.getCenterY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
                 setTopYErrorTest.run("with existing baselineY value set",
                     DrawTextOptions.create().setBaselineY(2),
-                    new PreConditionFailure("this.getBaselineY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
                 setTopYErrorTest.run("with existing bottomY value set",
                     DrawTextOptions.create().setBottomY(2),
-                    new PreConditionFailure("this.getBottomY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
 
                 final Action3<String,DrawTextOptions,Integer> setTopYTest = (String testName, DrawTextOptions options, Integer topY) ->
                 {
@@ -175,9 +182,6 @@ public interface DrawTextOptionsTests
                 setTopYTest.run("with no y-value set",
                     DrawTextOptions.create(),
                     20);
-                setTopYTest.run("with existing topY value set",
-                    DrawTextOptions.create().setTopY(20),
-                    30);
             });
 
             runner.testGroup("setCenterY(int)", () ->
@@ -186,21 +190,25 @@ public interface DrawTextOptionsTests
                 {
                     runner.test(testName, (Test test) ->
                     {
+                        final Integer centerY = options.getCenterY();
                         test.assertThrows(() -> options.setCenterY(5),
                             expected);
-                        test.assertNull(options.getCenterY());
+                        test.assertEqual(centerY, options.getCenterY());
                     });
                 };
 
                 setCenterYErrorTest.run("with existing topY value set",
                     DrawTextOptions.create().setTopY(2),
-                    new PreConditionFailure("this.getTopY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
+                setCenterYErrorTest.run("with existing centerY value set",
+                    DrawTextOptions.create().setCenterY(2),
+                    new PreConditionFailure("this.hasY() cannot be true."));
                 setCenterYErrorTest.run("with existing baselineY value set",
                     DrawTextOptions.create().setBaselineY(2),
-                    new PreConditionFailure("this.getBaselineY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
                 setCenterYErrorTest.run("with existing bottomY value set",
                     DrawTextOptions.create().setBottomY(2),
-                    new PreConditionFailure("this.getBottomY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
 
                 final Action3<String,DrawTextOptions,Integer> setCenterYTest = (String testName, DrawTextOptions options, Integer centerY) ->
                 {
@@ -218,9 +226,6 @@ public interface DrawTextOptionsTests
                 setCenterYTest.run("with no y-value set",
                     DrawTextOptions.create(),
                     20);
-                setCenterYTest.run("with existing centerY value set",
-                    DrawTextOptions.create().setCenterY(20),
-                    30);
             });
 
             runner.testGroup("setBaselineY(int)", () ->
@@ -229,21 +234,25 @@ public interface DrawTextOptionsTests
                 {
                     runner.test(testName, (Test test) ->
                     {
+                        final Integer baselineY = options.getBaselineY();
                         test.assertThrows(() -> options.setBaselineY(5),
                             expected);
-                        test.assertNull(options.getBaselineY());
+                        test.assertEqual(baselineY, options.getBaselineY());
                     });
                 };
 
                 setBaselineYErrorTest.run("with existing topY value set",
                     DrawTextOptions.create().setTopY(2),
-                    new PreConditionFailure("this.getTopY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
                 setBaselineYErrorTest.run("with existing centerY value set",
                     DrawTextOptions.create().setCenterY(2),
-                    new PreConditionFailure("this.getCenterY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
+                setBaselineYErrorTest.run("with existing baselineY value set",
+                    DrawTextOptions.create().setBaselineY(2),
+                    new PreConditionFailure("this.hasY() cannot be true."));
                 setBaselineYErrorTest.run("with existing bottomY value set",
                     DrawTextOptions.create().setBottomY(2),
-                    new PreConditionFailure("this.getBottomY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
 
                 final Action3<String,DrawTextOptions,Integer> setBaselineYTest = (String testName, DrawTextOptions options, Integer baselineY) ->
                 {
@@ -261,9 +270,6 @@ public interface DrawTextOptionsTests
                 setBaselineYTest.run("with no y-value set",
                     DrawTextOptions.create(),
                     20);
-                setBaselineYTest.run("with existing baselineY value set",
-                    DrawTextOptions.create().setBaselineY(20),
-                    30);
             });
 
             runner.testGroup("setBottomY(int)", () ->
@@ -272,21 +278,25 @@ public interface DrawTextOptionsTests
                 {
                     runner.test(testName, (Test test) ->
                     {
+                        final Integer bottomY = options.getBottomY();
                         test.assertThrows(() -> options.setBottomY(5),
                             expected);
-                        test.assertNull(options.getBottomY());
+                        test.assertEqual(bottomY, options.getBottomY());
                     });
                 };
 
                 setBottomYErrorTest.run("with existing topY value set",
                     DrawTextOptions.create().setTopY(2),
-                    new PreConditionFailure("this.getTopY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
                 setBottomYErrorTest.run("with existing centerY value set",
                     DrawTextOptions.create().setCenterY(2),
-                    new PreConditionFailure("this.getCenterY() must be null."));
-                setBottomYErrorTest.run("with existing bottomY value set",
+                    new PreConditionFailure("this.hasY() cannot be true."));
+                setBottomYErrorTest.run("with existing baselineY value set",
                     DrawTextOptions.create().setBaselineY(2),
-                    new PreConditionFailure("this.getBaselineY() must be null."));
+                    new PreConditionFailure("this.hasY() cannot be true."));
+                setBottomYErrorTest.run("with existing bottomY value set",
+                    DrawTextOptions.create().setBottomY(2),
+                    new PreConditionFailure("this.hasY() cannot be true."));
 
                 final Action3<String,DrawTextOptions,Integer> setBottomYTest = (String testName, DrawTextOptions options, Integer bottomY) ->
                 {
@@ -304,9 +314,6 @@ public interface DrawTextOptionsTests
                 setBottomYTest.run("with no y-value set",
                     DrawTextOptions.create(),
                     20);
-                setBottomYTest.run("with existing bottomY value set",
-                    DrawTextOptions.create().setBottomY(20),
-                    30);
             });
 
             runner.testGroup("setText(String)", () ->

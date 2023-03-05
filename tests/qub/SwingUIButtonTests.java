@@ -10,7 +10,7 @@ public interface SwingUIButtonTests
         {
             final Function0<SwingUIButton> creator = () ->
             {
-                final SwingUI ui = SwingUI.create(mainAsyncRunner);
+                final SwingUI ui = SwingUITests.createUI(mainAsyncRunner);
                 return ui.create(SwingUIButton.class).await();
             };
 

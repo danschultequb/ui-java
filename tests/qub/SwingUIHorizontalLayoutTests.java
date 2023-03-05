@@ -10,7 +10,7 @@ public interface SwingUIHorizontalLayoutTests
         {
             final Function0<SwingUIHorizontalLayout> creator = () ->
             {
-                final SwingUI ui = SwingUI.create(mainAsyncRunner);
+                final SwingUI ui = SwingUITests.createUI(mainAsyncRunner);
                 return ui.create(SwingUIHorizontalLayout.class).await();
             };
 

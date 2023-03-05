@@ -44,22 +44,13 @@ public interface EveryoneUIElement extends UIElement
     @Override
     public EveryoneUIElement setSize(int width, int height);
 
-    /**
-     * Set the {@link Distance} width and height of this {@link EveryoneUIElement}.
-     * @param width The new {@link Distance} width of this {@link EveryoneUIElement}.
-     * @param height The new {@link Distance} height of this {@link EveryoneUIElement}.
-     * @return This object for method chaining.
-     */
+    @Override
     public EveryoneUIElement setSize(Distance width, Distance height);
 
     @Override
     public EveryoneUIElement setSize(Size2Integer size);
 
-    /**
-     * Set the {@link Distance} size of this {@link EveryoneUIElement}.
-     * @param size The new {@link Distance} size of this {@link EveryoneUIElement}.
-     * @return This object for method chaining.
-     */
+    @Override
     public EveryoneUIElement setSize(Size2Distance size);
 
     @Override
@@ -70,6 +61,22 @@ public interface EveryoneUIElement extends UIElement
      * @param painter The {@link UIPainter} to use to paint this {@link EveryoneUIElement}.
      */
     public void paint(UIPainter painter);
+
+    /**
+     * Get the JSON representation of this {@link EveryoneUIElement}.
+     */
+    public JSONObject toJson();
+
+    /**
+     * Get the {@link String} representation of the provided {@link EveryoneUIElement}.
+     * @param uiElement The {@link EveryoneUIElement} to get the {@link String} representation of.
+     */
+    public static String toString(EveryoneUIElement uiElement)
+    {
+        PreCondition.assertNotNull(uiElement, "uiElement");
+
+        return uiElement.toJson().toString();
+    }
 
     /**
      * A version of a {@link EveryoneUIElement} that returns its own type from chainable methods.
@@ -118,6 +125,11 @@ public interface EveryoneUIElement extends UIElement
      */
     public static class Base<T extends EveryoneUIElement> implements EveryoneUIElement.Typed<T>
     {
+        private static final String typePropertyName = "type";
+        private static final String widthPropertyName = "width";
+        private static final String heightPropertyName = "height";
+        private static final String backgroundColorPropertyName = "backgroundColor";
+
         private final EveryoneSwingUI ui;
         private EveryoneUIElementParent parent;
         private int width;
@@ -182,6 +194,30 @@ public interface EveryoneUIElement extends UIElement
         }
 
         @Override
+        public JSONObject toJson()
+        {
+            final JSONObject result = JSONObject.create()
+                .setString(Base.typePropertyName, Types.getFullTypeName(this))
+                .setNumber(Base.widthPropertyName, this.width)
+                .setNumber(Base.heightPropertyName, this.height);
+
+            if (!this.backgroundColor.isTransparent())
+            {
+                result.setObject(Base.backgroundColorPropertyName, this.backgroundColor.toJson());
+            }
+
+            PostCondition.assertNotNull(result, "result");
+
+            return result;
+        }
+
+        @Override
+        public String toString()
+        {
+            return EveryoneUIElement.toString(this);
+        }
+
+        @Override
         public Color getBackgroundColor()
         {
             final Color result = this.backgroundColor;
@@ -219,12 +255,9 @@ public interface EveryoneUIElement extends UIElement
         }
 
         @Override
-        public DynamicSize2Integer getSize()
+        public Size2Integer getSize()
         {
-            return DynamicSize2Integer.create()
-                .setGetWidthFunction(this::getWidth)
-                .setGetHeightFunction(this::getHeight)
-                .setOnChangedFunction(this::onSizeChanged);
+            return Size2.create(this.width, this.height);
         }
 
         @Override
@@ -304,6 +337,8 @@ public interface EveryoneUIElement extends UIElement
         {
             PreCondition.assertNotNull(width, "width");
             PreCondition.assertGreaterThanOrEqualTo(width, Distance.zero, "width");
+            PreCondition.assertNotNull(height, "height");
+            PreCondition.assertGreaterThanOrEqualTo(height, Distance.zero, "height");
 
             final int pixelWidth = this.ui.convertHorizontalDistanceToPixels(width);
             final int pixelHeight = this.ui.convertVerticalDistanceToPixels(height);

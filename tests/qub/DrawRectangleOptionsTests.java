@@ -243,6 +243,32 @@ public interface DrawRectangleOptionsTests
                             .setNumber("green", 0)
                             .setNumber("blue", 255)
                             .setNumber("alpha", 255)));
+                toJsonTest.run(
+                    DrawRectangleOptions.create()
+                        .setLineColor(Color.transparent),
+                    JSONObject.create()
+                        .setNumber("leftX", 0)
+                        .setNumber("topY", 0)
+                        .setNumber("width", 0)
+                        .setNumber("height", 0)
+                        .setObject("lineColor", JSONObject.create()
+                            .setNumber("red", 0)
+                            .setNumber("green", 0)
+                            .setNumber("blue", 0)
+                            .setNumber("alpha", 0)));
+                toJsonTest.run(
+                    DrawRectangleOptions.create()
+                        .setFillColor(Color.transparent),
+                    JSONObject.create()
+                        .setNumber("leftX", 0)
+                        .setNumber("topY", 0)
+                        .setNumber("width", 0)
+                        .setNumber("height", 0)
+                        .setObject("fillColor", JSONObject.create()
+                            .setNumber("red", 0)
+                            .setNumber("green", 0)
+                            .setNumber("blue", 0)
+                            .setNumber("alpha", 0)));
             });
 
             runner.testGroup("toString()", () ->

@@ -1,5 +1,8 @@
 package qub;
 
+/**
+ * Options that can be used to draw a rectangle.
+ */
 public class DrawRectangleOptions
 {
     private static final String leftXPropertyName = "leftX";
@@ -25,6 +28,36 @@ public class DrawRectangleOptions
         return new DrawRectangleOptions();
     }
 
+    public static DrawRectangleOptions create(DrawRectangleOptions toCopy)
+    {
+        PreCondition.assertNotNull(toCopy, "toCopy");
+
+        return DrawRectangleOptions.create()
+            .set(toCopy);
+    }
+
+    public DrawRectangleOptions set(DrawRectangleOptions toCopy)
+    {
+        PreCondition.assertNotNull(toCopy, "toCopy");
+
+        this.leftX = toCopy.getLeftX();
+        this.topY = toCopy.getTopY();
+        this.width = toCopy.getWidth();
+        this.height = toCopy.getHeight();
+        this.lineColor = toCopy.getLineColor();
+        this.fillColor = toCopy.getFillColor();
+
+        return this;
+    }
+
+    /**
+     * Get whether this {@link DrawRectangleOptions} has an x-coordinate value.
+     */
+    public boolean hasX()
+    {
+        return true;
+    }
+
     public DrawRectangleOptions setLeftX(int leftX)
     {
         this.leftX = leftX;
@@ -37,6 +70,14 @@ public class DrawRectangleOptions
         return this.leftX;
     }
 
+    /**
+     * Get whether this {@link DrawRectangleOptions} has a y-coordinate value.
+     */
+    public boolean hasY()
+    {
+        return true;
+    }
+
     public DrawRectangleOptions setTopY(int topY)
     {
         this.topY = topY;
@@ -47,6 +88,14 @@ public class DrawRectangleOptions
     public int getTopY()
     {
         return this.topY;
+    }
+
+    /**
+     * Get whether this {@link DrawRectangleOptions} has a width value.
+     */
+    public boolean hasWidth()
+    {
+        return true;
     }
 
     public DrawRectangleOptions setWidth(int width)
@@ -63,6 +112,14 @@ public class DrawRectangleOptions
         return this.width;
     }
 
+    /**
+     * Get whether this {@link DrawRectangleOptions} has a height value.
+     */
+    public boolean hasHeight()
+    {
+        return true;
+    }
+
     public DrawRectangleOptions setHeight(int height)
     {
         PreCondition.assertGreaterThanOrEqualTo(height, 0, "height");
@@ -72,9 +129,26 @@ public class DrawRectangleOptions
         return this;
     }
 
+    /**
+     * Get the height of the rectangle to draw.
+     */
     public int getHeight()
     {
         return this.height;
+    }
+
+    /**
+     * Set the size of the rectangle to draw.
+     * @param width The width of the rectangle to draw.
+     * @param height The height of the rectangle to draw.
+     * @return This object for method chaining.
+     */
+    public DrawRectangleOptions setSize(int width, int height)
+    {
+        this.setWidth(width);
+        this.setHeight(height);
+
+        return this;
     }
 
     public DrawRectangleOptions setFillColor(Color fillColor)
@@ -106,7 +180,7 @@ public class DrawRectangleOptions
     }
 
     /**
-     * Get the JSON representation of this {@link DrawRectangleOptions}.
+     * Get the JSON representation of this {@link DrawRectangleOptions} object.
      */
     public JSONObject toJson()
     {
@@ -139,7 +213,7 @@ public class DrawRectangleOptions
     @Override
     public boolean equals(Object rhs)
     {
-        return rhs instanceof DrawRectangleOptions && this.equals((DrawRectangleOptions)rhs);
+        return rhs instanceof DrawRectangleOptions rhsOptions && this.equals(rhsOptions);
     }
 
     public boolean equals(DrawRectangleOptions rhs)

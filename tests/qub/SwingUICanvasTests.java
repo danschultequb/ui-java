@@ -10,7 +10,7 @@ public interface SwingUICanvasTests
         {
             final Function0<SwingUICanvas> creator = () ->
             {
-                final SwingUI ui = SwingUI.create(mainAsyncRunner);
+                final SwingUI ui = SwingUITests.createUI(mainAsyncRunner);
                 return ui.create(SwingUICanvas.class).await();
             };
 

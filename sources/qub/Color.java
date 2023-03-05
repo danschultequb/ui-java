@@ -108,7 +108,7 @@ public interface Color
     {
         PreCondition.assertNotNull(lhs, "lhs");
 
-        return rhs instanceof Color && lhs.equals((Color)rhs);
+        return rhs instanceof Color rhsColor && lhs.equals(rhsColor);
     }
 
     /**

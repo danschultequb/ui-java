@@ -38,7 +38,7 @@ public interface UIWindow extends Disposable
      */
     public default DynamicSize2Integer getDynamicSize()
     {
-        return DynamicSize2Integer.create()
+        return FunctionDynamicSize2Integer.create()
             .setGetWidthFunction(this::getWidth)
             .setGetHeightFunction(this::getHeight)
             .setOnChangedFunction(this::onSizeChanged);
@@ -96,7 +96,7 @@ public interface UIWindow extends Disposable
      */
     public default DynamicSize2Integer getContentAreaDynamicSize()
     {
-        return DynamicSize2Integer.create()
+        return FunctionDynamicSize2Integer.create()
             .setGetWidthFunction(this::getContentAreaWidth)
             .setGetHeightFunction(this::getContentAreaHeight)
             .setOnChangedFunction(this::onContentAreaSizeChanged);

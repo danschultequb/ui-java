@@ -57,12 +57,7 @@ public interface UIPainter
      * Draw a line using the provided {@link DrawLineOptions}.
      * @param options The {@link DrawLineOptions} to use when drawing the line.
      */
-    public default UIPainter drawLine(DrawLineOptions options)
-    {
-        PreCondition.assertNotNull(options, "options");
-
-        return this.drawLine(options.getStartX(), options.getStartY(), options.getEndX(), options.getEndY());
-    }
+    public UIPainter drawLine(DrawLineOptions options);
 
     /**
      * Draw an oval at the provided coordinate with the provided width and height.
@@ -77,12 +72,7 @@ public interface UIPainter
      * Draw an oval using the provided {@link DrawOvalOptions}.
      * @param options The {@link DrawOvalOptions} to use when drawing the oval.
      */
-    public default UIPainter drawOval(DrawOvalOptions options)
-    {
-        PreCondition.assertNotNull(options, "options");
-
-        return this.drawOval(options.getLeftX(), options.getTopY(), options.getWidth(), options.getHeight());
-    }
+    public UIPainter drawOval(DrawOvalOptions options);
 
     /**
      * Draw a rectangle at the provided coordinate with the provided width and height.
@@ -97,41 +87,7 @@ public interface UIPainter
      * Draw a rectangle using the provided options.
      * @param options The options to use when drawing the rectangle.
      */
-    public default UIPainter drawRectangle(DrawRectangleOptions options)
-    {
-        PreCondition.assertNotNull(options, "options");
-
-        final Color backupLineColor = this.getLineColor();
-        final Color backupFillColor = this.getFillColor();
-        final Color optionsLineColor = options.getLineColor();
-        final Color optionsFillColor = options.getFillColor();
-        try
-        {
-            if (optionsLineColor != null)
-            {
-                this.setLineColor(optionsLineColor);
-            }
-            if (optionsFillColor != null)
-            {
-                this.setFillColor(optionsFillColor);
-            }
-
-            this.drawRectangle(options.getLeftX(), options.getTopY(), options.getWidth(), options.getHeight());
-        }
-        finally
-        {
-            if (optionsLineColor != null)
-            {
-                this.setLineColor(backupLineColor);
-            }
-            if (optionsFillColor != null)
-            {
-                this.setFillColor(backupFillColor);
-            }
-        }
-
-        return this;
-    }
+    public UIPainter drawRectangle(DrawRectangleOptions options);
 
     /**
      * Draw the provided text at the provided baseline coordinate.
@@ -146,69 +102,73 @@ public interface UIPainter
      * @param options The {@link DrawTextOptions} to use when drawing the text.
      * @return This object for method chaining.
      */
-    public default UIPainter drawText(DrawTextOptions options)
-    {
-        PreCondition.assertNotNull(options, "options");
-        PreCondition.assertNotNull(options.getText(), "options.getText()");
-        PreCondition.assertTrue(options.getLeftX() != null || options.getCenterX() != null || options.getRightX() != null, "options.getLeftX() != null || options.getCenterX() != null || options.getRightX() != null");
-        PreCondition.assertTrue(options.getTopY() != null || options.getCenterY() != null || options.getBaselineY() != null || options.getBottomY() != null, "options.getTopY() != null || options.getCenterY() != null || options.getBaselineY() != null || options.getBottomY() != null");
-
-        final String text = options.getText();
-
-        Integer leftX = options.getLeftX();
-        Integer baselineY = options.getBaselineY();
-        if (leftX == null || baselineY == null)
-        {
-            final TextMeasurements textMeasurements = this.getTextMeasurements(text);
-
-            if (leftX == null)
-            {
-                final int textWidth = textMeasurements.getWidth();
-
-                final Integer centerX = options.getCenterX();
-                if (centerX != null)
-                {
-                    leftX = centerX - (textWidth / 2);
-                }
-                else
-                {
-                    leftX = options.getRightX() - textWidth;
-                }
-            }
-
-            if (baselineY == null)
-            {
-                final Integer topY = options.getTopY();
-                if (topY != null)
-                {
-                    baselineY = topY + textMeasurements.getAscent();
-                }
-                else
-                {
-                    final Integer bottomY = options.getBottomY();
-                    if (bottomY != null)
-                    {
-                        baselineY = bottomY - textMeasurements.getDescent();
-                    }
-                    else
-                    {
-                        final int centerY = options.getCenterY();
-                        final int ascent = textMeasurements.getAscent();
-                        final int height = ascent + textMeasurements.getDescent();
-                        baselineY = centerY - (height / 2) + ascent;
-                    }
-                }
-            }
-        }
-
-        return this.drawText(leftX, baselineY, text);
-    }
+    public UIPainter drawText(DrawTextOptions options);
 
     /**
      * Get {@link TextMeasurements} for the provided text.
      * @param text The text to measure.
      */
     public TextMeasurements getTextMeasurements(String text);
+
+    /**
+     * Translate this {@link UIPainter} so that all draw operations get the provided x-value added
+     * to their x-coordinates.
+     * @param x The x-value to add to every draw operation's x-coordinates.
+     * @return This object for method chaining.
+     */
+    public default UIPainter translateX(int x)
+    {
+        return this.translate(x, 0);
+    }
+
+    /**
+     * Translate this {@link UIPainter} so that all draw operations get the provided y-value added
+     * to their y-coordinates.
+     * @param y The y-value to add to every draw operation's y-coordinates.
+     * @return This object for method chaining.
+     */
+    public default UIPainter translateY(int y)
+    {
+        return this.translate(0, y);
+    }
+
+    /**
+     * Translate this {@link UIPainter} so that all draw operations get the provided x- and y-values
+     * added to their x- and y-coordinates.
+     * @param x The x-value to add to every draw operation's x-coordinates.
+     * @param y The y-value to add to every draw operation's y-coordinates.
+     * @return This object for method chaining.
+     */
+    public UIPainter translate(int x, int y);
+
+    /**
+     * Get the {@link Transform2} that this {@link UIPainter} is using to transform coordinates and
+     * draw operations.
+     */
+    public Transform2 getTransform();
+
+    /**
+     * Set the {@link Transform2} that this {@link UIPainter} is using to transform coordinates and
+     * draw operations.
+     * @param transform The {@link Transform2} that this {@link UIPainter} is using to transform
+     *                  coordinates and draw operations.
+     * @return This object for method chaining.
+     */
+    public UIPainter setTransform(Transform2 transform);
+
+    /**
+     * Preserve the current state of this {@link UIPainter}'s {@link Transform2}. The preserved
+     * {@link Transform2} will be restored this {@link UIPainter} when the returned
+     * {@link Disposable} is disposed.
+     */
+    public default Disposable saveTransform()
+    {
+        final Transform2 transformBackup = Transform2.create(this.getTransform());
+        return Disposable.create(() ->
+        {
+            this.setTransform(transformBackup);
+        });
+    }
 
     /**
      * A version of a {@link UIPainter} that returns its own type from chainable methods.
@@ -233,40 +193,44 @@ public interface UIPainter
         }
 
         @Override
-        @SuppressWarnings("unchecked")
-        public default T drawLine(DrawLineOptions options)
-        {
-            return (T)UIPainter.super.drawLine(options);
-        }
+        public T drawLine(DrawLineOptions options);
 
         @Override
         public T drawOval(int leftX, int topY, int width, int height);
 
         @Override
-        @SuppressWarnings("unchecked")
-        public default T drawOval(DrawOvalOptions options)
-        {
-            return (T)UIPainter.super.drawOval(options);
-        }
+        public T drawOval(DrawOvalOptions options);
 
         @Override
         public T drawRectangle(int leftX, int topY, int width, int height);
 
         @Override
-        @SuppressWarnings("unchecked")
-        public default T drawRectangle(DrawRectangleOptions options)
-        {
-            return (T)UIPainter.super.drawRectangle(options);
-        }
+        public T drawRectangle(DrawRectangleOptions options);
 
         @Override
         public T drawText(int leftX, int baselineY, String text);
 
         @Override
+        public T drawText(DrawTextOptions options);
+
+        @Override
         @SuppressWarnings("unchecked")
-        public default T drawText(DrawTextOptions options)
+        public default T translateX(int x)
         {
-            return (T)UIPainter.super.drawText(options);
+            return (T)UIPainter.super.translateX(x);
         }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public default T translateY(int y)
+        {
+            return (T)UIPainter.super.translateY(y);
+        }
+
+        @Override
+        public T translate(int x, int y);
+
+        @Override
+        public T setTransform(Transform2 transform);
     }
 }

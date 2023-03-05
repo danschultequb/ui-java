@@ -2,16 +2,22 @@ package qub;
 
 public interface EveryoneSwingUITests
 {
+    public static EveryoneSwingUI createUI(AsyncScheduler mainAsyncRunner)
+    {
+        PreCondition.assertNotNull(mainAsyncRunner, "mainAsyncRunner");
+
+        return EveryoneSwingUI.create(mainAsyncRunner)
+            .setHorizontalPixelsPerInch(100)
+            .setVerticalPixelsPerInch(200);
+    }
+
     public static void test(TestRunner runner)
     {
         runner.testGroup(EveryoneSwingUI.class,
             (TestResources resources) -> Tuple.create(resources.getMainAsyncRunner()),
             (AsyncScheduler mainAsyncRunner) ->
         {
-            final Function0<EveryoneSwingUI> creator = () ->
-            {
-                return EveryoneSwingUI.create(mainAsyncRunner);
-            };
+            final Function0<EveryoneSwingUI> creator = () -> EveryoneSwingUITests.createUI(mainAsyncRunner);
 
             UITests.test(runner, creator);
 

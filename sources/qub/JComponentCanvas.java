@@ -27,10 +27,11 @@ public class JComponentCanvas extends javax.swing.JComponent
     protected void paintComponent(java.awt.Graphics graphics)
     {
         PreCondition.assertNotNull(graphics, "graphics");
+        PreCondition.assertInstanceOf(graphics, java.awt.Graphics2D.class, "graphics");
 
         super.paintComponent(graphics);
 
-        this.paint(SwingUIPainter.create(graphics));
+        this.paint(SwingUIPainter.create((java.awt.Graphics2D)graphics));
     }
 
     public void paint(UIPainter painter)

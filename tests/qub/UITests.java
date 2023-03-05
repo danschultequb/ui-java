@@ -6,6 +6,22 @@ public interface UITests
     {
         runner.testGroup(UI.class, () ->
         {
+            runner.test("getHorizontalPixelsPerInch()", (Test test) ->
+            {
+                try (final UI ui = creator.run())
+                {
+                    test.assertGreaterThanOrEqualTo(ui.getHorizontalPixelsPerInch(), 0);
+                }
+            });
+
+            runner.test("getVerticalPixelsPerInch()", (Test test) ->
+            {
+                try (final UI ui = creator.run())
+                {
+                    test.assertGreaterThanOrEqualTo(ui.getVerticalPixelsPerInch(), 0);
+                }
+            });
+
             runner.testGroup("setCreator(Class<U>,Function0<T>)", () ->
             {
                 runner.test("with null uiElementType", (Test test) ->
