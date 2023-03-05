@@ -77,13 +77,35 @@ public class AffineTransform2 extends Transform2.Base implements MutableTransfor
     @Override
     public Point2Integer apply(Point2Integer point)
     {
-        return null;
+        PreCondition.assertNotNull(point, "point");
+
+        final double[] points = new double[4];
+        points[0] = point.getXAsInt();
+        points[1] = point.getYAsInt();
+        this.affineTransform.transform(points, 0, points, 2, 1);
+
+        final double resultX = points[2];
+        final double resultY = points[3];
+        final Point2Integer result = Point2.create((int)resultX, (int)resultY);
+
+        PostCondition.assertNotNull(result, "result");
+
+        return result;
     }
 
     @Override
     public void applyAssign(MutablePoint2Integer point)
     {
+        PreCondition.assertNotNull(point, "point");
 
+        final double[] points = new double[4];
+        points[0] = point.getXAsInt();
+        points[1] = point.getYAsInt();
+        this.affineTransform.transform(points, 0, points, 2, 1);
+
+        final double resultX = points[2];
+        final double resultY = points[3];
+        point.set((int)resultX, (int)resultY);
     }
 
     @Override

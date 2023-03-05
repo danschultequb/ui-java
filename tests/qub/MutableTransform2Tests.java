@@ -30,6 +30,11 @@ public interface MutableTransform2Tests
                         final MutableTransform2 translateXResult = transform.translateX(x);
                         test.assertSame(transform, translateXResult);
 
+                        test.assertEqual(JSONArray.create(
+                            JSONArray.create().addNumbers(1.0, 0.0, x),
+                            JSONArray.create().addNumbers(0.0, 1.0, 0.0),
+                            JSONArray.create().addNumbers(0.0, 0.0, 1.0)),
+                            transform.toJson());
                         test.assertEqual(Point2.create(x, 0), transform.apply(Point2.create(0, 0)));
                     });
                 };
@@ -51,6 +56,11 @@ public interface MutableTransform2Tests
                         final MutableTransform2 translateYResult = transform.translateY(y);
                         test.assertSame(transform, translateYResult);
 
+                        test.assertEqual(JSONArray.create(
+                            JSONArray.create().addNumbers(1.0, 0.0, 0.0),
+                            JSONArray.create().addNumbers(0.0, 1.0, y),
+                            JSONArray.create().addNumbers(0.0, 0.0, 1.0)),
+                            transform.toJson());
                         test.assertEqual(Point2.create(0, y), transform.apply(Point2.create(0, 0)));
                     });
                 };
@@ -72,6 +82,11 @@ public interface MutableTransform2Tests
                         final MutableTransform2 translateYResult = transform.translate(x, y);
                         test.assertSame(transform, translateYResult);
 
+                        test.assertEqual(JSONArray.create(
+                            JSONArray.create().addNumbers(1.0, 0.0, x),
+                            JSONArray.create().addNumbers(0.0, 1.0, y),
+                            JSONArray.create().addNumbers(0.0, 0.0, 1.0)),
+                            transform.toJson());
                         test.assertEqual(Point2.create(x, y), transform.apply(Point2.create(0, 0)));
                     });
                 };
