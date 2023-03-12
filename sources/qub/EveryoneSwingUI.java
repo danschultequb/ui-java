@@ -55,6 +55,30 @@ public class EveryoneSwingUI extends UI.Base<EveryoneSwingUI>
     }
 
     /**
+     * Schedule the provided {@link Action0} to be run on this {@link EveryoneSwingUI}'s
+     * {@link AsyncRunner}.
+     * @param action The {@link Action0} to run.
+     */
+    public AsyncTask<Void> schedule(Action0 action)
+    {
+        PreCondition.assertNotNull(action, "action");
+
+        return this.asyncScheduler.schedule(action);
+    }
+
+    /**
+     * Schedule the provided {@link Function0} to be run on this {@link EveryoneSwingUI}'s
+     * {@link AsyncRunner}.
+     * @param function The {@link Function0} to run.
+     */
+    public <T> AsyncTask<T> schedule(Function0<T> function)
+    {
+        PreCondition.assertNotNull(function, "function");
+
+        return this.asyncScheduler.schedule(function);
+    }
+
+    /**
      * Create a new {@link PausedAsyncTask} that will run the provided action when it is scheduled.
      * @param action The {@link Action0} to run when the returned {@link PausedAsyncTask} is
      *               scheduled.

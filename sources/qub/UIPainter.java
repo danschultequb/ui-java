@@ -19,6 +19,19 @@ public interface UIPainter
     public UIPainter setFillColor(Color fillColor);
 
     /**
+     * Save the current fill {@link Color} of this {@link UIPainter}. The saved fill {@link Color}
+     * will be restored when the returned {@link Disposable} is disposed.
+     */
+    public default Disposable saveFillColor()
+    {
+        final Color fillColor = this.getFillColor();
+        return Disposable.create(() ->
+        {
+            this.setFillColor(fillColor);
+        });
+    }
+
+    /**
      * Get the {@link Color} that lines will be drawn with and shapes will be outlined with.
      */
     public Color getLineColor();
@@ -30,6 +43,30 @@ public interface UIPainter
      * @return This object for method chaining.
      */
     public UIPainter setLineColor(Color lineColor);
+
+    /**
+     * Save the current line {@link Color} of this {@link UIPainter}. The saved line {@link Color}
+     * will be restored when the returned {@link Disposable} is disposed.
+     */
+    public default Disposable saveLineColor()
+    {
+        final Color lineColor = this.getLineColor();
+        return Disposable.create(() ->
+        {
+            this.setLineColor(lineColor);
+        });
+    }
+
+    /**
+     * Save the current line and fill {@link Color}s of this {@link UIPainter}. The saved line and
+     * fill {@link Color}s will be restored when the returned {@link Disposable} is disposed.
+     */
+    public default Disposable saveColors()
+    {
+        return Disposable.create(
+            this.saveLineColor(),
+            this.saveFillColor());
+    }
 
     /**
      * Draw a line from the provided start point to the provided end point.
@@ -247,7 +284,8 @@ public interface UIPainter
     {
         return Disposable.create(
             this.saveTransform(),
-            this.saveClip());
+            this.saveClip(),
+            this.saveColors());
     }
 
     /**

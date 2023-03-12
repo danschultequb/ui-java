@@ -648,7 +648,7 @@ public interface EveryoneSwingUIWindowTests
                 });
             });
 
-            runner.test("sandbox", runner.skip(false), (Test test) ->
+            runner.test("sandbox", runner.skip(true), (Test test) ->
             {
                 try (final EveryoneSwingUI ui = uiCreator.run();
                      final EveryoneSwingUIWindow window = ui.createEveryoneUIWindow().await())
@@ -657,15 +657,18 @@ public interface EveryoneSwingUIWindowTests
                     window.setWidth(Distance.inches(3));
                     window.setHeight(Distance.inches(3));
 
-                    window.setContent(
-                        ui.createUIHorizontalLayout().await()
-                            .setBackgroundColor(Color.red)
-                            .add(ui.createUIButton().await()
-                                .setBackgroundColor(Color.green)
-                                .setText("Hello World!"))
-                            .add(ui.createUIText().await()
-                                .setText("abc")
-                                .setBackgroundColor(Color.blue)));
+                    final UIText uiText = ui.createUIText().await()
+                        .setDynamicSize(window.getContentAreaDynamicSize());
+
+                    final Action1<PointerEvent> updateText = (PointerEvent event) ->
+                    {
+                        uiText.setText("Pointer location: " + (event == null || event.getNewLocation() == null ? "none" : event.getNewLocation().toString()));
+                    };
+                    updateText.run(null);
+
+                    uiText.onPointerMoved(updateText);
+
+                    window.setContent(uiText);
 
                     window.setVisible(true);
                     window.await();

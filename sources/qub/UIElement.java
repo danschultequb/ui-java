@@ -179,6 +179,65 @@ public interface UIElement
     }
 
     /**
+     * Run the provided {@link Action0} when a pointer enters this {@link EveryoneUIElement}.
+     * @param action The {@link Action0} to run when a pointer enters this
+     *               {@link EveryoneUIElement}.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action0}.
+     */
+    public default Disposable onPointerEntered(Action0 action)
+    {
+        PreCondition.assertNotNull(action, "action");
+
+        return this.onPointerEntered((PointerEvent event) -> action.run());
+    }
+
+    /**
+     * Run the provided {@link Action1} when a pointer enters this {@link EveryoneUIElement}.
+     * @param action The {@link Action1} to run when a pointer enters this
+     *               {@link EveryoneUIElement}.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action1}.
+     */
+    public Disposable onPointerEntered(Action1<PointerEvent> action);
+
+    /**
+     * Run the provided {@link Action0} when a pointer moves within this {@link EveryoneUIElement}.
+     * @param action The {@link Action0} to run when a pointer moves within this
+     * {@link EveryoneUIElement}.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action0}.
+     */
+    public default Disposable onPointerMoved(Action0 action)
+    {
+        return this.onPointerMoved((PointerEvent event) -> action.run());
+    }
+
+    /**
+     * Run the provided {@link Action1} when a pointer moves within this {@link EveryoneUIElement}.
+     * @param action The {@link Action1} to run when a pointer moves within this
+     * {@link EveryoneUIElement}.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action1}.
+     */
+    public Disposable onPointerMoved(Action1<PointerEvent> action);
+
+    /**
+     * Run the provided {@link Action0} when a pointer exits this {@link EveryoneUIElement}.
+     * @param action The {@link Action0} to run when a pointer exits this {@link EveryoneUIElement}.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action0}.
+     */
+    public default Disposable onPointerExited(Action0 action)
+    {
+        PreCondition.assertNotNull(action, "action");
+
+        return this.onPointerExited((PointerEvent event) -> action.run());
+    }
+
+    /**
+     * Run the provided {@link Action1} when a pointer exits this {@link EveryoneUIElement}.
+     * @param action The {@link Action1} to run when a pointer exits this {@link EveryoneUIElement}.
+     * @return A {@link Disposable} that can be disposed to unregister the provided {@link Action1}.
+     */
+    public Disposable onPointerExited(Action1<PointerEvent> action);
+
+    /**
      * A version of a {@link UIElement} that returns its own type from chainable methods.
      * @param <T> The actual type of the {@link UIElement}.
      */

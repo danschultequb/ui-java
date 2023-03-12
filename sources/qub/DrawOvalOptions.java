@@ -100,11 +100,7 @@ public class DrawOvalOptions
 
     public DrawOvalOptions setWidth(int width)
     {
-        PreCondition.assertGreaterThanOrEqualTo(width, 0, "width");
-
-        this.width = width;
-
-        return this;
+        return this.setSize(width, this.getHeight());
     }
 
     public int getWidth()
@@ -122,16 +118,30 @@ public class DrawOvalOptions
 
     public DrawOvalOptions setHeight(int height)
     {
-        PreCondition.assertGreaterThanOrEqualTo(height, 0, "height");
-
-        this.height = height;
-
-        return this;
+        return this.setSize(this.getWidth(), height);
     }
 
     public int getHeight()
     {
         return this.height;
+    }
+
+    public DrawOvalOptions setSize(int width, int height)
+    {
+        PreCondition.assertGreaterThanOrEqualTo(width, 0, "width");
+        PreCondition.assertGreaterThanOrEqualTo(height, 0, "height");
+
+        this.width = width;
+        this.height = height;
+
+        return this;
+    }
+
+    public DrawOvalOptions setSize(Size2<Integer> size)
+    {
+        PreCondition.assertNotNull(size, "size");
+
+        return this.setSize(size.getWidth(), size.getHeight());
     }
 
     public Color getLineColor()

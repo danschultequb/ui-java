@@ -42,4 +42,16 @@ public class JavaAwtFontMetricsTextMeasurements implements TextMeasurements
     {
         return this.fontMetrics.stringWidth(this.text);
     }
+
+    @Override
+    public boolean equals(Object rhs)
+    {
+        return TextMeasurements.equals(this, rhs);
+    }
+
+    @Override
+    public String toString()
+    {
+        return TextMeasurements.toString(this);
+    }
 }

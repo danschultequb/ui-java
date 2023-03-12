@@ -1,7 +1,5 @@
 package qub;
 
-import javax.swing.*;
-
 /**
  * A {@link UIElement} that contains a {@link javax.swing.JComponent}.
  */
@@ -292,6 +290,24 @@ public interface JComponentUIElement extends UIElement
         public Disposable onContentSizeChanged(Action1<SizeChange> action)
         {
             return this.onSizeChanged(action);
+        }
+
+        @Override
+        public Disposable onPointerEntered(Action1<PointerEvent> action)
+        {
+            return null;
+        }
+
+        @Override
+        public Disposable onPointerMoved(Action1<PointerEvent> action)
+        {
+            return null;
+        }
+
+        @Override
+        public Disposable onPointerExited(Action1<PointerEvent> action)
+        {
+            return null;
         }
     }
 }

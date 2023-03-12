@@ -63,6 +63,71 @@ public interface EveryoneUIElement extends UIElement
     public void paint(UIPainter painter);
 
     /**
+     * Get whether this {@link UIElement} contains a point at the provided x- and y-coordinates.
+     * @param x The x-coordinate of the point.
+     * @param y The y-coordinate of the point.
+     */
+    public default boolean containsPoint(int x, int y)
+    {
+        return 0 <= x && x <= this.getWidth() &&
+               0 <= y && y <= this.getHeight();
+    }
+
+    /**
+     * Get whether this {@link UIElement} contains the provided {@link Point2Integer}.
+     * @param point The {@link Point2Integer} to check.
+     */
+    public default boolean containsPoint(Point2Integer point)
+    {
+        PreCondition.assertNotNull(point, "point");
+
+        return this.containsPoint(point.getXAsInt(), point.getYAsInt());
+    }
+
+    public default boolean containsEventPreviousLocation(PointerEvent event)
+    {
+        PreCondition.assertNotNull(event, "event");
+
+        final Point2Integer previousLocation = event.getPreviousLocation();
+        return previousLocation != null && this.containsPoint(previousLocation);
+    }
+
+    public default boolean containsEventNewLocation(PointerEvent event)
+    {
+        PreCondition.assertNotNull(event, "event");
+
+        final Point2Integer newLocation = event.getNewLocation();
+        return newLocation != null && this.containsPoint(newLocation);
+    }
+
+    /**
+     * Get whether this {@link UIElement} contains either the previous or new location of the
+     * provided {@link PointerEvent}.
+     * @param event The {@link PointerEvent} to check.
+     */
+    public default boolean containsEvent(PointerEvent event)
+    {
+        PreCondition.assertNotNull(event, "event");
+
+        return this.containsEventPreviousLocation(event) || this.containsEventNewLocation(event);
+    }
+
+    /**
+     * Send the provided {@link PointerEvent} to this {@link EveryoneUIElement}.
+     * @param event The {@link PointerEvent} to send to this {@link EveryoneUIElement}.
+     */
+    public void sendPointerEvent(PointerEvent event);
+
+    @Override
+    public Disposable onPointerEntered(Action1<PointerEvent> action);
+
+    @Override
+    public Disposable onPointerMoved(Action1<PointerEvent> action);
+
+    @Override
+    public Disposable onPointerExited(Action1<PointerEvent> action);
+
+    /**
      * Get the JSON representation of this {@link EveryoneUIElement}.
      */
     public JSONObject toJson();
@@ -140,6 +205,9 @@ public interface EveryoneUIElement extends UIElement
         private int contentHeight;
         private RunnableEvent1<SizeChange> contentSizeChanged;
         private Color backgroundColor;
+        private RunnableEvent1<PointerEvent> pointerEntered;
+        private RunnableEvent1<PointerEvent> pointerMoved;
+        private RunnableEvent1<PointerEvent> pointerExited;
 
         protected Base(EveryoneSwingUI ui)
         {
@@ -196,6 +264,71 @@ public interface EveryoneUIElement extends UIElement
                     .setLineColor(Color.transparent)
                     .setFillColor(this.backgroundColor));
             }
+        }
+
+        protected void handlePointerEnterEvent(PointerEvent event)
+        {
+            PreCondition.assertNotNull(event, "event");
+
+            if (!this.containsEventPreviousLocation(event) && this.containsEventNewLocation(event))
+            {
+                Actions.run(this.pointerEntered, event);
+            }
+        }
+
+        protected void handlePointerExitEvent(PointerEvent event)
+        {
+            PreCondition.assertNotNull(event, "event");
+
+            if (this.containsEventPreviousLocation(event) && !this.containsEventNewLocation(event))
+            {
+                Actions.run(this.pointerExited, event);
+            }
+        }
+
+        @Override
+        public void sendPointerEvent(PointerEvent event)
+        {
+            PreCondition.assertNotNull(event, "event");
+
+            this.handlePointerEnterEvent(event);
+            this.handlePointerExitEvent(event);
+        }
+
+        @Override
+        public Disposable onPointerEntered(Action1<PointerEvent> action)
+        {
+            PreCondition.assertNotNull(action, "action");
+
+            if (this.pointerEntered == null)
+            {
+                this.pointerEntered = Event1.create();
+            }
+            return this.pointerEntered.subscribe(action);
+        }
+
+        @Override
+        public Disposable onPointerMoved(Action1<PointerEvent> action)
+        {
+            PreCondition.assertNotNull(action, "action");
+
+            if (this.pointerMoved == null)
+            {
+                this.pointerMoved = Event1.create();
+            }
+            return this.pointerMoved.subscribe(action);
+        }
+
+        @Override
+        public Disposable onPointerExited(Action1<PointerEvent> action)
+        {
+            PreCondition.assertNotNull(action, "action");
+
+            if (this.pointerExited == null)
+            {
+                this.pointerExited = Event1.create();
+            }
+            return this.pointerExited.subscribe(action);
         }
 
         @Override

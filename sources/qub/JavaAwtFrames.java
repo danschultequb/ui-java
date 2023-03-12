@@ -180,6 +180,18 @@ public interface JavaAwtFrames
         JavaAwtFrames.setHeight(frame, pixelHeight);
     }
 
+    public static Point2Integer getContentAreaTopLeftCorner(java.awt.Frame frame)
+    {
+        PreCondition.assertNotNull(frame, "frame");
+
+        final java.awt.Insets insets = frame.getInsets();
+        final Point2Integer result = Point2.create(insets.left, insets.top);
+
+        PostCondition.assertNotNull(result, "result");
+
+        return result;
+    }
+
     public static int getContentAreaWidth(java.awt.Frame frame)
     {
         PreCondition.assertNotNull(frame, "frame");

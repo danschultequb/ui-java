@@ -21,9 +21,18 @@ public class EveryoneSwingUIWindow implements UIWindow.Typed<EveryoneSwingUIWind
 
         this.jFrame = new javax.swing.JFrame();
         this.jFrame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+
         this.jFrame.addWindowListener(JavaWindowListenter.create()
             .setWindowOpenedAction(this.ui::setCurrentThreadAsyncRunner)
             .setWindowClosedAction(this::close));
+
+        final JavaMouseListener mouseListener = JavaMouseListener.create()
+            .setMouseMovedAction(this::sendPointerEvent)
+            .setMousePressedAction(this::sendPointerEvent)
+            .setMouseReleasedAction(this::sendPointerEvent);
+        this.jFrame.addMouseListener(mouseListener);
+        this.jFrame.addMouseMotionListener(mouseListener);
+
         this.jFrame.setContentPane(JComponentCanvas.create()
             .setPaintAction(this::paint));
     }
@@ -346,5 +355,25 @@ public class EveryoneSwingUIWindow implements UIWindow.Typed<EveryoneSwingUIWind
     public void repaint()
     {
         this.jFrame.repaint();
+    }
+
+    public void sendPointerEvent(PointerEvent event)
+    {
+        PreCondition.assertNotNull(event, "event");
+
+        if (this.content != null)
+        {
+            try (final Disposable contentState = event.saveState())
+            {
+                // Remove JFrame insets from event locations.
+                final Point2Integer contentAreaTopLeft = JavaAwtFrames.getContentAreaTopLeftCorner(this.jFrame);
+                event.inverseTranslate(contentAreaTopLeft.getXAsInt(), contentAreaTopLeft.getYAsInt());
+
+                if (this.content.containsEvent(event))
+                {
+                    this.content.sendPointerEvent(event);
+                }
+            }
+        }
     }
 }

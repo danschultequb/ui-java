@@ -27,7 +27,9 @@ public class EveryoneUIHorizontalLayout extends EveryoneUIElement.Base<EveryoneU
         PreCondition.assertNotNull(uiElement, "uiElement");
         PreCondition.assertInstanceOf(uiElement, EveryoneUIElement.class, "uiElement");
 
-        this.elements.add((EveryoneUIElement)uiElement);
+        final EveryoneUIElement everyoneUIElement = (EveryoneUIElement)uiElement;
+        this.elements.add(everyoneUIElement);
+        everyoneUIElement.setParent(this);
 
         int contentWidth = 0;
         int contentHeight = 0;
@@ -101,6 +103,24 @@ public class EveryoneUIHorizontalLayout extends EveryoneUIElement.Base<EveryoneU
                 painter.translateX(uiElement.getWidth());
             }
         }
+    }
+
+    @Override
+    public void sendPointerEvent(PointerEvent event)
+    {
+        PreCondition.assertNotNull(event, "event");
+
+        this.handlePointerEnterEvent(event);
+
+        for (final EveryoneUIElement element : this.elements)
+        {
+            if (element.containsEvent(event))
+            {
+                element.sendPointerEvent(event);
+            }
+        }
+
+        this.handlePointerExitEvent(event);
     }
 
     @Override

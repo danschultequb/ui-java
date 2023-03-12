@@ -25,6 +25,14 @@ public class SwingUIPainter implements UIPainter.Typed<SwingUIPainter>
         return new SwingUIPainter(graphics);
     }
 
+    public static SwingUIPainter create(java.awt.image.BufferedImage image)
+    {
+        PreCondition.assertNotNull(image, "image");
+        PreCondition.assertInstanceOf(image.getGraphics(), java.awt.Graphics2D.class, "image.getGraphics()");
+
+        return SwingUIPainter.create((java.awt.Graphics2D)image.getGraphics());
+    }
+
     @Override
     public Color getFillColor()
     {
@@ -57,6 +65,34 @@ public class SwingUIPainter implements UIPainter.Typed<SwingUIPainter>
         return this;
     }
 
+    private Disposable setColors(Color lineColor, Color fillColor)
+    {
+        final Color lineColorBackup = (lineColor == null ? null : this.getLineColor());
+        if (lineColor != null)
+        {
+            this.setLineColor(lineColor);
+        }
+
+        final Color fillColorBackup = (fillColor == null ? null : this.getFillColor());
+        if (fillColor != null)
+        {
+            this.setFillColor(fillColor);
+        }
+
+        return Disposable.create(() ->
+        {
+            if (lineColorBackup != null)
+            {
+                this.setLineColor(lineColorBackup);
+            }
+
+            if (fillColorBackup != null)
+            {
+                this.setFillColor(fillColor);
+            }
+        });
+    }
+
     @Override
     public SwingUIPainter drawLine(int startX, int startY, int endX, int endY)
     {
@@ -71,7 +107,10 @@ public class SwingUIPainter implements UIPainter.Typed<SwingUIPainter>
     {
         PreCondition.assertNotNull(options, "options");
 
-        return this.drawLine(options.getStartX(), options.getStartY(), options.getEndX(), options.getEndY());
+        try (final Disposable colorState = this.setColors(options.getLineColor(), null))
+        {
+            return this.drawLine(options.getStartX(), options.getStartY(), options.getEndX(), options.getEndY());
+        }
     }
 
     @Override
@@ -100,7 +139,10 @@ public class SwingUIPainter implements UIPainter.Typed<SwingUIPainter>
     {
         PreCondition.assertNotNull(options, "options");
 
-        return this.drawOval(options.getLeftX(), options.getTopY(), options.getWidth(), options.getHeight());
+        try (final Disposable colorState = this.setColors(options.getLineColor(), options.getFillColor()))
+        {
+            return this.drawOval(options.getLeftX(), options.getTopY(), options.getWidth(), options.getHeight());
+        }
     }
 
     @Override
@@ -176,9 +218,9 @@ public class SwingUIPainter implements UIPainter.Typed<SwingUIPainter>
     public SwingUIPainter drawText(DrawTextOptions options)
     {
         PreCondition.assertNotNull(options, "options");
+        PreCondition.assertTrue(options.hasX(), "options.hasX()");
+        PreCondition.assertTrue(options.hasY(), "options.hasY()");
         PreCondition.assertNotNull(options.getText(), "options.getText()");
-        PreCondition.assertTrue(options.getLeftX() != null || options.getCenterX() != null || options.getRightX() != null, "options.getLeftX() != null || options.getCenterX() != null || options.getRightX() != null");
-        PreCondition.assertTrue(options.getTopY() != null || options.getCenterY() != null || options.getBaselineY() != null || options.getBottomY() != null, "options.getTopY() != null || options.getCenterY() != null || options.getBaselineY() != null || options.getBottomY() != null");
 
         final String text = options.getText();
 
@@ -255,7 +297,7 @@ public class SwingUIPainter implements UIPainter.Typed<SwingUIPainter>
     public Size2Integer getClip()
     {
         final java.awt.Rectangle clipBounds = this.graphics.getClipBounds();
-        return Size2.create(clipBounds.width, clipBounds.height);
+        return clipBounds == null ? null : Size2.create(clipBounds.width, clipBounds.height);
     }
 
     @Override
@@ -285,7 +327,6 @@ public class SwingUIPainter implements UIPainter.Typed<SwingUIPainter>
     {
         PreCondition.assertNotNull(text, "text");
 
-        final java.awt.FontMetrics fontMetrics = this.graphics.getFontMetrics();
-        return JavaAwtFontMetricsTextMeasurements.create(text, fontMetrics);
+        return TextMeasurements.create(text, this.graphics.getFontMetrics());
     }
 }
